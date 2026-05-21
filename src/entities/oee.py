@@ -1,7 +1,4 @@
-"""
-Path: src/entities/oee.py
-"""
-
+""" Path: src/entities/oee.py """
 from dataclasses import dataclass
 
 @dataclass(frozen=True)
