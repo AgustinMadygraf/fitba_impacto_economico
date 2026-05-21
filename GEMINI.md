@@ -24,3 +24,4 @@
 - Costos Marginales: Incluyen materia prima (papel/pegamento) y energía marginal.
 - Tasas (r): Definidas por escenario (Desfavorable, Proyectado, Favorable).
 - Cálculo de Repago: Mes t donde sum(Bi) >= Inversion_Actualizada.
+- Análisis de Sensibilidad: Evaluación de riesgos ante variaciones en la tasa de crecimiento (r) del escenario base.

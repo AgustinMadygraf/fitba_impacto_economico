@@ -39,30 +39,44 @@ class SimularImpactoEconomico:
         disponibilidad_t = self.oee_base.disponibilidad
         inversion_objetivo = self.inversion.monto_actualizado
         
-        # Iteración mensual
+        # Iteración mensual (Cronograma de Planta)
         for mes in range(1, self.horizonte_maximo + 1):
-            # 1. Crecimiento (Dt = Dt-1 * (1 + r))
+            # 1. Evolución de la eficiencia
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             
-            # Aplicar límite físico de la planta
-            disponibilidad_activa = min(disponibilidad_t, self.capacidad.limite_disponibilidad)
+            # 2. Cálculo físico de la producción
+            volumen_t = self._calcular_volumen_produccion(disponibilidad_t)
             
-            # 2. Cálculo de Producción y Beneficio
-            # Pt = Volumen_Base * (Dt / D0)
-            produccion_t = self.produccion.volumen_base * (disponibilidad_activa / self.oee_base.disponibilidad)
+            # 3. Valoración económica
+            beneficio_mensual = self._calcular_beneficio_mensual(volumen_t)
             
-            # Limitar producción por factor de demanda
-            produccion_limitada = min(produccion_t, self.produccion.volumen_base * self.escenario.factor_demanda)
-            
-            # Beneficio Mensual = (Pt - Volumen_Base) * Margen
-            beneficio_mensual = (produccion_limitada - self.produccion.volumen_base) * self.producto.margen_contribucion_unitario
-            
-            # Solo sumamos beneficios positivos
             if beneficio_mensual > 0:
                 beneficio_acumulado += beneficio_mensual
             
-            # 3. Verificación de Repago
+            # 4. Verificación de Repago
             if beneficio_acumulado >= inversion_objetivo:
                 return mes
             
         return None
+
+    def _calcular_volumen_produccion(self, disponibilidad_t: float) -> float:
+        """
+        Resuelve el balance de producción física (Física de Planta).
+        Aplica cuellos de botella operativos y límites de absorción del mercado.
+        """
+        # Límite físico de la planta
+        disponibilidad_activa = min(disponibilidad_t, self.capacidad.limite_disponibilidad)
+        
+        # Transformación OEE -> Volumen: Pt = Volumen_Base * (Dt / D0)
+        produccion_potencial = self.produccion.volumen_base * (disponibilidad_activa / self.oee_base.disponibilidad)
+        
+        # Restricción de Demanda (Factor de mercado)
+        return min(produccion_potencial, self.produccion.volumen_base * self.escenario.factor_demanda)
+
+    def _calcular_beneficio_mensual(self, volumen_producido: float) -> float:
+        """
+        Transforma volumen físico incremental en flujo de caja (Economía).
+        Bt = (Pt - Volumen_Base) * Margen_Unitario
+        """
+        delta_volumen = volumen_producido - self.produccion.volumen_base
+        return delta_volumen * self.producto.margen_contribucion_unitario
