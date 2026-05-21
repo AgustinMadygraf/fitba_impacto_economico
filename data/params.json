@@ -12,7 +12,8 @@
       "rendimiento": 0.44,
       "calidad": 0.84
     },
-    "horizonte_meses": 12
+    "limite_disponibilidad": 0.85,
+    "horizonte_max_meses": 24
   },
   "produccion": {
     "volumen_mensual_base": 450000,
@@ -25,18 +26,18 @@
   "escenarios": {
     "desfavorable": {
       "nombre": "Desfavorable",
-      "factor_demanda": 0.8,
-      "factor_aumento_costo": 1.15
+      "tasa_crecimiento_mensual": 0.02,
+      "factor_demanda": 0.8
     },
     "proyectado": {
       "nombre": "Proyectado",
-      "factor_demanda": 1.0,
-      "factor_aumento_costo": 1.0
+      "tasa_crecimiento_mensual": 0.05,
+      "factor_demanda": 1.0
     },
-    "optimista": {
-      "nombre": "Optimista",
-      "factor_demanda": 1.2,
-      "factor_aumento_costo": 0.9
+    "favorable": {
+      "nombre": "Favorable",
+      "tasa_crecimiento_mensual": 0.10,
+      "factor_demanda": 1.2
     }
   }
 }

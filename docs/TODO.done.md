@@ -1,0 +1,3 @@
+- [x] Definir base de repago (ANR: $8.49M).
+- [x] Diseñar esquema de JSON de entrada.
+- [x] Establecer Línea Base real.
