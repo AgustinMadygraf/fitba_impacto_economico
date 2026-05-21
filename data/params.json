@@ -36,7 +36,7 @@
     },
     "favorable": {
       "nombre": "Favorable",
-      "tasa_crecimiento_mensual": 0.2,
+      "tasa_crecimiento_mensual": 0.02,
       "factor_demanda": 1.0
     }
   }

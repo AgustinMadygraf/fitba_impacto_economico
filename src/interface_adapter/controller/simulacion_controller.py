@@ -2,6 +2,7 @@
 Path: src/interface_adapter/controller/simulacion_controller.py
 """
 
+from typing import Any
 from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
 from src.interface_adapter.presenter.simulacion_presenter import SimulacionPresenter
 from src.entities.escenario import Escenario
@@ -10,12 +11,13 @@ from src.use_cases.simular_impacto import SimularImpactoEconomico
 class SimulacionController:
     """
     Orquestador de la ejecución de la simulación.
-    Utiliza el Presenter como una interfaz abstracta de salida.
+    Ahora es puramente un adaptador: recibe sus dependencias por constructor.
     """
     
-    def __init__(self, gateway: ParametrosGateway, presenter: SimulacionPresenter):
+    def __init__(self, gateway: ParametrosGateway, presenter: SimulacionPresenter, logger: Any):
         self.gateway = gateway
         self.presenter = presenter
+        self.logger = logger
 
     def ejecutar_simulacion(self):
         """
@@ -37,13 +39,15 @@ class SimulacionController:
                 factor_demanda=1.0 
             )
             
+            # Inyectamos el logger (que el controlador recibió) al caso de uso
             simulador = SimularImpactoEconomico(
                 inversion=inversion,
                 producto=producto,
                 oee_base=oee_base,
                 produccion=produccion,
                 escenario=escenario,
-                capacidad=capacidad
+                capacidad=capacidad,
+                logger=self.logger
             )
             
             mes_repago = simulador.ejecutar()
@@ -54,7 +58,6 @@ class SimulacionController:
                 'mes_repago': mes_repago
             })
 
-        # Delegar directamente al Presenter (que ahora es la interfaz de salida)
         self.presenter.presentar_resultados(
             target_repago=inversion.monto_actualizado,
             oee_base=oee_base.valor,

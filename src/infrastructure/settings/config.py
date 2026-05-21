@@ -3,6 +3,8 @@ Path: src/infrastructure/settings/config.py
 """
 
 import json
+import argparse
+import logging
 from typing import Dict, Any
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
@@ -13,12 +15,23 @@ from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
 
 class ConfigLoader(ParametrosGateway):
     """
-    Implementación física de ParametrosGateway que carga datos desde un archivo JSON.
+    Cargador de configuración de infraestructura.
+    Centraliza la captura de parámetros desde JSON y argumentos de línea de comandos (CLI).
     """
     
     def __init__(self, config_path: str = "data/params.json"):
         self.config_path = config_path
+        self._args = self._parse_cli_args()
         self._raw_data = self._load_json()
+
+    def _parse_cli_args(self):
+        parser = argparse.ArgumentParser(description="Simulador de Impacto Económico FITBA")
+        parser.add_argument("--debug", action="store_true", help="Habilitar modo auditoría técnica (DEBUG)")
+        # Podemos permitir que otros argumentos de main.py se definan aquí
+        return parser.parse_known_args()[0]
+
+    def is_debug_enabled(self) -> bool:
+        return self._args.debug
 
     def _load_json(self) -> Dict[str, Any]:
         with open(self.config_path, 'r') as f:

@@ -5,19 +5,25 @@ Path: src/infrastructure/settings/logger.py
 import logging
 import sys
 
-def get_logger(name: str = "FITBA"):
+def get_logger(name: str = "FITBA", debug: bool = False):
     """
     Retorna un logger configurado con la apariencia de FastAPI/Uvicorn.
-    Formato: LEVEL:    Mensaje
+    Recibe un booleano 'debug' para determinar el nivel.
     """
+    level = logging.DEBUG if debug else logging.INFO
+    
     logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(level)
     
     if not logger.handlers:
         handler = logging.StreamHandler(sys.stdout)
-        # Formateador estilo FastAPI (Nivel en mayúsculas con padding)
+        handler.setLevel(level)
         formatter = logging.Formatter('%(levelname)-8s %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
+        logger.propagate = False
     
+    for handler in logger.handlers:
+        handler.setLevel(level)
+        
     return logger
