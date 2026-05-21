@@ -1,9 +1,10 @@
-# DISCOVERY - Dudas Pendientes
+# DISCOVERY - Dudas e Incertidumbres Pendientes
 
-No hay dudas pendientes. Todos los parámetros, fórmulas y políticas de negocio han sido definidos y documentados en GEMINI.md.
+## Modelo de Negocio
+1. **Mix de Ventas:** ¿Cómo se distribuye porcentualmente el mix de producción entre los diferentes tipos de productos? ¿Este mix es constante o varía con el volumen?
+2. **Capacidad de Absorción:** ¿El mercado realmente garantiza la absorción del 100% de la producción incremental sin necesidad de stock?
+3. **Costo Energético:** ¿Cuál es el coeficiente de consumo eléctrico marginal por cada unidad producida por encima de la línea base?
+4. **Impacto en Turnos:** ¿A partir de qué volumen de producción el costo de "hora operativa" ($12.000) deja de ser fijo y requiere la contratación/apertura de nuevos turnos?
 
-
-## Dudas Pendientes - Fase de Análisis de Sensibilidad
-1. **Alcance del Reporte:** ¿El análisis de sensibilidad debe ejecutarse sobre los tres escenarios (Desfavorable, Proyectado, Favorable) o exclusivamente sobre el escenario "Proyectado"?
-2. **Variación de la Tasa:** ¿Cuál es el rango de variación esperado para la tasa r? (Ej: ±10%, ±20% o valores discretos definidos en el JSON).
-3. **Formato de Salida:** ¿El output del análisis debe ser un simple registro del mes de repago por tasa, o requiere un reporte estructurado (ej. desviación estándar del punto de equilibrio)?
+## Definiciones Técnicas
+1. **Validación de IPC:** ¿El factor IPC debe aplicarse mensualmente sobre el flujo de caja o solo una vez sobre el monto objetivo de la inversión? (Actualmente se aplica sobre el objetivo).
