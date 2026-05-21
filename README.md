@@ -1,17 +1,13 @@
-# FITBA - Informe de Impacto Económico (Python Edition)
+# FITBA - Sistema de Proyección de Impacto Económico
 
-Proyecto de transferencia tecnológica en la cooperativa Madygraf para la mejora de la eficiencia operativa (OEE).
+Herramienta en Python para calcular el incremento de eficiencia operativa (OEE) necesario para el repago del ANR otorgado a la cooperativa Madygraf.
 
-## Certezas del Proyecto
-- **Objetivo de Recupero:** $8.492.000 (Solo el ANR otorgado).
-- **Línea Base OEE:** 0,168 (16,8%).
-- **Plazo de Referencia:** 12 meses.
-- **Tecnologías:** Python.
-- **Arquitectura:** Clean Architecture.
-- **Gestión de Datos:** Los parámetros de entrada se consumen desde `data/*.json` (no trackeados).
+## Resumen Ejecutivo
+- **Objetivo:** Determinar el % de aumento de OEE requerido para recuperar el ANR en 12 meses.
+- **Stack:** Python 3.12, Clean Architecture.
+- **Configuración:** Parámetros cargados desde `data/params.json` (untrackeado).
 
-## Estructura del Análisis
-Cálculo del % de aumento de OEE necesario para el repago del ANR a valor presente (IPC) en 3 escenarios:
-1. Desfavorable
-2. Proyectado
-3. Optimista
+## Guía de Inicio Rápido
+1. Asegurar la existencia de `data/params.json` (ver `data/params.json.example`).
+2. Consultar `GEMINI.md` para las reglas de negocio y fórmulas técnicas.
+3. Revisar `docs/TODO.md` para el estado del desarrollo.

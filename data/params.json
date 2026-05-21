@@ -1,0 +1,42 @@
+{
+  "inversion": {
+    "objetivo_anr": 8492000.0,
+    "moneda": "ARS",
+    "fecha_base": "2025-02-01",
+    "fecha_objetivo": "2026-03-01",
+    "factor_ipc_acumulado": 1.3625
+  },
+  "oee": {
+    "linea_base": {
+      "disponibilidad": 0.135,
+      "rendimiento": 0.44,
+      "calidad": 0.84
+    },
+    "horizonte_meses": 12
+  },
+  "produccion": {
+    "volumen_mensual_base": 450000,
+    "precio_unitario_promedio": 150.0,
+    "costos_variables": {
+      "material_por_unidad": 85.5,
+      "hora_operativa": 12000.0
+    }
+  },
+  "escenarios": {
+    "desfavorable": {
+      "nombre": "Desfavorable",
+      "factor_demanda": 0.8,
+      "factor_aumento_costo": 1.15
+    },
+    "proyectado": {
+      "nombre": "Proyectado",
+      "factor_demanda": 1.0,
+      "factor_aumento_costo": 1.0
+    },
+    "optimista": {
+      "nombre": "Optimista",
+      "factor_demanda": 1.2,
+      "factor_aumento_costo": 0.9
+    }
+  }
+}
