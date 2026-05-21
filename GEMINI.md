@@ -14,17 +14,13 @@
   - Rendimiento (Performance): 44,0% (0,44) -> CONSTANTE
   - Calidad (Quality): 84,0% (0,84) -> CONSTANTE
   - OEE Base: 4,99%
-  - Límite de Disponibilidad: 85% (0,85)
+  - Límite de Disponibilidad: Definido dinámicamente mediante la entidad CapacidadInstalada.
 
 ## 3. Lógica de Impacto Económico (Modelo Recursivo)
 - Crecimiento Disponibilidad (Dt): Dt = Dt-1 * (1 + r)
 - Producción Mensual (Pt): Volumen_Base * (Dt / D0)
 - Beneficio Mensual (Bt): (Pt - Volumen_Base) * (Precio - Costos_Marginales_Unitarios)
 - Política de Ventas: Venta Instantánea (limitada por Factor Demanda; no hay stock).
+- Costos Marginales: Incluyen materia prima (papel/pegamento) y energía marginal.
 - Tasas (r): Definidas por escenario (Desfavorable, Proyectado, Favorable).
 - Cálculo de Repago: Mes t donde sum(Bi) >= Inversion_Actualizada.
-
-## 4. Decisiones de Diseño (Historial)
-- Política de Ventas: Venta Instantánea (limitada por demanda).
-- Margen: Margen de Contribución puro (incluye costos marginales: materia prima + energía).
-- Multiplicador de Producción: Directo basado en ratio de disponibilidad (Dt/D0).
