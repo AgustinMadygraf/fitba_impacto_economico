@@ -6,20 +6,17 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich import box
+from src.interface_adapter.presenter.simulacion_presenter import SimulacionPresenter
 
-class RichReporter:
+class RichSimulacionPresenter(SimulacionPresenter):
     """
-    Componente de reporte avanzado utilizando la librería rich.
-    Genera visualizaciones de alta calidad en la terminal.
+    Implementación física del Presenter utilizando la librería rich para CLI.
     """
     
     def __init__(self):
         self.console = Console()
 
-    def report_simulation(self, target_repago: float, oee_base: float, resultados: list):
-        """
-        Genera un reporte completo de la simulación en un solo panel.
-        """
+    def presentar_resultados(self, target_repago: float, oee_base: float, resultados: list):
         # 1. Panel de encabezado
         self.console.print(Panel(
             f"[bold blue]Target de Repago Actualizado:[/bold blue] [green]${target_repago:,.2f}[/green]\n"
@@ -42,7 +39,6 @@ class RichReporter:
         table.add_column("Repago (Meses)", justify="center", style="green")
 
         for res in resultados:
-            # Color dinámico para el repago
             mes_style = "green" if res['mes_repago'] else "red"
             resultado_str = f"{res['mes_repago']} meses" if res['mes_repago'] else "Fuera de horizonte"
             

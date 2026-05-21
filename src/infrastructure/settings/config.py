@@ -9,11 +9,11 @@ from src.entities.producto import Producto
 from src.entities.oee import OEE
 from src.entities.produccion import Produccion
 from src.entities.capacidad_instalada import CapacidadInstalada
+from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
 
-class ConfigLoader:
+class ConfigLoader(ParametrosGateway):
     """
-    Cargador de configuración de infraestructura.
-    Se encarga de transformar los parámetros crudos (JSON) en Entidades de Dominio.
+    Implementación física de ParametrosGateway que carga datos desde un archivo JSON.
     """
     
     def __init__(self, config_path: str = "data/params.json"):
