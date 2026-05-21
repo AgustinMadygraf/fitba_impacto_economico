@@ -62,7 +62,8 @@ class SimularImpactoEconomico:
     def _calcular_volumen_produccion(self, disponibilidad_t: float) -> float:
         """
         Resuelve el balance de producción física (Física de Planta).
-        Aplica cuellos de botella operativos y límites de absorción del mercado.
+        Aplica cuellos de botella operativos (Capacidad Instalada).
+        El factor_demanda actúa como una tasa de absorción de la producción potencial.
         """
         # Límite físico de la planta
         disponibilidad_activa = min(disponibilidad_t, self.capacidad.limite_disponibilidad)
@@ -70,8 +71,8 @@ class SimularImpactoEconomico:
         # Transformación OEE -> Volumen: Pt = Volumen_Base * (Dt / D0)
         produccion_potencial = self.produccion.volumen_base * (disponibilidad_activa / self.oee_base.disponibilidad)
         
-        # Restricción de Demanda (Factor de mercado)
-        return min(produccion_potencial, self.produccion.volumen_base * self.escenario.factor_demanda)
+        # Absorción de la producción (1.0 = 100% de absorción de lo producido)
+        return produccion_potencial * self.escenario.factor_demanda
 
     def _calcular_beneficio_mensual(self, volumen_producido: float) -> float:
         """
