@@ -1,38 +1,39 @@
 """
-Path: main.py
+Punto de entrada principal para la simulación de impacto económico FITBA.
 """
 
 from src.infrastructure.settings.config import ConfigLoader
+from src.infrastructure.settings.logger import get_logger
+from src.infrastructure.cli.rich import RichReporter
 from src.entities.escenario import Escenario
 from src.use_cases.simular_impacto import SimularImpactoEconomico
 
+# Inicialización del logger estilo FastAPI para eventos del sistema
+logger = get_logger()
+
 def run():
-    # 1. Carga de Configuración (Delegada a Infraestructura)
+    # 1. Inicialización de Infraestructura
     config = ConfigLoader()
+    reporter = RichReporter()
     
+    # 2. Carga de Datos de Dominio
     inversion = config.get_inversion()
     producto = config.get_producto()
     oee_base = config.get_oee_base()
     produccion = config.get_produccion_base()
     capacidad = config.get_capacidad_instalada()
     
-    print("-" * 60)
-    print(f"SIMULACIÓN DE IMPACTO ECONÓMICO - FITBA (Configuración Delegada)")
-    print(f"Target de Repago Actualizado: ${inversion.monto_actualizado:,.2f}")
-    print(f"OEE Línea Base: {oee_base.valor*100:.2f}%")
-    print(f"Nota: Se asume absorción del 100% de la producción (Push Model).")
-    print("-" * 60)
-    print(f"{'ESCENARIO':<15} | {'CRECIMIENTO':<12} | {'REPAGO (MESES)':<15}")
-    print("-" * 60)
+    logger.info("Iniciando proceso de simulación FITBA...")
     
-    # 2. Ejecución de Escenarios
+    # 3. Ejecución de Escenarios y Recolección de Resultados
     escenarios_data = config.get_escenarios_raw()
+    resultados = []
     
     for clave, datos in escenarios_data.items():
         escenario = Escenario(
             nombre=datos['nombre'],
             tasa_crecimiento=datos['tasa_crecimiento_mensual'],
-            factor_demanda=1.0  # Mantenemos 100% de absorción según definición industrial
+            factor_demanda=1.0 
         )
         
         simulador = SimularImpactoEconomico(
@@ -46,10 +47,20 @@ def run():
         
         mes_repago = simulador.ejecutar()
         
-        resultado = f"{mes_repago} meses" if mes_repago else "Fuera de horizonte"
-        print(f"{escenario.nombre:<15} | {escenario.tasa_crecimiento*100:>10.1f}% | {resultado:<15}")
+        resultados.append({
+            'nombre': escenario.nombre,
+            'tasa': escenario.tasa_crecimiento,
+            'mes_repago': mes_repago
+        })
 
-    print("-" * 60)
+    # 4. Reporte Visual (Rich)
+    reporter.report_simulation(
+        target_repago=inversion.monto_actualizado,
+        oee_base=oee_base.valor,
+        resultados=resultados
+    )
+    
+    logger.info("Simulación finalizada exitosamente.")
 
 if __name__ == "__main__":
     run()
