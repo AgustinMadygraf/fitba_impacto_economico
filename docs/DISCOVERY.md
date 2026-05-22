@@ -16,3 +16,8 @@
 4. **Vista de Auditoría Detallada (Modo Debug):** En la CLI, el flag `--debug` expone la traza técnica mes a mes. En la interfaz web, ¿queremos ofrecer una vista de "Detalle de Auditoría" (como una tabla expandible con el desglose mensual para cada escenario o un modal detallado) o es suficiente mostrar la tabla resumida de meses de repago?
 5. **Seguridad y Control de Acceso:** Dado que las simulaciones manejan datos financieros del ANR y costos de producción de la planta de la cooperativa Madygraf, ¿se requiere algún tipo de login/autenticación básica para acceder al panel, o debe ser de acceso público abierto dentro de la red local?
 
+
+## Estrategia de Testing y CI
+1. **Tooling de Testeo:** ¿Utilizaremos `pytest` con `pytest-cov` para medir la cobertura del 80%?
+2. **Infraestructura de CI:** ¿Se implementará un pipeline de CI en el repositorio (ej. GitHub Actions) o nos limitaremos a hooks de git locales (`pre-push`)?
+3. **Estructura de Pruebas:** ¿Se aceptará la estructura propuesta (`tests/unit`, `tests/integration`) alineada con la Clean Architecture actual?

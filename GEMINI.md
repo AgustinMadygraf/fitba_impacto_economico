@@ -25,3 +25,7 @@
 - Tasas (r): Definidas por escenario (Desfavorable, Proyectado, Favorable).
 - Cálculo de Repago: Mes t donde sum(Bi) >= Inversion_Actualizada.
 - Análisis de Sensibilidad: Evaluación de riesgos ante variaciones en la tasa de crecimiento (r) del escenario base.
+
+## 4. Estándares de Calidad
+- Cobertura de Tests: Mínimo 80% (unitarios y de integración).
+- CI: Ejecución de tests y chequeo de sintaxis obligatorio en pre-push.
