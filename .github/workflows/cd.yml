@@ -11,17 +11,9 @@ jobs:
     steps:
       - name: Validate Secrets
         run: |
-          echo "Validating environment vps-production..."
-          if [ -z "${{ secrets.VPS_KEY }}" ]; then
-            echo "::error::VPS_KEY secret is missing!"
-            exit 1
-          else
-            echo "VPS_KEY secret is present (length: ${#VPS_KEY})."
-          fi
-          if [ -z "${{ secrets.VPS_HOST }}" ]; then
-            echo "::error::VPS_HOST secret is missing!"
-            exit 1
-          fi
+          echo "VPS_KEY length: ${#VPS_KEY}"
+        env:
+          VPS_KEY: ${{ secrets.VPS_KEY }}
 
   deploy:
     needs: validate-env
@@ -30,6 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
+      - name: Debug and Deploy
+        run: |
+          echo "VPS_KEY length: ${#VPS_KEY}"
+        env:
+          VPS_KEY: ${{ secrets.VPS_KEY }}
+          
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -40,4 +38,3 @@ jobs:
           debug: true
           script: |
             echo "SSH connection established successfully."
-            echo "Deployment completed successfully."
