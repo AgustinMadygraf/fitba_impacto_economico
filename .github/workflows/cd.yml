@@ -7,23 +7,43 @@ on:
 jobs:
   verify-secrets:
     runs-on: ubuntu-latest
+    environment: app-production
     steps:
       - name: Check Secrets
         run: |
-          if [ -z "${{ secrets.VPS_HOST }}" ]; then
-            echo "Error: VPS_HOST is missing."
-            exit 1
+          echo "Checking required secrets in environment 'app-production'..."
+          
+          # Función para validar existencia de un secreto
+          validate_secret() {
+            local name=$1
+            local value=$2
+            if [ -z "$value" ]; then
+              echo "::error::Secret '$name' is NOT configured in the 'app-production' environment."
+              return 1
+            else
+              echo "Secret '$name' is configured."
+              return 0
+            fi
+          }
+
+          exit_code=0
+          validate_secret "VPS_HOST" "${{ secrets.VPS_HOST }}" || exit_code=1
+          validate_secret "VPS_USER" "${{ secrets.VPS_USER }}" || exit_code=1
+          validate_secret "VPS_KEY"  "${{ secrets.VPS_KEY }}"  || exit_code=1
+          
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::Pipeline failed because one or more required secrets are missing."
+            exit $exit_code
           fi
-          echo "Secrets verified."
+          
+          echo "All required secrets are present."
 
   deploy:
     needs: verify-secrets
     runs-on: ubuntu-latest
+    environment: vps-production
     steps:
       - uses: actions/checkout@v4
-      - name: Debug Connection
-        run: echo "Attempting deploy to host ${{ secrets.VPS_HOST }} as user ${{ secrets.VPS_USER }}"
-      
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -32,7 +52,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script_stop: true
           script: |
-            echo "SSH connection successful."
+            echo "SSH connection established successfully."
             cd /ruta/a/tu/proyecto
             git pull origin main
-            echo "Deployment script completed."
+            echo "Deployment completed successfully."
