@@ -226,3 +226,14 @@
   <script type="module" src="/js/app.js"></script>
 </body>
 </html>
+
+<script>
+const inputs = document.querySelectorAll("input:disabled, input[readonly]");
+inputs.forEach(input => {
+  const style = window.getComputedStyle(input);
+  console.log("Input ID: " + input.id);
+  console.log("  - Color: " + style.color);
+  console.log("  - Background-color: " + style.backgroundColor);
+  console.log("  - Opacity: " + style.opacity);
+});
+</script>
