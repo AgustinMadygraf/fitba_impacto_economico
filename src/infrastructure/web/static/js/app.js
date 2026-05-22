@@ -177,6 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dibujar/Actualizar Gráfico Chart.js
   function renderizarGrafico(proyecciones, target) {
+    if (typeof Chart === 'undefined') {
+      console.warn('Chart.js no esta disponible; se omite el grafico.');
+      return;
+    }
+
     const labels = Array.from({ length: 24 }, (_, i) => `Mes ${i + 1}`);
     const targetData = Array(24).fill(target);
 
