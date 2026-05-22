@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       // Poblar Inputs
       inputAnr.value = data.inversion.objetivo_anr;
-      inputIpc.value = data.inversion.factor_ipc_acumulado;
+      inputIpc.value = ((data.inversion.factor_ipc_acumulado - 1) * 100).toFixed(1);
       inputDispBase.value = (data.oee.linea_base.disponibilidad * 100).toFixed(1);
       inputPerf.value = (data.oee.linea_base.rendimiento * 100).toFixed(1);
       inputQuality.value = (data.oee.linea_base.calidad * 100).toFixed(1);
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       inputRateProyectado.value = (data.escenarios.proyectado.tasa_crecimiento_mensual * 100).toFixed(1);
       inputRateFavorable.value = (data.escenarios.favorable.tasa_crecimiento_mensual * 100).toFixed(1);
 
-      kpiOeeMax.textContent = `${(data.oee.limite_disponibilidad * data.oee.linea_base.rendimiento * data.oee.linea_base.calidad * 100).toFixed(2)}%`;
+      kpiOeeMax.textContent = `${(data.oee.limite_disponibilidad * data.oee.linea_base.rendimiento * data.oee.linea_base.calidad * 100).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
       // Primera simulación inicial
       ejecutarSimulacion(data);
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const payload = {
       inversion: {
         objetivo_anr: parseFloat(inputAnr.value),
-        factor_ipc_acumulado: parseFloat(inputIpc.value)
+        factor_ipc_acumulado: (parseFloat(inputIpc.value) / 100) + 1
       },
       oee: {
         linea_base: {
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         kpiTargetActualizado.textContent = `$${target.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         const oeeBaseVal = apiResponse.oee_base;
-        kpiOeeBase.textContent = `${(oeeBaseVal * 100).toFixed(2)}%`;
+        kpiOeeBase.textContent = `${ (oeeBaseVal * 100).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }%`;
 
         // Renderizar tabla
         renderizarTabla(apiResponse.resultados);
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const mesText = res.mes_repago ? `Mes ${res.mes_repago}` : 'Fuera de horizonte (>24 meses)';
       const viableClass = res.viable ? 'badge-favorable' : 'badge-desfavorable';
       const viableText = res.viable ? 'Viable' : 'No Viable';
-      const tasaPercent = (res.tasa * 100).toFixed(2);
+      const tasaPercent = (res.tasa * 100).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       
       const row = `
         <tr class="fade-in">

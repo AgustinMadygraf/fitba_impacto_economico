@@ -11,6 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Debug Environment
+        run: |
+          echo "Environment: $GITHUB_JOB"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Secret VPS_HOST length: ${#VPS_HOST}"
+          echo "Secret VPS_USER length: ${#VPS_USER}"
+          echo "Secret VPS_KEY length: ${#VPS_KEY}"
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_KEY: ${{ secrets.VPS_KEY }}
+        
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -19,9 +31,6 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: 5932
           debug: true
-          script_stop: true
           script: |
             echo "SSH connection established successfully."
-            cd /ruta/a/tu/proyecto
-            git pull origin main
             echo "Deployment completed successfully."
