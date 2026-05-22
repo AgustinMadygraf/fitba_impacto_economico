@@ -1,7 +1,8 @@
 /**
  * Path: src/infrastructure/web/static/js/app.js
- * Lógica del Frontend y Visualización Dinámica FITBA
  */
+
+import { SimulationService } from "./simulationService.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Instanciación de Controles DOM
@@ -14,21 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputVolBase = document.getElementById('input-vol-base');
   const inputPrecio = document.getElementById('input-precio');
   const inputCosto = document.getElementById('input-costo');
-  
+
   const inputRateDesfavorable = document.getElementById('input-rate-desfavorable');
   const inputRateProyectado = document.getElementById('input-rate-proyectado');
   const inputRateFavorable = document.getElementById('input-rate-favorable');
-  
+
   // KPIs
   const kpiTargetActualizado = document.getElementById('kpi-target-actualizado');
   const kpiOeeBase = document.getElementById('kpi-oee-base');
   const kpiOeeMax = document.getElementById('kpi-oee-max');
-  
+
   // Containers
   const loading = document.getElementById('loading');
   const tableContainer = document.getElementById('table-container');
   const resultadosTbody = document.getElementById('resultados-tbody');
-  
+
   // 2. Inicialización del Gráfico Chart.js
   const ctx = document.getElementById('chart-proyeccion').getContext('2d');
   let myChart = null;
@@ -46,15 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
       inputDispBase.value = data.oee.linea_base.disponibilidad;
       inputPerf.value = data.oee.linea_base.rendimiento;
       inputQuality.value = data.oee.linea_base.calidad;
-      
+
       inputVolBase.value = data.produccion.volumen_mensual_base;
       inputPrecio.value = data.produccion.precio_unitario_promedio;
       inputCosto.value = data.produccion.costos_variables.material_por_unidad;
-      
+
       inputRateDesfavorable.value = data.escenarios.desfavorable.tasa_crecimiento_mensual;
       inputRateProyectado.value = data.escenarios.proyectado.tasa_crecimiento_mensual;
       inputRateFavorable.value = data.escenarios.favorable.tasa_crecimiento_mensual;
-      
+
       kpiOeeMax.textContent = `${(data.oee.limite_disponibilidad * data.oee.linea_base.rendimiento * data.oee.linea_base.calidad * 100).toFixed(2)}%`;
 
       // Primera simulación inicial
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Manejar Envío del Formulario
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     // Armar Payload a partir del DOM
     const payload = {
       inversion: {
@@ -131,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Actualizar KPIs Rápidos
         const target = apiResponse.target_repago;
         kpiTargetActualizado.textContent = `$${target.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        
+
         const oeeBaseVal = apiResponse.oee_base;
         kpiOeeBase.textContent = `${(oeeBaseVal * 100).toFixed(2)}%`;
 
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarTabla(apiResponse.resultados);
 
         // 2. Calcular integral de beneficios mensual en frontend para gráfico detallado
-        const proyeccionesGrafico = calcularProyeccionesMensuales(payload);
+        const proyeccionesGrafico = SimulationService.calcularProyeccionesMensuales(payload);
         renderizarGrafico(proyeccionesGrafico, target);
 
         loading.classList.add('d-none');
@@ -174,142 +175,100 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Calcular la proyección acumulada de 24 meses
-  function calcularProyeccionesMensuales(payload) {
-    const meses = Array.from({ length: 24 }, (_, i) => i + 1);
-    const dispBase = payload.oee.linea_base.disponibilidad;
-    const rendimiento = payload.oee.linea_base.rendimiento;
-    const calidad = payload.oee.linea_base.calidad;
-    const volBase = payload.produccion.volumen_mensual_base;
-    const margen = payload.produccion.precio_unitario_promedio - payload.produccion.costos_variables.material_por_unidad;
-    const limiteDisp = payload.oee.limite_disponibilidad || 0.85;
-
-    const proyecciones = { desfavorable: [], proyectado: [], favorable: [] };
-
-    ['desfavorable', 'proyectado', 'favorable'].forEach(key => {
-      const esc = payload.escenarios[key];
-      let disp_t = dispBase;
-      let acumulado = 0;
-
-      for (let m = 1; m <= 24; m++) {
-        disp_t *= (1 + esc.tasa_crecimiento_mensual);
-        
-        // Limitar por capacidad física instalada
-        const disp_activa = Math.min(disp_t, limiteDisp);
-        
-        // Push Model: Pt = volumen_base * (Dt / D0)
-        const vol_t = volBase * (disp_activa / dispBase) * esc.factor_demanda;
-        
-        // Beneficio mensual marginal
-        const delta_vol = vol_t - volBase;
-        const ben_mensual = delta_vol * margen;
-
-        if (ben_mensual > 0) {
-          acumulado += ben_mensual;
-        }
-        proyecciones[key].push(acumulado);
-      }
-    });
-
-    return proyecciones;
-  }
-
   // Dibujar/Actualizar Gráfico Chart.js
   function renderizarGrafico(proyecciones, target) {
     const labels = Array.from({ length: 24 }, (_, i) => `Mes ${i + 1}`);
-
-    // Línea segmentada constante del target
     const targetData = Array(24).fill(target);
 
-    const datasets = [
-      {
-        label: 'Escenario Favorable',
-        data: proyecciones.favorable,
-        borderColor: 'hsl(145, 80%, 45%)',
-        backgroundColor: 'hsla(145, 80%, 45%, 0.1)',
-        borderWidth: 3,
-        tension: 0.3,
-        fill: false
-      },
-      {
-        label: 'Escenario Proyectado',
-        data: proyecciones.proyectado,
-        borderColor: 'hsl(195, 100%, 50%)',
-        backgroundColor: 'hsla(195, 100%, 50%, 0.1)',
-        borderWidth: 3,
-        tension: 0.3,
-        fill: false
-      },
-      {
-        label: 'Escenario Desfavorable',
-        data: proyecciones.desfavorable,
-        borderColor: 'hsl(25, 95%, 50%)',
-        backgroundColor: 'hsla(25, 95%, 50%, 0.1)',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false
-      },
-      {
-        label: 'Target de Repago',
-        data: targetData,
-        borderColor: 'rgba(255, 99, 132, 0.75)',
-        borderWidth: 2,
-        borderDash: [6, 6],
-        pointRadius: 0,
-        fill: false
-      }
-    ];
+  const datasets = [
+    {
+      label: 'Escenario Favorable',
+      data: proyecciones.favorable,
+      borderColor: 'hsl(145, 80%, 45%)',
+      backgroundColor: 'hsla(145, 80%, 45%, 0.1)',
+      borderWidth: 3,
+      tension: 0.3,
+      fill: false
+    },
+    {
+      label: 'Escenario Proyectado',
+      data: proyecciones.proyectado,
+      borderColor: 'hsl(195, 100%, 50%)',
+      backgroundColor: 'hsla(195, 100%, 50%, 0.1)',
+      borderWidth: 3,
+      tension: 0.3,
+      fill: false
+    },
+    {
+      label: 'Escenario Desfavorable',
+      data: proyecciones.desfavorable,
+      borderColor: 'hsl(25, 95%, 50%)',
+      backgroundColor: 'hsla(25, 95%, 50%, 0.1)',
+      borderWidth: 2,
+      tension: 0.3,
+      fill: false
+    },
+    {
+      label: 'Target de Repago',
+      data: targetData,
+      borderColor: 'rgba(255, 99, 132, 0.75)',
+      borderWidth: 2,
+      borderDash: [6, 6],
+      pointRadius: 0,
+      fill: false
+    }
+  ];
 
-    if (myChart) {
-      myChart.data.datasets = datasets;
-      myChart.update();
-    } else {
-      myChart = new Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: 'hsl(215, 15%, 72%)',
-                font: { family: 'Plus Jakarta Sans', size: 11 }
-              }
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              callbacks: {
-                label: function(context) {
-                  let label = context.dataset.label || '';
-                  if (label) label += ': ';
-                  if (context.raw !== null) {
-                    label += '$' + context.raw.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-                  }
-                  return label;
-                }
-              }
+  if (myChart) {
+    myChart.data.datasets = datasets;
+    myChart.update();
+  } else {
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'hsl(215, 15%, 72%)',
+              font: { family: 'Plus Jakarta Sans', size: 11 }
             }
           },
-          scales: {
-            x: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: 'hsl(215, 12%, 50%)', font: { family: 'Plus Jakarta Sans' } }
-            },
-            y: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: {
-                color: 'hsl(215, 12%, 50%)',
-                font: { family: 'Plus Jakarta Sans' },
-                callback: function(value) {
-                  return '$' + (value / 1e6).toFixed(1) + 'M';
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || '';
+                if (label) label += ': ';
+                if (context.raw !== null) {
+                  label += '$' + context.raw.toLocaleString('es-AR', { maximumFractionDigits: 0 });
                 }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: 'hsl(215, 12%, 50%)', font: { family: 'Plus Jakarta Sans' } }
+          },
+          y: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: {
+              color: 'hsl(215, 12%, 50%)',
+              font: { family: 'Plus Jakarta Sans' },
+              callback: function (value) {
+                return '$' + (value / 1e6).toFixed(1) + 'M';
               }
             }
           }
         }
-      });
-    }
+      }
+    });
   }
+}
 });
