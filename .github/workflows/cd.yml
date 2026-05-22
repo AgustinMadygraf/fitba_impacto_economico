@@ -5,18 +5,34 @@ on:
     branches: [ main ]
 
 jobs:
+  verify-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Secrets
+        run: |
+          if [ -z "${{ secrets.VPS_HOST }}" ]; then
+            echo "Error: VPS_HOST is missing."
+            exit 1
+          fi
+          echo "Secrets verified."
+
   deploy:
+    needs: verify-secrets
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Debug Connection
+        run: echo "Attempting deploy to host ${{ secrets.VPS_HOST }} as user ${{ secrets.VPS_USER }}"
+      
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
+          script_stop: true
           script: |
+            echo "SSH connection successful."
             cd /ruta/a/tu/proyecto
             git pull origin main
-            # Reiniciar servidor (ajustar según tu setup: systemctl, docker-compose, etc.)
-            # sudo systemctl restart fitba-app
+            echo "Deployment script completed."
