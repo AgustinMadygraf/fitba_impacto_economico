@@ -254,3 +254,16 @@ h1, h2, h3, h4, h5, h6 {
 .glow-text-green {
   text-shadow: 0 0 10px hsla(145, 80%, 45%, 0.4);
 }
+
+
+/* Fix contrast for muted text */
+body .text-muted {
+  color: hsl(215, 15%, 85%);
+  font-weight: 500;
+}
+
+/* Custom muted class for better contrast */
+.custom-muted {
+  color: hsl(215, 15%, 85%) !important;
+  font-weight: 500;
+}

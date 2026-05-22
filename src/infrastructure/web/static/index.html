@@ -52,7 +52,7 @@
             <div class="mb-3">
               <label for="input-ipc" class="form-label">Factor IPC Acumulado</label>
               <input type="number" step="0.0001" class="form-control" id="input-ipc" required>
-              <div class="form-text text-muted">Ajuste de inflación a valor presente.</div>
+              <div class="form-text custom-muted">Ajuste de inflación a valor presente.</div>
             </div>
           </div>
 
@@ -146,21 +146,21 @@
             <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between">
               <div class="text-secondary fs-7 text-uppercase tracking-wider">Inversión Actualizada (Valor Presente)</div>
               <div class="fs-3 fw-bold text-white mt-2 glow-text-blue" id="kpi-target-actualizado">$0.00</div>
-              <div class="text-muted fs-8 mt-1">Ajustado por el factor IPC.</div>
+              <div class="custom-muted fs-8 mt-1">Ajustado por el factor IPC.</div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between">
               <div class="text-secondary fs-7 text-uppercase tracking-wider">OEE Base Proyectado</div>
               <div class="fs-3 fw-bold text-white mt-2" id="kpi-oee-base">0.00%</div>
-              <div class="text-muted fs-8 mt-1">D0 (Disponibilidad) × Performance × Calidad.</div>
+              <div class="custom-muted fs-8 mt-1">D0 (Disponibilidad) × Performance × Calidad.</div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between">
               <div class="text-secondary fs-7 text-uppercase tracking-wider">Límite Físico de Planta</div>
               <div class="fs-3 fw-bold text-white mt-2 text-warning" id="kpi-oee-max">85.0%</div>
-              <div class="text-muted fs-8 mt-1">Capacidad máxima física de disponibilidad.</div>
+              <div class="custom-muted fs-8 mt-1">Capacidad máxima física de disponibilidad.</div>
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@
   <footer class="text-center text-secondary py-5 border-top border-secondary border-opacity-25 mt-5 fs-8 fade-in">
     <div class="container">
       <p class="mb-1"><strong>FITBA - Impacto Económico Cooperativo</strong></p>
-      <p class="text-muted mb-0">Basado en las reglas de negocio técnicas de Madygraf para recuperación de ANR actualizado por inflación.</p>
+      <p class="custom-muted mb-0">Basado en las reglas de negocio técnicas de Madygraf para recuperación de ANR actualizado por inflación.</p>
     </div>
   </footer>
 
@@ -235,5 +235,17 @@ inputs.forEach(input => {
   console.log("  - Color: " + style.color);
   console.log("  - Background-color: " + style.backgroundColor);
   console.log("  - Opacity: " + style.opacity);
+});
+</script>
+
+<script>
+console.log("--- DEBUG: custom-muted ---");
+const mutedElements = document.querySelectorAll(".custom-muted");
+mutedElements.forEach(el => {
+  const style = window.getComputedStyle(el);
+  console.log("Elemento text: " + el.innerText.substring(0, 20) + "...");
+  console.log("  - Color final: " + style.color);
+  console.log("  - Peso final: " + style.fontWeight);
+  console.log("  - CSS activo: " + el.getAttribute("class"));
 });
 </script>
