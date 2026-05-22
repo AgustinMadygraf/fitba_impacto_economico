@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
       inputPrecio.value = data.produccion.precio_unitario_promedio;
       inputCosto.value = data.produccion.costos_variables.material_por_unidad;
 
-      inputRateDesfavorable.value = data.escenarios.desfavorable.tasa_crecimiento_mensual;
-      inputRateProyectado.value = data.escenarios.proyectado.tasa_crecimiento_mensual;
-      inputRateFavorable.value = data.escenarios.favorable.tasa_crecimiento_mensual;
+      inputRateDesfavorable.value = (data.escenarios.desfavorable.tasa_crecimiento_mensual * 100).toFixed(1);
+      inputRateProyectado.value = (data.escenarios.proyectado.tasa_crecimiento_mensual * 100).toFixed(1);
+      inputRateFavorable.value = (data.escenarios.favorable.tasa_crecimiento_mensual * 100).toFixed(1);
 
       kpiOeeMax.textContent = `${(data.oee.limite_disponibilidad * data.oee.linea_base.rendimiento * data.oee.linea_base.calidad * 100).toFixed(2)}%`;
 
@@ -94,17 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
       escenarios: {
         desfavorable: {
           nombre: "Desfavorable",
-          tasa_crecimiento_mensual: parseFloat(inputRateDesfavorable.value),
+          tasa_crecimiento_mensual: parseFloat(inputRateDesfavorable.value) / 100,
           factor_demanda: 1.0
         },
         proyectado: {
           nombre: "Proyectado",
-          tasa_crecimiento_mensual: parseFloat(inputRateProyectado.value),
+          tasa_crecimiento_mensual: parseFloat(inputRateProyectado.value) / 100,
           factor_demanda: 1.0
         },
         favorable: {
           nombre: "Favorable",
-          tasa_crecimiento_mensual: parseFloat(inputRateFavorable.value),
+          tasa_crecimiento_mensual: parseFloat(inputRateFavorable.value) / 100,
           factor_demanda: 1.0
         }
       }
