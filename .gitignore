@@ -2,3 +2,4 @@
 data/*
 !data/*.json
 __pycache__/
+.coverage
