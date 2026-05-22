@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Poblar Inputs
       inputAnr.value = data.inversion.objetivo_anr;
       inputIpc.value = data.inversion.factor_ipc_acumulado;
-      inputDispBase.value = data.oee.linea_base.disponibilidad;
-      inputPerf.value = data.oee.linea_base.rendimiento;
-      inputQuality.value = data.oee.linea_base.calidad;
+      inputDispBase.value = (data.oee.linea_base.disponibilidad * 100).toFixed(1);
+      inputPerf.value = (data.oee.linea_base.rendimiento * 100).toFixed(1);
+      inputQuality.value = (data.oee.linea_base.calidad * 100).toFixed(1);
 
       inputVolBase.value = data.produccion.volumen_mensual_base;
       inputPrecio.value = data.produccion.precio_unitario_promedio;
@@ -78,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       oee: {
         linea_base: {
-          disponibilidad: parseFloat(inputDispBase.value),
-          rendimiento: parseFloat(inputPerf.value),
-          calidad: parseFloat(inputQuality.value)
+          disponibilidad: parseFloat(inputDispBase.value) / 100,
+          rendimiento: parseFloat(inputPerf.value) / 100,
+          calidad: parseFloat(inputQuality.value) / 100
         },
         limite_disponibilidad: 0.85 // Límite físico por defecto
       },
