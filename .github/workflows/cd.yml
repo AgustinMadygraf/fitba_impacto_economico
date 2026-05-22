@@ -11,16 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Validate Secrets and Deploy
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          port: 5932
           key: ${{ secrets.VPS_KEY }}
+          port: 5932
+          debug: true
           script_stop: true
           script: |
-            echo "Secrets verified via successful SSH connection."
+            echo "SSH connection established successfully."
             cd /ruta/a/tu/proyecto
             git pull origin main
             echo "Deployment completed successfully."
