@@ -5,29 +5,22 @@ on:
     branches: [ main ]
 
 jobs:
-  validate-env:
-    runs-on: ubuntu-latest
-    environment: vps-production
-    steps:
-      - name: Validate Secrets
-        run: |
-          echo "VPS_KEY length: ${#VPS_KEY}"
-        env:
-          VPS_KEY: ${{ secrets.VPS_KEY }}
-
   deploy:
-    needs: validate-env
     runs-on: ubuntu-latest
     environment: vps-production
     steps:
       - uses: actions/checkout@v4
-        
-      - name: Debug and Deploy
+      
+      - name: Verify key fingerprint
         run: |
-          echo "VPS_KEY length: ${#VPS_KEY}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_KEY" > ~/.ssh/vps_key
+          chmod 600 ~/.ssh/vps_key
+          echo "Fingerprint del secreto en GitHub:"
+          ssh-keygen -y -f ~/.ssh/vps_key | ssh-keygen -lf -
         env:
           VPS_KEY: ${{ secrets.VPS_KEY }}
-          
+        
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
