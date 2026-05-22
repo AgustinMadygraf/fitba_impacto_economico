@@ -5,23 +5,30 @@ on:
     branches: [ main ]
 
 jobs:
+  validate-env:
+    runs-on: ubuntu-latest
+    environment: vps-production
+    steps:
+      - name: Validate Secrets
+        run: |
+          echo "Validating environment vps-production..."
+          if [ -z "${{ secrets.VPS_KEY }}" ]; then
+            echo "::error::VPS_KEY secret is missing!"
+            exit 1
+          else
+            echo "VPS_KEY secret is present (length: ${#VPS_KEY})."
+          fi
+          if [ -z "${{ secrets.VPS_HOST }}" ]; then
+            echo "::error::VPS_HOST secret is missing!"
+            exit 1
+          fi
+
   deploy:
+    needs: validate-env
     runs-on: ubuntu-latest
     environment: vps-production
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Debug Environment
-        run: |
-          echo "Environment: $GITHUB_JOB"
-          echo "Repository: $GITHUB_REPOSITORY"
-          echo "Secret VPS_HOST length: ${#VPS_HOST}"
-          echo "Secret VPS_USER length: ${#VPS_USER}"
-          echo "Secret VPS_KEY length: ${#VPS_KEY}"
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_KEY: ${{ secrets.VPS_KEY }}
         
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
