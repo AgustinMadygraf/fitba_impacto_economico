@@ -4,11 +4,12 @@
 - Lenguaje: Python.
 - Patrón: Clean Architecture.
 - Entrada: JSON dinámico en data/params.json.
+- Interfaz: Dashboard web con tres secciones (Entradas, Datos Intermedios, Salidas).
 
 ## 2. Reglas de Negocio (Fuente de Verdad)
-- Target de Repago: $8.492.000 (Solo el ANR otorgado).
+- Target de Repago: .492.000 (Solo el ANR otorgado).
 - Ajuste por Inflación: El Target debe actualizarse a valor presente usando el factor IPC del JSON.
-- Horizonte Temporal: Máximo 24 meses.
+- Horizonte Temporal: Máximo 24 meses (Límite técnico).
 - Línea Base Operativa: 
   - Disponibilidad (D0): 13,5% (0,135)
   - Rendimiento (Performance): 44,0% (0,44) -> CONSTANTE
@@ -29,3 +30,8 @@
 ## 4. Estándares de Calidad
 - Cobertura de Tests: Mínimo 80% (unitarios y de integración).
 - CI: Ejecución de tests y chequeo de sintaxis obligatorio en pre-push.
+
+## 5. Diseño de Interfaz (Transparencia de Proceso)
+- **Sección 1 (Entradas)**: Captura de parámetros operativos.
+- **Sección 2 (Datos Intermedios)**: Visualización de valores calculados (Inversión IPC, OEE real, Margen unitario).
+- **Sección 3 (Salidas)**: Resultados de repago y gráficos dinámicos.

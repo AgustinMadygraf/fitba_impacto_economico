@@ -1,7 +1,11 @@
 # SRS - Especificación de Requerimientos del Sistema
 
 ## 1. Introducción
-El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf en un horizonte de hasta 24 meses, aplicando las reglas de negocio definidas en GEMINI.md.
+El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf. 
+
+**Horizontes Temporales:**
+- **Límite de Simulación:** Hasta 24 meses (capacidad técnica del motor).
+- **KPI de Éxito:** Repago alcanzado en menos de 12 meses.
 
 ## 2. Entidades de Datos
 - Inversión
@@ -14,14 +18,14 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf en un 
 - **RF02:** Simulación de impacto económico basada en el modelo recursivo definido en GEMINI.md.
 - **RF03:** Generación de Reporte de Repago (punto de equilibrio) por escenario.
 - **RF04:** Validación de límites físicos (Capacidad operativa máxima).
-- **RF05:** Interfaz Gráfica de Usuario (Web Dashboard): Dashboard interactivo y responsivo optimizado para desktop y mobile.
-- **RF06:** Formulario de Simulación Dinámica: Permitir al usuario modificar en tiempo real todos los parámetros operativos y financieros (montos, IPC, OEE base, costos marginales, precios y tasas) y disparar simulaciones al instante sin reiniciar el servicio.
-- **RF07:** Visualización Gráfica Interactiva: Representación gráfica de la evolución mensual de la disponibilidad del OEE y las curvas de beneficio acumulado por escenario (utilizando Chart.js o similar).
-- **RF08:** API REST (FastAPI): Endpoint `GET /api/params` para servir la configuración base y `POST /api/simular` para calcular proyecciones con payloads variables.
+- **RF05:** Interfaz Gráfica de Usuario (Web Dashboard): Dashboard interactivo organizado en tres secciones funcionales (Entradas, Datos Intermedios y Salidas).
+- **RF06:** Formulario de Simulación Dinámica (Sección Entradas): Ajuste en tiempo real de parámetros operativos y financieros.
+- **RF07:** Visualización de Datos Intermedios (Sección Datos Intermedios): Mostrar cálculos derivados (Inversión Actualizada, OEE Base real, Márgenes) para transparencia del modelo.
+- **RF08:** Visualización Gráfica Interactiva (Sección Salidas): Resultados finales de repago, viabilidad y curvas de beneficio acumulado (Chart.js).
+- **RF09:** API REST (FastAPI): Endpoints para servir parámetros base y procesar simulaciones dinámicas.
 
 ## 4. Requerimientos No Funcionales
-- **RNF01:** Clean Architecture y DDD (Domain-Driven Design).
-- **RNF02:** Extensibilidad e independencia de frameworks.
-- **RNF03:** Experiencia de Usuario de Alto Rendimiento (Wow Factor): Interfaz construida con Bootstrap 5, paleta oscura premium, efectos glassmorphism, micro-animaciones en interacciones y tiempos de respuesta de la API menores a 50ms.
-- **RNF04:** Aislamiento del Framework de Entrega: FastAPI, Jinja2 y cualquier biblioteca frontend quedarán estrictamente confinados en la capa de Infraestructura, sin filtrar dependencias hacia las entidades o casos de uso.
-
+- **RNF01:** Clean Architecture y DDD.
+- **RNF02:** Independencia de frameworks.
+- **RNF03:** UX Premium (Wow Factor): Bootstrap 5, glassmorphism, micro-animaciones y respuesta < 50ms.
+- **RNF04:** Aislamiento de Infraestructura: Capas de dominio y casos de uso sin dependencias de FastAPI o librerías frontend.

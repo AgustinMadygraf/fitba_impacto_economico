@@ -49,7 +49,7 @@ graph TD
     UseCase --> Escenario
 ```
 
-- **Capa de Dominio (`src/entities/`)**: **Inmutable.** No se permite la importación de libreráas externas o dependencias del framework web.
+- **Capa de Dominio (`src/entities/`)**: **Inmutable.** No se permite la importación de librerías externas o dependencias del framework web.
 - **Capa de Casos de Uso (`src/use_cases/`)**: **Inmutable.** Sigue ejecutando la simulación basada en el modelo recursivo puro.
 - **Capa de Adaptadores de Interfaz (`src/interface_adapter/`)**:
   - `JSONSimulacionPresenter`: Nueva clase que implementa la interfaz `SimulacionPresenter`. Almacena en memoria el resultado formateado como un diccionario JSON estándar de Python.
@@ -86,51 +86,7 @@ sequenceDiagram
     Gateway-->>Controller: Entidades de Dominio
     
     loop Para cada escenario (Desfavorable, Proyectado, Favorable)
-        Controller->>UseCase: Instanciar SimelarImpactoEconomico(...)
-        Controller->>UseCase: ejecutar()
-        activate UseCase
-        UseCase-->>Controller: Mes de repago (int o None)
-        deactivate UseCase
-    end
-    
-    Controller->>Presenter: presentar_resultados(target, oee_base, resultados)
-    activate Presenter
-    Note over Presenter: Convierte a DTO serializable<br/>y lo guarda en self.response_data
-    Presenter-->>Controller: Ok
-    deactivate Presenter
-    Controller-->>API: Ok
-    deactivate Controller
-    
-    API-->>JS: HTTP 200 OK (JSON Response)
-    deactivate API
-    activate JS
-    Note over JS: Actualiza tablas y<br/>redibuja Chart.js
-    JS-->>Usuario: Visualización del Dashboard Actualizado
-    deactivate JS
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Usuario
-    participant JS as Frontend (app.js)
-    participant API as FastAPI (app.py)
-    participant Gateway as RequestParametrosGateway
-    participant Presenter as JSONSimulacionPresenter
-    participant Controller as SimulacionController
-    participant UseCase as SimularImpactoEconomico
-
-    Usuario->>JS: Clic en "Ejecutar Simulación"
-    JS->>API: HTTP POST /api/simular (JSON Payload)
-    activate API
-    API->>Gateway: Instanciar con datos de Request
-    API->>Presenter: Instanciar JSONSimulacionPresenter
-    API->>Controller: Instanciar SimulacionController(Gateway, Presenter)
-    API->>Controller: ejecutar_simulacion()
-    activate Controller
-    Controller->>Gateway: get_inversion(), get_producto(), etc.
-    Gateway-->>Controller: Entidades de Dominio
-    
-    loop Para cada escenario (Desfavorable, Proyectado, Favorable)
-        Controller->>UseCase: Instanciar SimelarImpactoEconomico(...)
+        Controller->>UseCase: Instanciar SimularImpactoEconomico(...)
         Controller->>UseCase: ejecutar()
         activate UseCase
         UseCase-->>Controller: Mes de repago (int o None)
@@ -303,6 +259,6 @@ Para garantizar la compatibilidad con frameworks de pruebas automatizadas, todos
 ## 6. Siguientes Pasos
 Una vez resueltas las dudas listadas en [DISCOVERY.md](file:///home/agustin/proyectos_software/fitba_impacto_economico/docs/DISCOVERY.md), se procederá a:
 1. Instalar dependencias (`fastapi`, `uvicorn`, `pydantic`).
-2. Crear la estructura de directorios para estático  en `src/infrastructure/web/`.
+2. Crear la estructura de directorios para estáticos en `src/infrastructure/web/`.
 3. Implementar el backend de FastAPI y probar los endpoints vía Swagger UI (`/docs`).
 4. Desarrollar la interfaz frontend de alto impacto visual.
