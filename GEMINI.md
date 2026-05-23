@@ -1,34 +1,24 @@
 # Instrucciones Técnicas y Reglas de Negocio - FITBA
 
 ## 1. Mandatos Técnicos
-- **Rol Proactivo:** El agente opera como un consultor técnico senior.
-- Lenguaje: Python.
-- Patrón: Clean Architecture + DDD.
-- UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
-- **Regla de Oro - Persistencia Orientada al Dominio:** La configuración del sistema (`params.json`) debe mantener un mapeo 1 a 1 con las entidades del dominio. Cada entidad fundamental debe tener su propio nodo independiente en el archivo de configuración, asegurando desacoplamiento y cohesión.
+- **Patrón:** Clean Architecture + DDD.
+- **Persistencia Orientada al Dominio (Regla de Oro):** La configuración (`params.json`) debe mantener un mapeo **1:1** con las 8 entidades fundamentales del dominio. La estructura debe ser **plana y desacoplada** para facilitar la mantenibilidad y la independencia de componentes.
 
-## 2. Reglas de Negocio (Fuente de Verdad)
-- **Modelo de Precio y Valor Presente:** Flujos operativos a valor presente.
-- **Dinamismo Financiero (Inflación):** 
-  - **Target de Repago:** 8.492.000 (Monto base del ANR).
-  - **Capitalización Compuesta:** Se utiliza la entidad `IndiceFinanciero` para actualizar el Target de forma exponencial mes a mes.
-- **Horizonte Temporal:** Máximo 24 meses.
-- **KPI de Éxito:** Repago alcanzado en < 12 meses.
-- **Modelo de Producción:** Flujos independientes basados en:
-  - **Capacidad Instalada:** Límite físico (independiente).
-  - **OEE:** Eficiencia operativa (independiente).
-  - La intersección (Capacidad Efectiva) se calcula en el Caso de Uso.
+## 2. Entidades de Dominio y Estructura (Fuente de Verdad)
+Para garantizar la independencia física e industrial, el sistema se estructura en torno a estas 8 entidades:
+1. **Inversion**: Datos financieros del ANR.
+2. **CapacidadInstalada**: Límite físico (independiente).
+3. **OEE_Base**: Eficiencia operativa (independiente).
+4. **IPC_Serie**: Inflación acumulada (IndiceFinanciero).
+5. **Productos**: Catálogo de productos.
+6. **Lineas**: Catálogo de máquinas.
+7. **MixObjetivo**: Configuración de producción.
+8. **Escenarios**: Proyecciones de mercado.
 
-## 3. Estructura de Entidades (1:1 con Configuración)
-Para mantener la independencia, el sistema mapea las siguientes 8 entidades al archivo `params.json`:
-1. `inversion`
-2. `capacidad_instalada`
-3. `oee_base`
-4. `ipc_serie`
-5. `productos`
-6. `lineas`
-7. `mix_objetivo`
-8. `escenarios`
+## 3. Reglas de Negocio
+- **Independencia Operativa:** La `CapacidadInstalada` (física) y el `OEE_Base` (operativo) no deben anidarse. La intersección lógica (Capacidad Efectiva) es responsabilidad exclusiva de la capa de Caso de Uso.
+- **Dinamismo Financiero:** El Target de Repago se capitaliza mediante el `IndiceFinanciero` (IPC).
+- **Modelo de Precio:** Operamos íntegramente a valor presente.
 
 ## 4. Estándares de Calidad
 - Bootstrap 100%: Layouts responsivos nativos.

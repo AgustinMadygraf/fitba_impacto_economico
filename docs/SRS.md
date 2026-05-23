@@ -1,9 +1,6 @@
 # SRS - Especificación de Requerimientos del Sistema
 
-## 1. Introducción
-El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
-
-## 2. Entidades de Dominio (Mapeo 1:1 con Configuración)
+## 1. Entidades de Dominio (Mapeo 1:1 con Configuración)
 Para asegurar el desacoplamiento, la configuración del sistema refleja explícitamente estas 8 entidades:
 1. **Inversion**: Datos financieros del ANR.
 2. **CapacidadInstalada**: Límite físico (independiente de OEE).
@@ -14,10 +11,6 @@ Para asegurar el desacoplamiento, la configuración del sistema refleja explíci
 7. **MixProduccion**: Configuración de producción.
 8. **Escenario**: Proyecciones de mercado.
 
-## 3. Requerimientos Funcionales
-- **RF01**: Carga basada en entidades independientes.
-- **RF02**: Simulación recursiva con capitalización compuesta.
-
-## 4. Decisiones Técnicas
-- **Desacoplamiento Industrial:** Las entidades `CapacidadInstalada` y `OEE` se tratan como entes físicos y operativos independientes, calculando la capacidad efectiva exclusivamente en la capa de Caso de Uso.
+## 2. Decisiones Técnicas
+- **Desacoplamiento Industrial:** `CapacidadInstalada` y `OEE` se tratan como entes físicos y operativos independientes, calculando la capacidad efectiva exclusivamente en el Caso de Uso.
 - **Persistencia Orientada al Dominio:** La configuración JSON es plana y refleja 1 a 1 las 8 entidades del dominio para facilitar la mantenibilidad.
