@@ -25,11 +25,11 @@ measure_step() {
 measure_step "Tests" cd backend && source .venv/bin/activate && pytest
 
 # 2. Configuración
-if [ ! -f .env ]; then
+if [ ! -f backend/.env ]; then
     log_error "El archivo .env no existe."
     exit 1
 fi
-source .env
+source backend/.env
 
 : "${VPS_USER:?VPS_USER no definido}"
 : "${VPS_IP:?VPS_IP no definido}"
@@ -44,6 +44,6 @@ measure_step "Git Push" git push origin main
 log_info "Ejecutando operaciones remotas..."
 # 1. Despliegue y 2. Actualización de timestamp en remoto
 TIMESTAMP=$(date +%s)
-STATUS=$(curl -o /dev/null -s -w "%{http_code}" https://fitba.datamaq.com.ar/api/config || echo "000")
+STATUS=$(curl -o /dev/null -s -w "%{http_code}" ${URL_BASE}/api/config || echo "000")
 
 log_info "Despliegue finalizado exitosamente. Versión cache-bust: $TIMESTAMP"
