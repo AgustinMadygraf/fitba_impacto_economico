@@ -3,7 +3,7 @@ from src.interface_adapter.repositories.json_parametros_repository import JsonPa
 
 def test_parametros_gateway_impl_mapping():
     raw_data = {
-        "inversion": {"objetivo_anr": 1000.0},
+        "inversion": {"objetivo_anr": 1000.0, "fecha_base": "2025-01-01"},
         "catalogo": {
             "productos": [{"id": "p1", "nombre": "Prod1", "precio": 10.0, "costo": 5.0}],
             "lineas": [{"id": "l1", "nombre": "Lin1", "capacidad_nominal": 100.0, "productos_compatibles": ["p1"]}]

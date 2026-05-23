@@ -1,11 +1,8 @@
-from typing import Any
-from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
-from src.interface_adapter.presenter.simulacion_presenter import SimulacionPresenter
-from src.entities.escenario import Escenario
 from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
+from src.entities.escenario import Escenario
 
 class SimulacionController:
-    def __init__(self, gateway: Any, presenter: SimulacionPresenter, logger: Any):
+    def __init__(self, gateway, presenter, logger):
         self.gateway = gateway
         self.presenter = presenter
         self.logger = logger
@@ -17,18 +14,17 @@ class SimulacionController:
         lineas = self.gateway.get_lineas_produccion()
         capacidad = self.gateway.get_capacidad_instalada()
         mix = self.gateway.get_mix_produccion()
-        
+    
         escenarios_data = self.gateway.get_escenarios_raw()
-        resultados = []
-        proyecciones = {}
         
+        proyecciones = {}
         for clave, datos in escenarios_data.items():
             escenario = Escenario(
                 nombre=datos["nombre"],
                 tasa_crecimiento=datos["tasa_crecimiento_mensual"],
                 factor_demanda=datos.get("factor_demanda", 1.0)
             )
-            
+    
             simulador = SimularImpactoEconomico(
                 inversion=inversion,
                 productos=productos,
@@ -39,14 +35,8 @@ class SimulacionController:
                 escenario=escenario,
                 logger=self.logger
             )
-            
-            mes_repago, serie_proyeccion = simulador.ejecutar()
-            resultados.append({"nombre": escenario.nombre, "tasa": escenario.tasa_crecimiento, "mes_repago": mes_repago})
+    
+            _, serie_proyeccion = simulador.ejecutar()
             proyecciones[clave] = serie_proyeccion
-
-        self.presenter.presentar_resultados(
-            target_repago=inversion.monto_actualizado,
-            oee_base=oee_base.valor,
-            resultados=resultados,
-            proyecciones=proyecciones
-        )
+    
+        self.presenter.presentar_resultados(mes_repago=None, proyecciones=proyecciones)

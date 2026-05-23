@@ -8,9 +8,8 @@ def test_ejecutar_simulacion():
     presenter = MagicMock()
     logger = MagicMock()
     
-    # Setup: Create a real inversion object (or mock it correctly)
     indice = IndiceFinanciero("IPC", {1: 0.1}, 0.1)
-    inversion = Inversion(monto_anr=1000.0, indice_base=indice)
+    inversion = Inversion(monto_anr=1000.0, fecha_base="2025-01-01", indice_base=indice)
     
     gateway.get_inversion.return_value = inversion
     gateway.get_productos.return_value = [MagicMock(id="p1", margen_contribucion_unitario=5.0)]

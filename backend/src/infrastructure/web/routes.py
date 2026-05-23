@@ -19,7 +19,7 @@ web_logger = get_logger("FITBA.Web")
 class OEEBaseSchema(BaseModel):
     disponibilidad: float; rendimiento: float; calidad: float; limite_disponibilidad: float
 class InversionSchema(BaseModel):
-    objetivo_anr: float
+    objetivo_anr: float; fecha_base: str
 class ProductoSchema(BaseModel):
     id: str; nombre: str; precio_unitario: float; costo_marginal_unitario: float
 class LineaProduccionSchema(BaseModel):
@@ -48,13 +48,10 @@ def get_params():
     try:
         loader = ConfigLoader()
         raw_data = loader._raw_data
-        
-        # Mapeo correcto: params.json contiene 'precio' y 'costo'
         productos = [
             {"id": p["id"], "nombre": p["nombre"], "precio": p["precio"], "costo": p["costo"]}
             for p in raw_data["catalogo"]["productos"]
         ]
-        
         return {
             "inversion": {"monto_anr": raw_data["inversion"]["objetivo_anr"], "monto_actualizado": raw_data["inversion"]["objetivo_anr"]},
             "oee": raw_data["oee_base"],
@@ -62,18 +59,15 @@ def get_params():
             "lineas_produccion": raw_data["catalogo"]["lineas"],
             "ipc_serie": [{"mes": k, "tasa": v} for k, v in raw_data["ipc_serie"]["serie_mensual"].items()]
         }
-    except KeyError as ke:
-        web_logger.error(f"Error de clave en GET /api/v1/simulacion/parametros: Falta la clave {str(ke)}")
-        raise HTTPException(status_code=500, detail=f"Error de estructura de datos: Falta la clave {str(ke)}")
     except Exception as e:
-        web_logger.error(f"Error genérico en GET /api/v1/simulacion/parametros: {str(e)}")
+        web_logger.error(f"Error en GET /api/v1/simulacion/parametros: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/v1/simulacion/ejecutar")
 def post_simular(payload: SimularRequestSchema):
     try:
         raw_dict = {
-            "inversion": {"objetivo_anr": payload.inversion.objetivo_anr},
+            "inversion": {"objetivo_anr": payload.inversion.objetivo_anr, "fecha_base": payload.inversion.fecha_base},
             "oee_base": payload.oee_base.model_dump(),
             "catalogo": {
                 "productos": [{"id": p.id, "nombre": p.nombre, "precio_unitario": p.precio_unitario, "costo_marginal_unitario": p.costo_marginal_unitario} for p in payload.catalogo.productos],
@@ -85,7 +79,7 @@ def post_simular(payload: SimularRequestSchema):
         }
         gateway = JsonParametrosRepository(raw_dict)
         presenter = JSONSimulacionPresenter()
-        controller = SimulacionController(gateway, presenter, get_logger("FITBA.SimulacionWeb"))
+        controller = SimulacionController(gateway, presenter, get_logger("FITBA.SimulacionSimulacion"))
         controller.ejecutar_simulacion()
         return presenter.response_data
     except Exception as e:

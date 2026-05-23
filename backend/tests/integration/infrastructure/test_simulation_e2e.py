@@ -6,7 +6,7 @@ client = TestClient(app)
 
 def test_full_simulation_flow():
     payload = {
-        "inversion": {"objetivo_anr": 850000.0},
+        "inversion": {"objetivo_anr": 850000.0, "fecha_base": "2025-02-01"},
         "oee_base": {
             "disponibilidad": 0.135,
             "rendimiento": 0.44,

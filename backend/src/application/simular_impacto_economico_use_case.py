@@ -1,4 +1,8 @@
+from datetime import datetime
+from src.application.date_helper import add_months
 from typing import Optional, Any, List, Dict, Tuple
+
+
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
@@ -8,7 +12,6 @@ from src.entities.linea_produccion import LineaProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 
 class SimularImpactoEconomico:
-    """Caso de uso para calcular el punto de equilibrio con entidades desacopladas e inflación ajustada."""
     
     def __init__(
         self, 
@@ -31,29 +34,31 @@ class SimularImpactoEconomico:
         self.horizonte_maximo = 24
         self.logger = logger
 
-    def ejecutar(self) -> Tuple[Optional[int], List[float]]:
+    def ejecutar(self) -> Tuple[Optional[int], List[Dict[str, Any]]]:
         beneficio_acumulado = 0.0
         disponibilidad_t = self.oee_base.disponibilidad
         
         mes_repago = None
         proyeccion_mensual = []
         
-        # Volumen base operativo (calculado mediante intersección desacoplada)
+        fecha_base = datetime.strptime(self.inversion.fecha_base, "%Y-%m-%d")
+        
         beneficio_base = self._calcular_beneficio_mensual(self.capacidad_instalada.capacidad_nominal_total * self.oee_base.valor)
         
         for mes in range(1, self.horizonte_maximo + 1):
-            # --- NUEVA LÓGICA DE INFLACIÓN ---
-            # El caso de uso delega la responsabilidad del cálculo a la entidad.
+            fecha_actual = add_months(fecha_base, mes)
+            label_fecha = fecha_actual.strftime("%m/%Y")
+            
+            # Inflación
             if self.inversion.indice_base:
                 factor_inflacion = self.inversion.indice_base.calcular_factor_capitalizacion(mes)
                 target_actualizado_t = self.inversion.monto_anr * factor_inflacion
             else:
                 target_actualizado_t = self.inversion.monto_anr
-            # ---------------------------------
             
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             
-            # Intersección: Capacidad Física * OEE Operativo
+            # OEE
             oee_t = disponibilidad_t * self.oee_base.rendimiento * self.oee_base.calidad
             capacidad_efectiva = self.capacidad_instalada.capacidad_nominal_total * min(oee_t, 1.0) * self.escenario.factor_demanda
             
@@ -63,7 +68,12 @@ class SimularImpactoEconomico:
             if delta_beneficio > 0:
                 beneficio_acumulado += delta_beneficio
             
-            proyeccion_mensual.append(beneficio_acumulado)
+            # Enriquecer resultado con etiqueta temporal
+            proyeccion_mensual.append({
+                "mes": mes,
+                "fecha": label_fecha,
+                "beneficio_acumulado": beneficio_acumulado
+            })
             
             if mes_repago is None and beneficio_acumulado >= target_actualizado_t:
                 mes_repago = mes

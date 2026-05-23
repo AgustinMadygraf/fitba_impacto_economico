@@ -19,7 +19,7 @@ class JsonParametrosRepository(ParametrosGateway):
             idx_data = self._raw_data["ipc_serie"]
             serie = {int(k): v for k, v in idx_data["serie_mensual"].items()}
             indice = IndiceFinanciero(nombre=idx_data["nombre"], serie_mensual=serie, tasa_proyectada=idx_data["tasa_proyectada"])
-        return Inversion(monto_anr=data["objetivo_anr"], indice_base=indice)
+        return Inversion(monto_anr=data["objetivo_anr"], fecha_base=data["fecha_base"], indice_base=indice)
 
     def get_productos(self) -> List[Producto]:
         return [Producto(id=p["id"], nombre=p["nombre"], precio_unitario=p["precio_unitario"], costo_marginal_unitario=p["costo_marginal_unitario"]) for p in self._raw_data["catalogo"]["productos"]]
