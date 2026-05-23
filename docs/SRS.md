@@ -13,8 +13,9 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf, consi
 ## 2. Entidades de Datos
 - **Inversión**: Datos financieros del ANR.
 - **Índice Financiero (IPC)**: Serie temporal de inflación intermensual para capitalización del target.
-- **OEE Dinámico**: Parámetros operativos (Disponibilidad, Rendimiento, Calidad).
-- **Líneas de Producción**: Definición de capacidad instalada y productos compatibles.
+- **Capacidad Instalada**: Límites físicos operativos (independiente de la eficiencia).
+- **OEE**: Factores de eficiencia operativa (independiente de la capacidad instalada).
+- **Líneas de Producción**: Definición de máquinas y productos compatibles.
 - **Productos**: Definición de márgenes de contribución.
 - **Mix Objetivo**: Configuración de producción por producto.
 - **Escenarios**: Proyecciones de mercado (Tasa de crecimiento, factor de demanda).
@@ -31,7 +32,7 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf, consi
 - **RF09**: API REST (FastAPI).
 - **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo.
 - **RF11**: Gestión de Productos y Líneas (Dinámico): CRUD básico de productos, líneas y su asociación en el mix.
-- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva.
+- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva basado en la intersección independiente de Capacidad Instalada y factores OEE.
 
 ## 4. Requerimientos No Funcionales
 - **RNF01**: Clean Architecture y DDD.
@@ -42,5 +43,6 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf, consi
 ## 5. Decisiones Técnicas (Resueltas)
 - **Estrategia de Testing:** Framework pytest con estructura por capas (unit/integration) y cobertura mínima del 80%.
 - **Infraestructura CI:** Uso de hooks de git locales (pre-push.sh) como primera barrera de calidad.
-- **Lógica de Inflación Exponencial:** El sistema ya no usa un factor IPC fijo. Utiliza una entidad `IndiceFinanciero` que aplica tasas mensuales sobre el target de inversión de forma acumulativa para determinar el punto de equilibrio real.
+- **Desacoplamiento de Producción:** Se ha formalizado la separación entre *Capacidad Instalada* (física) y *OEE* (eficiencia), tratándolos como entidades de dominio independientes para mejorar la modelización.
+- **Lógica de Inflación Exponencial:** El sistema utiliza una entidad `IndiceFinanciero` que aplica tasas mensuales sobre el target de inversión de forma acumulativa para determinar el punto de equilibrio real.
 - **Naturaleza de los Productos:** Se reconoce que los productos son variables y el precio de referencia es una abstracción para el cálculo del punto de equilibrio inicial.

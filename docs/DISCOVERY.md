@@ -11,3 +11,8 @@
 2. **Validación Dinámica**: Exponer reglas de validación (límites `gt=0`, etc.) a través del endpoint de parámetros para que la UI se configure automáticamente.
 3. **Estandarización de Observabilidad**: Implementar trazas distribuidas (`X-Correlation-ID`) en todo el frontend para correlacionar errores de UI con logs de backend.
 
+
+## Deuda Técnica Identificada
+- **Acoplamiento de Entidades (Capacidad vs. OEE):** Actualmente, la configuración de capacidad nominal está acoplada al nodo de OEE en `params.json`.
+  - *Decisión:* Se ha mantenido este acoplamiento para priorizar la estabilidad actual del sistema, pero se reconoce como deuda técnica.
+  - *Acción futura:* Refactorizar la configuración para desacoplar físicamente estos dominios (Capacidad Instalada vs. Eficiencia Operativa) y actualizar los Gateways correspondientes.

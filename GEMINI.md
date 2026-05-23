@@ -1,7 +1,7 @@
 # Instrucciones Técnicas y Reglas de Negocio - FITBA
 
 ## 1. Mandatos Técnicos
-- **Rol Proactivo:** El agente opera como un consultor técnico senior. En cada interacción, debe proponer acciones concretas, identificar riesgos potenciales y guiar al usuario a través del roadmap, evitando estados de espera pasiva.
+- **Rol Proactivo:** El agente opera como un consultor técnico senior. En cada interacción, debe proponer acciones concretras, identificar riesgos potenciales y guiar al usuario a través del roadmap, evitando estados de espera pasiva.
 - Lenguaje: Python.
 - Patrón: Clean Architecture.
 - UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
@@ -17,8 +17,12 @@
 - **Horizonte Temporal:** Máximo 24 meses (Límite técnico).
 - **KPI de Éxito:** Repago alcanzado en menos de 12 meses.
 - **Línea Base Operativa:** OEE Base 4,99%.
-- **Modelo de Producción:** El sistema opera bajo "Flujos de Producción" compuestos por una o más máquinas. La capacidad efectiva de un flujo es determinada por el cuello de botella (la máquina con menor capacidad o dependencia operativa).
-  - *Nota de Alcance Inicial*: El sistema se despliega restringido a un único producto y una única máquina, manteniendo la estructura extensible para futuros flujos complejos.
+- **Modelo de Producción:** El sistema opera bajo "Flujos de Producción" independientes.
+  - **Capacidad Instalada:** Define el límite físico/teórico de producción. Configuración independiente de la eficiencia operativa.
+  - **OEE:** Define los factores de eficiencia (Disponibilidad, Rendimiento, Calidad). Configuración independiente de la capacidad física.
+  - La **Capacidad Efectiva** es el resultado de la intersección de ambas entidades (Capacidad_Nominal * OEE_Valor).
+  - *Nota de Alcance Inicial*: El sistema se despliega restringido a una configuración de 1 Producto / 1 Máquina, manteniendo la estructura extensible.
+- **Dependencias Operativas:** Se soportan flujos secuenciales (donde una máquina A es necesaria para que B funcione).
 
 ## 3. Diseño de Interfaz (Transparencia de Proceso)
 - **Sección 1 (Entradas)**: Captura de parámetros.

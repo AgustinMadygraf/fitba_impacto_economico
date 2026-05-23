@@ -3,7 +3,7 @@
 Este documento define la arquitectura para el sistema FITBA, manteniendo la Clean Architecture y facilitando la migración progresiva a TypeScript.
 
 ## 1. Alineación de Capas (DDD)
-- Dominio (src/entities/): Entidades puras (Productos, Líneas, Mix). Sin dependencias.
+- Dominio (src/entities/): Entidades puras (Productos, Líneas, Mix, CapacidadInstalada, OEE, IndiceFinanciero). Las entidades de producción (Capacidad e OEE) están desacopladas para independencia de configuración.
 - Casos de Uso (src/use_cases/): Lógica de simulación.
 - Adaptadores (src/interface_adapter/): Gateways y Presenters.
 - Infraestructura (src/infrastructure/): API FastAPI y Frontend JS/TS.
