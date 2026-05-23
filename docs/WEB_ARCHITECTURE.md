@@ -194,7 +194,7 @@ La interfaz se construirá con un enfoque **Mobile First** y diseño **Premium D
 
 1.  **Sección de Entradas (Variables de Control):**
     - Controles interactivos para modificar los parámetros de inversión, OEE base, producción y escenarios.
-    - Ubicación: Panel lateral (Sidebar) o sección superior.
+    - Ubicación: Columna responsiva de Bootstrap (aside.col-lg-4).
     - Propósito: Permitir al usuario "jugar" con las variables del modelo.
 
 2.  **Sección de Datos Intermedios (Cálculos de Proceso):**
