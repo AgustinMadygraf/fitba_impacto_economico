@@ -23,3 +23,4 @@
   - [x] Implementar cálculo de proyecciones mensuales (trayectoria de beneficio) en el Backend (`SimularImpactoEconomico`).
   - [x] Exponer datasets de proyecciones a través de `/api/v1/simulacion/ejecutar`.
   - [x] Migrar lógica de `SimulationDomain` (Frontend) para consumir datasets del Backend (Eliminación de redundancia).
+- [x] Implementar UI en la sección de Entradas para visualizar/editar la serie de IPC.
