@@ -5,13 +5,11 @@
 - **Estrategia de Testing:** Framework **pytest** con estructura de carpetas por capas (unit/integration) y cobertura mínima del 80%.
 - **Infraestructura CI:** Uso de hooks de git locales (`pre-push.sh`) como primera barrera de calidad.
 - **Lógica de IPC:** El ajuste por inflación se aplica sobre el monto objetivo (Target) inicial, no sobre los flujos mensuales.
-- **Modelo de Producción:** Se operará bajo "Flujos de Producción" que agrupan máquinas dependientes.
 
 ## 2. Modelo de Negocio (Pendientes)
 1. **Mix de Ventas:** ¿Cómo se distribuye el mix de producción? ¿Es constante o varía con el volumen?
 2. **Capacidad de Absorción:** ¿Se garantiza la venta del 100% incremental (Factor Demanda)?
 3. **Costos de Escalamiento:** ¿A partir de qué volumen el costo de hora operativa (2.000) requiere la apertura de nuevos turnos?
-4. **Diversificación de Productos (Crudos):** Si la confeccionadora funciona sin la impresora (bolsa cruda), ¿el mercado paga lo mismo o es un producto distinto con diferente margen?
 5. **Estandarización de Impresoras:** ¿La "Impresora de Bolsas" dedicada tiene la misma velocidad/capacidad que la "Impresora en línea"?
 6. **Gestión de Inventario Intermedio (Buffer):** ¿Existe stock intermedio entre máquinas dependientes o el sistema se detiene si una máquina falla (flujo puro)?
 
