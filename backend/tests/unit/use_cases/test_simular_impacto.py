@@ -38,8 +38,11 @@ def test_simular_impacto_repago():
     )
 
     # Execute
-    mes_repago = simulacion.ejecutar()
+    mes_repago, proyecciones = simulacion.ejecutar()
 
     # Assert
     assert mes_repago is not None
+    assert isinstance(mes_repago, int)
     assert mes_repago <= 24
+    assert len(proyecciones) == 24
+    assert proyecciones[-1] >= 1100

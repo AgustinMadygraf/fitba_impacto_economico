@@ -1,7 +1,3 @@
-"""
-Path: src/interface_adapter/presenter/json_presenter.py
-"""
-
 from src.interface_adapter.presenter.simulacion_presenter import SimulacionPresenter
 
 class JSONSimulacionPresenter(SimulacionPresenter):
@@ -13,7 +9,13 @@ class JSONSimulacionPresenter(SimulacionPresenter):
     def __init__(self):
         self.response_data = {}
 
-    def presentar_resultados(self, target_repago: float, oee_base: float, resultados: list):
+    def presentar_resultados(
+        self, 
+        target_repago: float, 
+        oee_base: float, 
+        resultados: list,
+        proyecciones: dict = None
+    ):
         """
         Guarda los resultados formateados en un formato plano de diccionario.
         """
@@ -29,5 +31,6 @@ class JSONSimulacionPresenter(SimulacionPresenter):
                     "viable": res['mes_repago'] is not None and res['mes_repago'] <= 24
                 }
                 for res in resultados
-            ]
+            ],
+            "proyecciones": proyecciones or {}
         }

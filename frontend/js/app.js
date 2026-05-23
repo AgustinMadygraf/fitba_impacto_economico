@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       poblarFormulario(data);
       loading.classList.remove('d-none');
       try {
-        const results = await SimulationController.runSimulation(FormBinder.getSimulationData());
+        const formData = FormBinder.getSimulationData();
+        if (getMode() === 'development') console.debug('[FITBA] Simulación inicial con datos:', formData);
+        const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
       } catch (error) {
         if (getMode() === 'development') console.error('Error en simulación automática:', {error});
@@ -44,10 +46,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     loading.classList.remove('d-none');
     
     try {
-      const results = await SimulationController.runSimulation(FormBinder.getSimulationData());
+      const formData = FormBinder.getSimulationData();
+      if (getMode() === 'development' || true) { // Forzado temporalmente para depuración solicitada
+        console.group('[FITBA] Depuración de Simulación');
+        console.info('1. Datos recolectados del formulario:', formData);
+      }
+
+      const results = await SimulationController.runSimulation(formData);
+      
+      if (getMode() === 'development' || true) {
+        console.info('2. Resultados recibidos del Backend:', results);
+        console.groupEnd();
+      }
+
       actualizarUI(results);
     } catch (error) {
+      console.error('[FITBA] Error crítico en simulación:', error);
       alert('Error en simulación: ' + error.message);
+      if (getMode() === 'development' || true) console.groupEnd();
     } finally {
       loading.classList.add('d-none');
     }

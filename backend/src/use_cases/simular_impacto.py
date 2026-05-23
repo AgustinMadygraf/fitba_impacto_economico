@@ -1,4 +1,4 @@
-from typing import Optional, Any, List, Dict
+from typing import Optional, Any, List, Dict, Tuple
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
@@ -28,36 +28,48 @@ class SimularImpactoEconomico:
         self.horizonte_maximo = 24
         self.logger = logger
         
-        # Calcular capacidad total del sistema
+        # Calcular capacidad total del sistema (Sumatoria de capacidades nominales)
         self.capacidad_total = sum(l.capacidad_nominal for l in lineas_produccion)
 
-    def ejecutar(self) -> Optional[int]:
+    def ejecutar(self) -> Tuple[Optional[int], List[float]]:
+        """
+        Ejecuta la simulación y retorna una tupla con:
+        (mes_repago, proyeccion_acumulada_mensual)
+        """
         beneficio_acumulado = 0.0
         disponibilidad_t = self.oee_base.disponibilidad
         inversion_objetivo = self.inversion.monto_actualizado
         
+        mes_repago = None
+        proyeccion_mensual = []
+        
+        # Volumen base operativo (línea de base inamovible)
+        # Capacidad Real = Capacidad Nominal * OEE
+        capacidad_base = self.capacidad_total * self.oee_base.valor
+        beneficio_base = self._calcular_beneficio_mensual(capacidad_base)
+        
         for mes in range(1, self.horizonte_maximo + 1):
+            # La optimización incrementa la disponibilidad
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             
-            # 1. Capacidad efectiva total
-            capacidad_efectiva = self._calcular_capacidad_efectiva(disponibilidad_t)
+            # Nueva Capacidad Real = Capacidad Nominal * (D_t * R_base * Q_base)
+            oee_t = disponibilidad_t * self.oee_base.rendimiento * self.oee_base.calidad
+            capacidad_efectiva = self.capacidad_total * min(oee_t, 1.0) * self.escenario.factor_demanda
             
-            # 2. Beneficio ponderado por mix
             beneficio_mensual = self._calcular_beneficio_mensual(capacidad_efectiva)
             
-            if beneficio_mensual > 0:
-                beneficio_acumulado += beneficio_mensual
+            # El impacto económico es el beneficio EXTRA generado por la optimización
+            delta_beneficio = beneficio_mensual - beneficio_base
             
-            if beneficio_acumulado >= inversion_objetivo:
-                return mes
+            if delta_beneficio > 0:
+                beneficio_acumulado += delta_beneficio
             
-        return None
-
-    def _calcular_capacidad_efectiva(self, disponibilidad_t: float) -> float:
-        # TODO: Implementar lógica de cuello de botella por flujo de producción
-        # Por ahora, usamos una simplificación agregada
-        factor_disponibilidad = min(disponibilidad_t, 1.0) # Simplificación
-        return self.capacidad_total * factor_disponibilidad * self.escenario.factor_demanda
+            proyeccion_mensual.append(beneficio_acumulado)
+            
+            if mes_repago is None and beneficio_acumulado >= inversion_objetivo:
+                mes_repago = mes
+            
+        return mes_repago, proyeccion_mensual
 
     def _calcular_beneficio_mensual(self, volumen_total: float) -> float:
         beneficio_total = 0.0
