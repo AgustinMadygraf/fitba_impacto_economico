@@ -36,6 +36,7 @@
                 <div class="mb-3">
                   <label for="input-anr" class="form-label text-muted">ANR Otorgado ($)</label>
                   <input type="number" step="1000" class="form-control" id="input-anr" required>
+                  <input type="hidden" id="input-fecha-base">
                 </div>
                 <div class="mb-3">
                   <label for="input-ipc" class="form-label text-muted">IPC Acumulado (%)</label>
@@ -167,7 +168,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
   <!-- Scripts cargados en orden -->
   <script src="/js/logger.js"></script>
-  <script type="module" src="/js/app.js?v=__TIMESTAMP__"></script>
+  <script type="module" src="/js/simulationDashboard.js?v=__TIMESTAMP__"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Toast Container -->

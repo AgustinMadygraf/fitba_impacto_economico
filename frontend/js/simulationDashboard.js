@@ -1,5 +1,5 @@
 /**
- * Path: src/infrastructure/web/static/js/app.js
+ * Path: src/infrastructure/web/static/js/simulationDashboard.js
  */
 
 import { SimulationController } from './simulationController.js';
@@ -8,7 +8,6 @@ import { UIUpdater } from './uiUpdater.js';
 import { UINotifier } from './uiNotifier.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const getMode = () => (window.APP_CONFIG && window.APP_CONFIG.mode) || 'production';
   const form = document.getElementById('form-simulacion');
   const loading = document.getElementById('loading');
   const canvasElement = document.getElementById('chart-proyeccion');
@@ -20,37 +19,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     .then(async data => {
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
-      UINotifier.showInfo('Iniciando carga inicial...');
       try {
         const formData = FormBinder.getSimulationData();
         const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
-        UINotifier.showSuccess('Simulación inicial completada.');
       } catch (error) {
-        console.warn("App UI Warning (Init): Check initialization state", error);
-        UINotifier.showError('Error en la simulación inicial: ' + error.message);
+        console.error("[FITBA ERROR] Simulation failed:", error);
       } finally {
         if (loading) loading.classList.add('d-none');
       }
-    })
-    .catch(err => { 
-        console.error("App UI Error (Fetch Params):", err);
-        UINotifier.showError('No se pudo conectar con el servidor.');
     });
 
-  if (!form) { console.warn("[FITBA] Simulation form not found in DOM"); }
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (loading) loading.classList.remove('d-none');
-    UINotifier.showInfo('Calculando nueva simulación...');
     try {
       const formData = FormBinder.getSimulationData();
       const results = await SimulationController.runSimulation(formData);
       actualizarUI(results);
-      UINotifier.showSuccess('Simulación calculada con éxito.');
     } catch (error) {
-      console.error("App UI Error (Submit):", error);
-      UINotifier.showError("Error en simulación: " + error.message);
+      console.error("[FITBA ERROR] Submit simulation failed:", error);
     } finally {
       if (loading) loading.classList.add('d-none');
     }
@@ -65,8 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-producto-nombre" value="${producto.nombre}" placeholder="Nombre">
       <div class="d-flex gap-2">
-        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio_unitario || 0}" placeholder="Precio">
-        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo_marginal_unitario || 0}" placeholder="Costo">
+        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio || 0}" placeholder="Precio">
+        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo || 0}" placeholder="Costo">
       </div>
     `;
     container.appendChild(div);
@@ -86,10 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function poblarFormulario(data) {
-    if (!data.inversion || !data.productos || !data.lineas_produccion) return;
-    
     const inputAnr = document.getElementById('input-anr');
+    const inputFechaBase = document.getElementById('input-fecha-base');
     if (inputAnr) inputAnr.value = data.inversion.monto_actualizado;
+    if (inputFechaBase) inputFechaBase.value = data.inversion.fecha_base;
     
     const listaProductos = document.getElementById("lista-productos");
     const listaLineas = document.getElementById("lista-lineas");
@@ -97,7 +85,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (listaProductos) { listaProductos.innerHTML = ""; data.productos.forEach(p => renderProductoRow(p)); }
     if (listaLineas) { listaLineas.innerHTML = ""; data.lineas_produccion.forEach(l => renderLineaRow(l)); }
-    
     if (listaIpc && data.ipc_serie) {
        listaIpc.innerHTML = data.ipc_serie.map(item => `<div>Mes ${item.mes}: ${(item.tasa * 100).toFixed(1)}%</div>`).join('');
     }
@@ -109,5 +96,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (ctx) renderizarGrafico(results.proyecciones, results.target_repago);
   }
 
-  function renderizarGrafico(proyecciones, target) { /* ... */ }
+  function renderizarGrafico(proyecciones, target) {
+    if (myChart) myChart.destroy();
+    
+    const labels = Object.values(proyecciones)[0].map(p => p.fecha);
+    const datasets = Object.keys(proyecciones).map((key, i) => ({
+      label: key,
+      data: proyecciones[key].map(p => p.beneficio_acumulado),
+      borderColor: i === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)',
+      fill: false
+    }));
+
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
 });

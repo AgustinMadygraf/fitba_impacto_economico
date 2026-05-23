@@ -20,8 +20,10 @@ export const FormBinder = {
       capacidad: parseFloat(div.querySelector(".input-linea-capacidad").value) || 0
     }));
 
+    console.log("[DEBUG] FormBinder: raw input fecha-base value is:", getVal('input-fecha-base'));
     const data = {
       anr: getVal('input-anr'),
+      fechaBase: getVal('input-fecha-base'),
       dispBase: getVal('input-disp-base'),
       perf: getVal('input-perf'),
       quality: getVal('input-quality'),

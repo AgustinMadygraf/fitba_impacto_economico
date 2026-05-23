@@ -17,7 +17,9 @@ class SimulacionController:
     
         escenarios_data = self.gateway.get_escenarios_raw()
         
+        resultados = []
         proyecciones = {}
+        
         for clave, datos in escenarios_data.items():
             escenario = Escenario(
                 nombre=datos["nombre"],
@@ -36,7 +38,19 @@ class SimulacionController:
                 logger=self.logger
             )
     
-            _, serie_proyeccion = simulador.ejecutar()
+            mes_repago, serie_proyeccion = simulador.ejecutar()
+            # Mapeo consistente para la UI
+            resultados.append({
+                "escenario": escenario.nombre, 
+                "tasa": escenario.tasa_crecimiento, 
+                "mes_repago": mes_repago,
+                "viable": mes_repago is not None
+            })
             proyecciones[clave] = serie_proyeccion
     
-        self.presenter.presentar_resultados(mes_repago=None, proyecciones=proyecciones)
+        self.presenter.presentar_resultados(
+            target_repago=inversion.monto_actualizado,
+            oee_base=oee_base.valor,
+            resultados=resultados,
+            proyecciones=proyecciones
+        )

@@ -9,7 +9,8 @@ export const SimulationMapper = {
     };
 
     const inversion = {
-      objetivo_anr: parseFloatOrDefault(formData.anr, 0)
+      objetivo_anr: parseFloatOrDefault(formData.anr, 0),
+      fecha_base: formData.fechaBase
     };
 
     const oee_base = {
@@ -44,12 +45,15 @@ export const SimulationMapper = {
       favorable: { nombre: 'Favorable', tasa_crecimiento_mensual: parseFloatOrDefault(formData.rateFavorable, 0) / 100, factor_demanda: 1.0 }
     };
 
-    return { 
+    const payload = { 
         inversion, 
         oee_base, 
         catalogo: { productos, lineas }, 
         mix_objetivo, 
         escenarios 
     };
+    
+    console.log("[DEBUG] SimulationMapper: payload to send:", payload);
+    return payload;
   }
 };

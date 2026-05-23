@@ -48,12 +48,17 @@ def get_params():
     try:
         loader = ConfigLoader()
         raw_data = loader._raw_data
+        web_logger.info(f"Raw data: {raw_data}")
         productos = [
             {"id": p["id"], "nombre": p["nombre"], "precio": p["precio"], "costo": p["costo"]}
             for p in raw_data["catalogo"]["productos"]
         ]
         return {
-            "inversion": {"monto_anr": raw_data["inversion"]["objetivo_anr"], "monto_actualizado": raw_data["inversion"]["objetivo_anr"]},
+            "inversion": {
+                "monto_anr": raw_data["inversion"]["objetivo_anr"], 
+                "monto_actualizado": raw_data["inversion"]["objetivo_anr"],
+                "fecha_base": raw_data["inversion"]["fecha_base"]
+            },
             "oee": raw_data["oee_base"],
             "productos": productos,
             "lineas_produccion": raw_data["catalogo"]["lineas"],
