@@ -11,6 +11,7 @@ from src.entities.escenario import Escenario
 from src.entities.linea_produccion import LineaProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 from src.entities.indice_financiero import IndiceFinanciero
+from src.application.ipc_calculator import IPCCalculator
 
 class SimularImpactoEconomico:
     
@@ -60,10 +61,11 @@ class SimularImpactoEconomico:
             fecha_actual = add_months(fecha_base, mes)
             label_fecha = fecha_actual.strftime("%m/%Y")
             
-            # Inflación
+            # Inflación using IPCCalculator
             factor_inflacion = 1.0
             if indice_base:
-                factor_inflacion = indice_base.calcular_factor_capitalizacion(mes)
+                # We need to simulate the "today" as the fecha_actual
+                factor_inflacion = IPCCalculator.calculate_factor(indice_base, self.inversion.fecha_base, fecha_actual)
                 target_actualizado_t = self.inversion.monto_anr * factor_inflacion
             else:
                 target_actualizado_t = self.inversion.monto_anr

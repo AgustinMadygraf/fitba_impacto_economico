@@ -19,8 +19,11 @@
 
 - [x] **Fase 6: Centralización de Lógica y Observabilidad (Post-MVP)**
   - [x] Centralización de ejecución: implementado 'run.sh' como único punto de entrada.
-  - [x] Unificación: eliminación de 'backend/run_web.py'.
+  - [x] Unificación: eliminación de 'backend/run_web.py' .
   - [x] Implementar cálculo de proyecciones mensuales (trayectoria de beneficio) en el Backend (`SimularImpactoEconomico`).
   - [x] Exponer datasets de proyecciones a través de `/api/v1/simulacion/ejecutar`.
   - [x] Migrar lógica de `SimulationDomain` (Frontend) para consumir datasets del Backend (Eliminación de redundancia).
+  - [x] Implementar `CorrelationID` en frontend y backend para mejorar trazabilidad de errores (Observabilidad).
 - [x] Implementar UI en la sección de Entradas para visualizar/editar la serie de IPC.
+- [x] Refactorización: Centralización de cálculo de IPC en `IPCCalculator` (Servicio de Dominio).
+- [x] Corrección de KPIs: Refactorización de cálculo de `monto_anr_real` y visualización centralizada.

@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -12,6 +12,7 @@ from src.interface_adapter.controllers.simulacion_controller import SimulacionCo
 from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 from src.interface_adapter.presenter.json_presenter import JSONSimulacionPresenter
 from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
+from src.application.ipc_calculator import IPCCalculator
 
 app = FastAPI(title="FITBA - API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -56,13 +57,10 @@ def get_params():
             for p in raw_data["catalogo"]["productos"]
         ]
         
-        # Calculate Accumulated IPC
+        # Calculate Accumulated IPC using IPCCalculator service
         ipc_acumulado = 1.0
         if inversion.indice_base:
-            today = datetime.now()
-            base = datetime.strptime(inversion.fecha_base, "%Y-%m-%d")
-            months_diff = (today.year - base.year) * 12 + (today.month - base.month)
-            ipc_acumulado = inversion.indice_base.calcular_factor_capitalizacion(max(0, months_diff))
+            ipc_acumulado = IPCCalculator.calculate_factor(inversion.indice_base, inversion.fecha_base, datetime.now())
 
         # Flatten IPC for the UI
         ipc_serie_flat = []
@@ -89,7 +87,9 @@ def get_params():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/v1/simulacion/ejecutar")
-def post_simular(payload: SimularRequestSchema):
+def post_simular(payload: SimularRequestSchema, request: Request):
+    correlation_id = request.headers.get("X-Correlation-ID", "N/A")
+    web_logger.info(f"[CID: {correlation_id}] POST /api/v1/simulacion/ejecutar iniciado")
     try:
         raw_dict = {
             "inversion": {"objetivo_anr": payload.inversion.objetivo_anr, "fecha_base": payload.inversion.fecha_base},
@@ -105,11 +105,12 @@ def post_simular(payload: SimularRequestSchema):
         }
         gateway = JsonParametrosRepository(raw_dict)
         presenter = JSONSimulacionPresenter()
-        controller = SimulacionController(gateway, presenter, get_logger("FITBA.SimulacionSimulacion"))
+        controller = SimulacionController(gateway, presenter, get_logger(f"FITBA.Simulacion.{correlation_id}"))
         controller.ejecutar_simulacion()
+        web_logger.info(f"[CID: {correlation_id}] POST /api/v1/simulacion/ejecutar finalizado exitosamente")
         return presenter.response_data
     except Exception as e:
-        web_logger.error(f"Error en POST /api/v1/simulacion/ejecutar: {str(e)}")
+        web_logger.error(f"[CID: {correlation_id}] Error en POST /api/v1/simulacion/ejecutar: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend")

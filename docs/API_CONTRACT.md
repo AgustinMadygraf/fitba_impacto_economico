@@ -5,56 +5,44 @@ Este documento define el contrato de datos entre el Backend (API REST) y el Fron
 ## 1. Endpoints
 
 ### GET /api/v1/simulacion/parametros
-Devuelve la configuración actual del sistema utilizada para las simulaciones.
+Devuelve la configuración actual del sistema utilizada para las simulaciones. El cálculo del valor real ajustado por inflación se realiza centralizadamente en el backend para garantizar la integridad financiera.
 
 **Respuesta:**
 ```json
 {
   "inversion": {
-    "monto_anr": 8492000.0,
-    "monto_actualizado": 11570350.0,
-    "moneda": "ARS",
+    "monto_anr_nominal": 8492000.0,
+    "monto_anr_real": 12900000.0,
     "fecha_base": "2025-02-01",
-    "fecha_objetivo": "2026-03-01"
+    "ipc_acumulado": 1.52
   },
   "oee": {
     "disponibilidad": 0.135,
     "rendimiento": 0.44,
-    "calidad": 0.84
+    "calidad": 0.84,
+    "limite_disponibilidad": 0.85
   },
-  "productos": [
-    {
-      "id": "bolsa_lisa",
-      "nombre": "Bolsa Lisa",
-      "precio_unitario": 150.0,
-      "costo_marginal_unitario": 85.5
-    }
-  ],
-  "mix_objetivo": {
-    "bolsa_lisa": 1.0
-  }
+  "productos": [],
+  "ipc_serie": [],
+  "tasa_proyectada": 0.02
 }
 ```
 
 ### POST /api/v1/simulacion/ejecutar
 Recibe los parámetros y devuelve el resultado de la simulación.
 
-**Cuerpo (Payload):** (Opcional, si no se envía, usa los valores por defecto del servidor).
-
 **Respuesta:**
 ```json
 {
-  "target_repago": 11570350.0,
+  "target_repago": 8492000.0,
   "oee_base": 0.0499,
-  "resultados": [...],
+  "resultados": [],
   "proyecciones": {
-    "favorable": [123.45, 234.56, ...],
-    "proyectado": [111.11, 222.22, ...],
-    "desfavorable": [99.99, 199.99, ...]
+    "proyectado": []
   }
 }
 ```
 
 ## 2. Notas Técnicas
-- **Valor Presente**: Todos los montos monetarios (`monto_actualizado`, `precio_unitario`) están expresados en moneda de hoy.
-- **Tipado**: Las respuestas garantizan valores numéricos de punto flotante para los cálculos de margen y repago.
+- **Valor Presente**: El backend calcula `monto_anr_real` como fuente de verdad (`monto_anr_nominal * ipc_acumulado`). El frontend consume este valor para su visualización.
+- **IPC Acumulado**: El campo `ipc_acumulado` es una instantánea (snapshot) dinámica calculada por el backend, representando el factor acumulado desde la `fecha_base` de la inversión hasta la fecha actual, derivado exclusivamente de la serie histórica y proyectada proporcionada en el JSON de configuración (fuente única de verdad).
