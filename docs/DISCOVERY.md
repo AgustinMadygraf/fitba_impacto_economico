@@ -6,8 +6,8 @@
 
 ## 1. Modelo de Negocio
 1. **Capacidad de Absorción:** ¿Se garantiza la venta del 100% incremental (Factor Demanda)?
-2. **Interfaz Web de Tres Secciones:**
-1. **Reactividad vs. Botón:** ¿La actualización de las secciones "Datos Intermedios" y "Salidas" debe ser automática al cambiar un input (Debounce) o requiere pulsar "Ejecutar Simulación"?
-2. **Profundidad de Datos Intermedios:** ¿La Sección 2 debe incluir una tabla con el desglose mensual (traza de auditoría) o solo los KPI consolidados?
-3. **Persistencia de Parámetros:** ¿Los ajustes realizados por el usuario en la "Sección de Entradas" deben persistir en localStorage para futuras sesiones o ser volátiles?
-4. **Seguridad de Acceso:** Dado el carácter sensible de los costos de la cooperativa, ¿se requiere autenticación básica o el acceso será libre en red local?
+## 3. Mejoras Arquitectónicas (Post-MVP)
+1. **Centralización de Lógica de Negocio**: Migrar la lógica de cálculo de proyecciones financieras (`SimulationDomain.calculateFrontendProjections`) desde el Frontend al Backend. El Backend será la única fuente de verdad para los datasets de gráficos.
+2. **Validación Dinámica**: Exponer reglas de validación (límites `gt=0`, etc.) a través del endpoint de parámetros para que la UI se configure automáticamente.
+3. **Estandarización de Observabilidad**: Implementar trazas distribuidas (`X-Correlation-ID`) en todo el frontend para correlacionar errores de UI con logs de backend.
+

@@ -46,23 +46,12 @@ Recibe los parámetros y devuelve el resultado de la simulación.
 {
   "target_repago": 11570350.0,
   "oee_base": 0.0499,
-  "resultados": [
-    {
-      "nombre": "Desfavorable",
-      "tasa": 0.01,
-      "mes_repago": 18
-    },
-    {
-      "nombre": "Proyectado",
-      "tasa": 0.015,
-      "mes_repago": 14
-    },
-    {
-      "nombre": "Favorable",
-      "tasa": 0.02,
-      "mes_repago": 10
-    }
-  ]
+  "resultados": [...],
+  "proyecciones": {
+    "favorable": [123.45, 234.56, ...],
+    "proyectado": [111.11, 222.22, ...],
+    "desfavorable": [99.99, 199.99, ...]
+  }
 }
 ```
 

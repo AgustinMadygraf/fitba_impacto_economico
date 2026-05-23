@@ -26,7 +26,7 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **RF05**: Web Dashboard interactivo (Frontend DDD).
 - **RF06**: Formulario de Simulación Dinámica (Entradas).
 - **RF07**: Visualización de Datos Intermedios (Inversión Actualizada, OEE Real).
-- **RF08**: Visualización Gráfica (Chart.js).
+- **RF08**: Visualización Gráfica (Chart.js): El Backend entrega los datasets procesados (proyecciones calculadas); el Frontend solo se encarga de la renderización visual.
 - **RF09**: API REST (FastAPI).
 - **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo. (*MVP*: Limitado a 1 producto; Arquitectura: Diseñada para extender a multiproducto).
 - **RF11**: Gestión de Productos y Líneas (Dinámico): CRUD básico de productos, líneas y su asociación en el mix.
