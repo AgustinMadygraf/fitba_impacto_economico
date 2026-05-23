@@ -57,18 +57,45 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Renderiza dinámicamente un producto en la UI.
    * @param {Object} producto - Datos del producto.
    */
-  function renderProductoRow(producto = { nombre: "Producto A", precio: 0, costo: 0 }) {
+  function renderProductoRow(producto = { id: Date.now().toString(), nombre: "Nuevo Producto", precio: 0, costo: 0 }) {
     const container = document.getElementById("lista-productos");
-    container.innerHTML = `
-      <div class="card mb-2 p-2 border-0 bg-dark bg-opacity-10">
-        <input type="text" class="form-control mb-1" value="${producto.nombre}" placeholder="Nombre">
-        <div class="d-flex gap-2">
-          <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio}" placeholder="Precio">
-          <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo}" placeholder="Costo">
-        </div>
+    const div = document.createElement("div");
+    div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-producto";
+    div.dataset.id = producto.id;
+    div.innerHTML = `
+      <input type="text" class="form-control mb-1 input-producto-nombre" value="${producto.nombre}" placeholder="Nombre">
+      <div class="d-flex gap-2">
+        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio}" placeholder="Precio">
+        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo}" placeholder="Costo">
       </div>
     `;
-    document.getElementById("add-producto").disabled = true; // Alcance Inicial
+    container.appendChild(div);
+    
+    // Alcance Inicial: Restringir a 1 producto
+    if (container.children.length >= 1) {
+      document.getElementById("add-producto").disabled = true;
+    }
+  }
+
+  /**
+   * Renderiza dinámicamente una línea de producción en la UI.
+   * @param {Object} linea - Datos de la línea.
+   */
+  function renderLineaRow(linea = { id: Date.now().toString(), nombre: "Línea 1", capacidad: 0 }) {
+    const container = document.getElementById("lista-lineas");
+    const div = document.createElement("div");
+    div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-linea";
+    div.dataset.id = linea.id;
+    div.innerHTML = `
+      <input type="text" class="form-control mb-1 input-linea-nombre" value="${linea.nombre}" placeholder="Nombre">
+      <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad}" placeholder="Capacidad Nominal">
+    `;
+    container.appendChild(div);
+
+    // Alcance Inicial: Restringir a 1 línea
+    if (container.children.length >= 1) {
+      document.getElementById("add-linea").disabled = true;
+    }
   }
 
   /**
@@ -88,24 +115,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('input-disp-base').value = (data.oee.disponibilidad * 100).toFixed(1);
     document.getElementById('input-perf').value = (data.oee.rendimiento * 100).toFixed(1);
     
-    document.getElementById('input-precio').value = data.productos[0].precio_unitario;
-    
-    // Corregido: asegurar que se inyecta el volumen base si existe en la data
-    const linea = data.lineas_produccion[0];
-    document.getElementById('input-vol-base').value = linea.capacidad_nominal;
-    
-    renderProductoRow({
-        nombre: data.productos[0].nombre,
-        precio: data.productos[0].precio_unitario,
-        costo: data.productos[0].costo_marginal_unitario
+    // Limpiar contenedores
+    document.getElementById("lista-productos").innerHTML = "";
+    document.getElementById("lista-lineas").innerHTML = "";
+
+    // Poblar productos
+    data.productos.forEach(p => {
+      renderProductoRow({
+        id: p.id,
+        nombre: p.nombre,
+        precio: p.precio_unitario,
+        costo: p.costo_marginal_unitario
+      });
+    });
+
+    // Poblar líneas
+    data.lineas_produccion.forEach(l => {
+      renderLineaRow({
+        id: l.id,
+        nombre: l.nombre,
+        capacidad: l.capacidad_nominal
+      });
     });
     
+    // Mantener campos legacy por compatibilidad temporal con FormBinder
+    document.getElementById('input-precio').value = data.productos[0].precio_unitario;
     document.getElementById('input-costo').value = data.productos[0].costo_marginal_unitario;
+    document.getElementById('input-vol-base').value = data.lineas_produccion[0].capacidad_nominal;
     
     document.getElementById('input-rate-desfavorable').value = 1.0;
     document.getElementById('input-rate-proyectado').value = 1.5;
     document.getElementById('input-rate-favorable').value = 2.0;
-  }  /**
+  }
+
+  /**
    * Actualiza la UI con los resultados.
    * @param {Object} results - Resultados de la simulación.
    */
