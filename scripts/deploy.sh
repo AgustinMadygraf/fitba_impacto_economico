@@ -25,11 +25,14 @@ measure_step() {
 measure_step "Tests" cd backend && source .venv/bin/activate && pytest
 
 # 2. Configuración
-if [ ! -f backend/.env ]; then
-    log_error "El archivo backend/.env no existe."
+if [ -f .env ]; then
+    source .env
+elif [ -f backend/.env ]; then
+else
+    log_error "No se encontró el archivo .env"
     exit 1
 fi
-source backend/.env
+fi
 
 : "${VPS_USER:?VPS_USER no definido}"
 : "${VPS_IP:?VPS_IP no definido}"
