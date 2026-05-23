@@ -1,13 +1,12 @@
 # SRS - Especificación de Requerimientos del Sistema
 
 ## 1. Ajuste Financiero (Inflación)
-El sistema debe ajustar el Target de Repago utilizando un modelo de interés compuesto basado en la serie IPC proporcionada.
+- **RF-FIN-01:** Cálculo de valor futuro del ANR mediante interés compuesto sobre IPC.
 
-- **Requerimiento Funcional (RF-FIN-01):** El sistema debe leer la serie de tasas mensuales de IPC y calcular el valor futuro del ANR para cada mes del horizonte de simulación (hasta 24 meses).
-- **Regla de Cálculo (RC-FIN-01):** 
-  - Para meses dentro de la serie IPC: `Target_t = Target_{t-1} * (1 + ipc_t)`.
-  - Para meses fuera de la serie IPC: `Target_t = Target_{t-1} * (1 + tasa_proyectada)`.
-- **Requerimiento no Funcional (RNF-FIN-01):** La entidad `IndiceFinanciero` debe ser la única responsable de calcular el factor de ajuste dado un mes específico, garantizando encapsulamiento.
+## 2. Temporalidad y Referencias (RF-TEM-01)
+- El sistema debe soportar referencias calendarizadas para todas las proyecciones financieras.
+- **Regla (RC-TEM-01):** La etiqueta temporal se calcula como `fecha_base + N meses`, formateada como `MM/YYYY`. 
+- **Responsabilidad:** La capa de Caso de Uso debe enriquecer el resultado de la simulación con estas etiquetas antes de delegar la presentación al `JSONSimulacionPresenter`.
 
-## 2. Entidades Principales
-(Como definido en el modelo 1:1, incluyendo `IndiceFinanciero` con las reglas anteriores).
+## 3. Entidades
+(1:1 mapeo: Inversion, CapacidadInstalada, OEE, IndiceFinanciero, Producto, LineaProduccion, MixProduccion, Escenario).

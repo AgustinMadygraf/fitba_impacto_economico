@@ -2,26 +2,15 @@
 
 ## 1. Mandatos Técnicos
 - **Patrón:** Clean Architecture + DDD.
-- **Persistencia Orientada al Dominio:** La configuración (`params.json`) debe mantener un mapeo **1:1** con las 8 entidades fundamentales del dominio.
+- **Persistencia Orientada al Dominio:** La configuración (`params.json`) debe mantener un mapeo **1:1** con las 8 entidades fundamentales.
 
-## 2. Reglas de Negocio y Modelo Financiero
-- **Modelo de Precio:** Operamos íntegramente a valor presente (moneda real).
-- **Ajuste por Inflación (Target de Repago):**
-  - El ANR es un monto nominal. El target de repago debe ajustarse mensualmente por inflación para reflejar su valor real al momento de la simulación.
-  - **Fórmula de Capitalización Compuesta:** 
-    - `Target_t = Target_base * \prod_{i=1}^{t} (1 + tasa_ipc_i)`
-  - **Proyección de IPC:** Si el horizonte temporal (`t`) supera la serie histórica de IPC disponible, se utilizará la `tasa_proyectada` definida en la entidad `IndiceFinanciero` como constante para los meses restantes.
-- **Independencia Operativa:** `CapacidadInstalada` (físico) y `OEE_Base` (operativo) son independientes. La capacidad efectiva se calcula en el Caso de Uso.
+## 2. Temporalidad y Referencias
+- **Referencia Temporal Absoluta:** El sistema utiliza `fecha_base` (formato YYYY-MM-DD) provista en el nodo `inversion` del JSON como punto de anclaje.
+- **Mapeo Temporal:** Todas las proyecciones (mes 1 al 24) deben ser traducidas en el backend a etiquetas absolutas con formato `MM/YYYY` antes de ser enviadas a la capa de presentación (Frontend).
 
-## 3. Entidades de Dominio
-1. **Inversion**: ANR base.
-2. **CapacidadInstalada**: Físico.
-3. **OEE_Base**: Operativo.
-4. **IndiceFinanciero**: Serie IPC y tasa proyectada.
-5. **Productos**: Catálogo.
-6. **Lineas**: Máquinas.
-7. **MixObjetivo**: Configuración de producción.
-8. **Escenarios**: Proyecciones de mercado.
+## 3. Reglas de Negocio
+- **Ajuste por Inflación (Target de Repago):** Ajuste mensual compuesto basado en `IndiceFinanciero`.
+- **Independencia Operativa:** `CapacidadInstalada` y `OEE_Base` son independientes; el caso de uso calcula la capacidad efectiva.
 
 ## 4. Estándares de Calidad
 - Bootstrap 100%.
