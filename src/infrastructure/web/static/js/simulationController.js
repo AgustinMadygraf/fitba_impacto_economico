@@ -4,13 +4,19 @@ import { Logger } from './logger.js';
 
 export const SimulationController = {
   async runSimulation(formData) {
-    Logger.info('Iniciando coordinación de simulación...');
+    const timerLabel = 'Simulación Total';
+    Logger.time(timerLabel);
+    Logger.info('Controller: Mapeando formulario...');
+    
     try {
       const payload = SimulationDomain.mapFormToPayload(formData);
-      const apiResponse = await ApiClient.post('/api/simular', payload);
-      const projections = SimulationDomain.calculateFrontendProjections(payload);
       
-      Logger.info('Simulación coordinada exitosamente.');
+      const apiResponse = await ApiClient.post('/api/simular', payload);
+      
+      const projections = SimulationDomain.calculateFrontendProjections(formData);
+      
+      Logger.timeEnd(timerLabel);
+      
       return {
         targetRepago: apiResponse.target_repago,
         oeeBase: apiResponse.oee_base,
@@ -18,7 +24,8 @@ export const SimulationController = {
         proyecciones: projections
       };
     } catch (error) {
-      Logger.error('Error en la coordinación de simulación', { error });
+      Logger.timeEnd(timerLabel);
+      Logger.error('Controller: Error crítico', { error });
       throw error;
     }
   }

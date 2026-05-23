@@ -3,16 +3,31 @@
  */
 
 import { SimulationController } from './simulationController.js';
+import { Logger } from './logger.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-simulacion');
   const loading = document.getElementById('loading');
+  const ctx = document.getElementById('chart-proyeccion').getContext('2d');
+  let myChart = null;
 
-  // Inicialización: Cargar Parámetros
+  // Inicialización: Cargar Parámetros y ejecutar simulación inicial
   fetch('/api/params')
     .then(res => res.json())
-    .then(data => poblarFormulario(data))
-    .catch(err => console.error('Error cargando parámetros:', err));
+    .then(async data => {
+      poblarFormulario(data);
+      // Automatización: Ejecutar simulación inicial
+      loading.classList.remove('d-none');
+      try {
+        const results = await SimulationController.runSimulation(getFormData());
+        actualizarUI(results);
+      } catch (error) {
+        Logger.error('Error en simulación automática:', {error});
+      } finally {
+        loading.classList.add('d-none');
+      }
+    })
+    .catch(err => Logger.error('Error cargando parámetros:', {err}));
 
   // Manejador de Simulación
   form.addEventListener('submit', async (e) => {
@@ -52,9 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('input-disp-base').value = (data.oee.linea_base.disponibilidad * 100).toFixed(1);
     document.getElementById('input-perf').value = (data.oee.linea_base.rendimiento * 100).toFixed(1);
     document.getElementById('input-quality').value = (data.oee.linea_base.calidad * 100).toFixed(1);
-    document.getElementById('input-vol-base').value = data.produccion.volumen_mensual_base;
-    document.getElementById('input-precio').value = data.produccion.precio_unitario_promedio;
-    document.getElementById('input-costo').value = data.produccion.costos_variables.material_por_unidad;
+    
+    // Mapeo actualizado para el nuevo modelo
+    document.getElementById('input-vol-base').value = data.lineas_produccion[0].capacidad_nominal;
+    document.getElementById('input-precio').value = data.productos[0].precio_unitario;
+    document.getElementById('input-costo').value = data.productos[0].costo_marginal_unitario;
+    
     document.getElementById('input-rate-desfavorable').value = (data.escenarios.desfavorable.tasa_crecimiento_mensual * 100).toFixed(1);
     document.getElementById('input-rate-proyectado').value = (data.escenarios.proyectado.tasa_crecimiento_mensual * 100).toFixed(1);
     document.getElementById('input-rate-favorable').value = (data.escenarios.favorable.tasa_crecimiento_mensual * 100).toFixed(1);
@@ -69,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kpi-oee-max').textContent = (oeeMaxVal * 100).toFixed(2) + '%';
     
     renderizarTabla(results.resultados);
+    renderizarGrafico(results.proyecciones, results.targetRepago);
   }
 
   function renderizarTabla(resultados) {
@@ -77,13 +96,45 @@ document.addEventListener('DOMContentLoaded', () => {
     resultados.forEach(res => {
       const mesText = res.mes_repago ? 'Mes ' + res.mes_repago : 'Límite >24m';
       const viableClass = res.viable ? 'badge-favorable' : 'badge-desfavorable';
-      const row = '<tr>' +
+      tbody.innerHTML += '<tr>' +
         '<td><span class="badge-escenario badge-' + res.escenario.toLowerCase() + '">' + res.escenario + '</span></td>' +
         '<td class="text-center">' + (res.tasa * 100).toFixed(1) + '%</td>' +
         '<td class="text-center fw-bold text-white">' + mesText + '</td>' +
         '<td class="text-center"><span class="badge-escenario ' + viableClass + '">' + (res.viable ? 'Viable' : 'No Viable') + '</span></td>' +
         '</tr>';
-      tbody.innerHTML += row;
     });
+  }
+
+  function renderizarGrafico(proyecciones, target) {
+    Logger.info('Renderizando gráfico', { proyecciones, target });
+    try {
+      const labels = Array.from({ length: 24 }, (_, i) => 'Mes ' + (i + 1));
+      const datasets = [
+        { label: 'Favorable', data: proyecciones.favorable, borderColor: 'hsl(145, 80%, 45%)', borderWidth: 3, tension: 0.3, pointRadius: 0 },
+        { label: 'Proyectado', data: proyecciones.proyectado, borderColor: 'hsl(195, 100%, 50%)', borderWidth: 3, tension: 0.3, pointRadius: 0 },
+        { label: 'Desfavorable', data: proyecciones.desfavorable, borderColor: 'hsl(25, 95%, 50%)', borderWidth: 2, tension: 0.3, pointRadius: 0 },
+        { label: 'Target Repago', data: Array(24).fill(target), borderColor: 'rgba(255, 99, 132, 0.6)', borderWidth: 2, borderDash: [5, 5], pointRadius: 0 }
+      ];
+      if (myChart) {
+        myChart.data.datasets = datasets;
+        myChart.update();
+      } else {
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: { labels, datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#ccc' } } },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', callback: function(v) { return '$' + (v / 1e6).toFixed(1) + 'M'; } } }
+            }
+          }
+        });
+      }
+    } catch (error) {
+      Logger.error('Error renderizando gráfico', { error });
+    }
   }
 });
