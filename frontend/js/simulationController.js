@@ -27,7 +27,7 @@ export const SimulationController = {
       const payload = SimulationMapper.mapFormToPayload(formData);
 
       // 2. Ejecución Infraestructura
-      const apiResponse = await ApiClient.post('/api/simular', payload);
+      const apiResponse = await ApiClient.post('/api/v1/simulacion/ejecutar', payload);
 
       // 3. Ejecución Dominio
       const projections = SimulationDomain.calculateFrontendProjections(formData);

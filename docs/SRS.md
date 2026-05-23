@@ -28,9 +28,9 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **RF07**: Visualización de Datos Intermedios (Inversión Actualizada, OEE Real).
 - **RF08**: Visualización Gráfica (Chart.js).
 - **RF09**: API REST (FastAPI).
-- **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo. (*Nota de Alcance Inicial*: Limitado a 1 producto).
+- **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo. (*MVP*: Limitado a 1 producto; Arquitectura: Diseñada para extender a multiproducto).
 - **RF11**: Gestión de Productos y Líneas (Dinámico): CRUD básico de productos, líneas y su asociación en el mix.
-- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva basado en cuello de botella. (*Nota de Alcance Inicial*: Limitado a 1 máquina).
+- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva. (*MVP*: Limitado a 1 máquina; Arquitectura: Diseñada para implementar cuello de botella).
 
 ## 4. Requerimientos No Funcionales
 - **RNF01**: Clean Architecture y DDD.
@@ -41,4 +41,5 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 ## 5. Decisiones Técnicas (Resueltas)
 - **Estrategia de Testing:** Framework pytest con estructura por capas (unit/integration) y cobertura mínima del 80%.
 - **Infraestructura CI:** Uso de hooks de git locales (pre-push.sh) como primera barrera de calidad.
-- **Lógica de IPC:** El ajuste por inflación se aplica sobre el monto objetivo (Target) inicial, no sobre los flujos mensuales.
+- **Lógica de IPC y Valor Presente:** El sistema opera bajo un modelo de valor presente. El factor IPC se aplica **exclusivamente** sobre la inversión inicial para establecer el "Target" actualizado. Los precios y costos marginales ya se encuentran expresados en moneda de hoy y se consideran constantes en términos reales durante la simulación de 24 meses.
+- **Naturaleza de los Productos:** Se reconoce que los productos son variables y el precio de referencia es una abstracción para el cálculo del punto de equilibrio inicial.

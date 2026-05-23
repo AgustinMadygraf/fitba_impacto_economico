@@ -1,5 +1,5 @@
 import pytest
-from src.interface_adapter.gateway.dinamico_gateway import DinamicoParametrosGateway
+from src.interface_adapter.repositories.dinamico_gateway import DinamicoParametrosGateway
 
 def test_dinamico_gateway_mapping():
     raw_data = {

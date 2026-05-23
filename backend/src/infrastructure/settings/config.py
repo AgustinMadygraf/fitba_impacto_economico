@@ -9,7 +9,7 @@ from src.entities.oee import OEE
 from src.entities.linea_produccion import LineaProduccion
 from src.entities.produccion import MixProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
-from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
+from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 
 # Capturar tiempo al importar el módulo (inicio del proceso)
 _START_TIME = datetime.datetime.now().isoformat()

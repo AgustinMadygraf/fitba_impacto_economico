@@ -1,5 +1,5 @@
 from typing import Dict, Any, List
-from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
+from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE

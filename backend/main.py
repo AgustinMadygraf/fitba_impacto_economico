@@ -5,7 +5,7 @@ Path: main.py
 from src.infrastructure.settings.config import ConfigLoader
 from src.infrastructure.settings.logger import get_logger
 from src.infrastructure.cli.rich import RichSimulacionPresenter
-from src.interface_adapter.controller.simulacion_controller import SimulacionController
+from src.interface_adapter.http_controllers.simulacion_controller import SimulacionController
 
 def run():
     # 1. Carga de configuración (incluye detección de --debug)

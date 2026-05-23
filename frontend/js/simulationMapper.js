@@ -11,7 +11,7 @@ export const SimulationMapper = {
   mapFormToPayload(formData) {
     const inversion = {
       objetivo_anr: parseFloat(formData.anr),
-      factor_ipc_acumulado: (parseFloat(formData.ipc) / 100) + 1
+      factor_ipc_acumulado: 1.0 // MVP: Valor Presente, no aplica IPC adicional
     };
 
     // CORRECCIÓN: Estructura plana que espera el backend ahora
@@ -28,10 +28,11 @@ export const SimulationMapper = {
       costo_marginal_unitario: parseFloat(formData.costo) 
     }];
     
+    // MVP: Mantener estructura obligatoria para Pydantic
     const lineas_produccion = [{ 
       id: 'l1', 
       nombre: 'Linea 1', 
-      capacidad_nominal: parseFloat(formData.volBase), 
+      capacidad_nominal: parseFloat(formData.volBase) || 0, 
       productos_compatibles: ['p1'] 
     }];
 

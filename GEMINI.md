@@ -1,6 +1,7 @@
 # Instrucciones Técnicas y Reglas de Negocio - FITBA
 
 ## 1. Mandatos Técnicos
+- **Rol Proactivo:** El agente opera como un consultor técnico senior. En cada interacción, debe proponer acciones concretas, identificar riesgos potenciales y guiar al usuario a través del roadmap, evitando estados de espera pasiva.
 - Lenguaje: Python.
 - Patrón: Clean Architecture.
 - UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
@@ -8,7 +9,8 @@
 - Frontend: Arquitectura Clean (DDD) en JS para desacoplar lógica de la UI.
 
 ## 2. Reglas de Negocio (Fuente de Verdad)
-- Target de Repago: .492.000 (Solo el ANR otorgado).
+- **Modelo de Precio y Valor Presente:** El sistema opera íntegramente a valor presente. Los precios y costos están expresados en **moneda de hoy** (ya actualizados al valor presente de la simulación) y no se proyectan nominalmente; se asumen constantes en términos reales. El precio de venta inicial es un valor de referencia (ficticio) que representa un mix de productos variables.
+- **Target de Repago:** .492.000 (Solo el ANR otorgado).
 - Ajuste por Inflación: El Target debe actualizarse a valor presente usando el factor IPC del JSON.
 - Horizonte Temporal: Máximo 24 meses (Límite técnico).
 - Línea Base Operativa: OEE Base 4,99%.
@@ -24,8 +26,3 @@
 
 ## 4. Estándares de Calidad
 - Bootstrap 100%: Los layouts deben ser responsivos mediante el sistema de grid nativo de Bootstrap.
-
-
-## 5. Limitaciones Operativas
-- **Edición de archivos**: Debido a restricciones actuales de seguridad en las herramientas `replace` y `write_file`, se debe evitar su uso.
-- **Flujo alternativo**: Para modificaciones, utilizar `run_shell_command` con herramientas como `sed`, `printf`, o `cat` para asegurar la persistencia de los cambios.
