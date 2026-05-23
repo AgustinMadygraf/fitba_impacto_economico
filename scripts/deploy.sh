@@ -50,3 +50,4 @@ TIMESTAMP=$(date +%s)
 STATUS=$(curl -o /dev/null -s -w "%{http_code}" ${URL_BASE}/api/config || echo "000")
 
 log_info "Despliegue finalizado exitosamente. Versión cache-bust: $TIMESTAMP"
+log_info "Estado de la API: $STATUS"
