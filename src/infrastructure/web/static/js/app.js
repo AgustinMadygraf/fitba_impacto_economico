@@ -4,6 +4,9 @@
 
 import { SimulationController } from './simulationController.js';
 
+/**
+ * Inicializador de la aplicación.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     if (window.CONFIG_LOADED) await window.CONFIG_LOADED;
@@ -48,6 +51,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+/**
+ * Recolecta los datos del formulario.
+ * @returns {FormData} Los datos recolectados.
+ */
   function getFormData() {
     return {
       anr: document.getElementById('input-anr').value,
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       dispBase: document.getElementById('input-disp-base').value,
       perf: document.getElementById('input-perf').value,
       quality: document.getElementById('input-quality').value,
-      volBase: document.getElementById('input-vol-base').value,
+      volBase: document.querySelector(".input-linea-capacidad").value,
       precio: document.getElementById('input-precio').value,
       costo: document.getElementById('input-costo').value,
       rateDesfavorable: document.getElementById('input-rate-desfavorable').value,
@@ -63,17 +70,60 @@ document.addEventListener('DOMContentLoaded', async () => {
       rateFavorable: document.getElementById('input-rate-favorable').value,
     };
   }
+  /**
+   * Renderiza dinámicamente un producto en la UI.
+   * @param {Object} producto - Datos del producto.
+   */
+  function renderProductoRow(producto = { nombre: "Producto A", precio: 0, costo: 0 }) {
+    const container = document.getElementById("lista-productos");
+    container.innerHTML = `
+      <div class="card mb-2 p-2 border-0 bg-dark bg-opacity-10">
+        <input type="text" class="form-control mb-1" value="${producto.nombre}" placeholder="Nombre">
+        <div class="d-flex gap-2">
+          <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio}" placeholder="Precio">
+          <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo}" placeholder="Costo">
+        </div>
+      </div>
+    `;
+    document.getElementById("add-producto").disabled = true; // Alcance Inicial
+  }
+  /**
+   * Renderiza dinámicamente una línea en la UI.
+   * @param {Object} linea - Datos de la línea.
+   */
+  function renderLineaRow(linea = { nombre: "Linea 1", capacidad: 0 }) {
+    const container = document.getElementById("lista-lineas");
+    container.innerHTML = `
+      <div class="card mb-2 p-2 border-0 bg-dark bg-opacity-10">
+        <input type="text" class="form-control mb-1" value="${linea.nombre}" placeholder="Nombre">
+        <input type="number" class="form-control input-linea-capacidad" value="${linea.capacidad}" placeholder="Capacidad">
+      </div>
+    `;
+    document.getElementById("add-linea").disabled = true; // Alcance Inicial
+  }
 
+/**
+ * Pobla el formulario con datos iniciales.
+ * @param {Object} data - Datos iniciales.
+ */
   function poblarFormulario(data) {
     document.getElementById('input-anr').value = data.inversion.objetivo_anr;
     document.getElementById('input-ipc').value = ((data.inversion.factor_ipc_acumulado - 1) * 100).toFixed(1);
     
+    document.getElementById("input-quality").value = (data.oee.linea_base.calidad * 100).toFixed(1);
     document.getElementById('input-disp-base').value = (data.oee.linea_base.disponibilidad * 100).toFixed(1);
     document.getElementById('input-perf').value = (data.oee.linea_base.rendimiento * 100).toFixed(1);
-    document.getElementById('input-quality').value = (data.oee.linea_base.calidad * 100).toFixed(1);
-    
-    document.getElementById('input-vol-base').value = data.lineas_produccion[0].capacidad_nominal;
     document.getElementById('input-precio').value = data.productos[0].precio_unitario;
+    renderProductoRow({
+        nombre: data.productos[0].nombre,
+        precio: data.productos[0].precio_unitario,
+        costo: data.productos[0].costo_marginal_unitario
+    });
+    
+    renderLineaRow({
+        nombre: data.lineas_produccion[0].nombre,
+        capacidad: data.lineas_produccion[0].capacidad_nominal
+    });
     document.getElementById('input-costo').value = data.productos[0].costo_marginal_unitario;
     
     document.getElementById('input-rate-desfavorable').value = (data.escenarios.desfavorable.tasa_crecimiento_mensual * 100).toFixed(1);
@@ -81,6 +131,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('input-rate-favorable').value = (data.escenarios.favorable.tasa_crecimiento_mensual * 100).toFixed(1);
   }
 
+/**
+ * Actualiza la UI con los resultados.
+ * @param {Object} results - Resultados de la simulación.
+ */
   function actualizarUI(results) {
     document.getElementById('kpi-target-actualizado').textContent = '$' + results.target_repago.toLocaleString('es-AR', { minimumFractionDigits: 0 });
     document.getElementById('kpi-oee-base').textContent = (results.oee_base * 100).toFixed(2) + '%';

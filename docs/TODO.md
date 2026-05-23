@@ -5,10 +5,6 @@
 
 ## Fase 5: UI Dinámica y Tipado Progresivo (Prioridad Alta)
 - [ ] Implementar UI para Gestión Dinámica de Productos y Líneas (RF11).
-- [ ] Instrumentar tipado JSDoc estricto en nuevos módulos.
-- [ ] Refactorización de componentes para soporte multiproducto.
-
-## Fase 6: Migración a React/TypeScript (Prioridad Baja)
-- [ ] Migración de componentes a React.
-- [ ] Conversión de archivos .js a .ts (tras madurez de JSDoc).
-- [ ] Configuración final de TypeScript.
+  - *Nota*: Restringir inicialmente a 1 Producto, 1 Máquina.
+- [x] Instrumentar tipado JSDoc estricto en nuevos módulos.
+- [ ] Refactorización de componentes para soporte multiproducto (Preparación extensible).

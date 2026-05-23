@@ -1,6 +1,5 @@
 """
-Punto de entrada principal para el servidor web de simulación FITBA.
-Ejecuta el servidor FastAPI con recarga automática para desarrollo.
+Path: run_web.py
 """
 
 import uvicorn

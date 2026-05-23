@@ -1,6 +1,5 @@
 """
-Punto de entrada principal para la simulación de impacto económico FITBA.
-Bootstrap de la aplicación simplificado al máximo.
+Path: main.py
 """
 
 from src.infrastructure.settings.config import ConfigLoader

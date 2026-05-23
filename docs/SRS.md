@@ -7,6 +7,9 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **Límite de Simulación:** Hasta 24 meses.
 - **KPI de Éxito:** Repago alcanzado en menos de 12 meses.
 
+**Alcance Inicial:**
+- El sistema se despliega restringido a un único producto y una única máquina, manteniendo la estructura extensible para futuros flujos complejos.
+
 ## 2. Entidades de Datos
 - **Inversión**: Datos financieros del ANR.
 - **OEE Dinámico**: Parámetros operativos (Disponibilidad, Rendimiento, Calidad).
@@ -25,9 +28,9 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **RF07**: Visualización de Datos Intermedios (Inversión Actualizada, OEE Real).
 - **RF08**: Visualización Gráfica (Chart.js).
 - **RF09**: API REST (FastAPI).
-- **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo.
+- **RF10**: Cálculo Multiproducto: Ponderación de volumen por Mix Objetivo. (*Nota de Alcance Inicial*: Limitado a 1 producto).
 - **RF11**: Gestión de Productos y Líneas (Dinámico): CRUD básico de productos, líneas y su asociación en el mix.
-- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva basado en cuello de botella.
+- **RF12**: Modelado de Flujos Productivos: Cálculo de capacidad efectiva basado en cuello de botella. (*Nota de Alcance Inicial*: Limitado a 1 máquina).
 
 ## 4. Requerimientos No Funcionales
 - **RNF01**: Clean Architecture y DDD.

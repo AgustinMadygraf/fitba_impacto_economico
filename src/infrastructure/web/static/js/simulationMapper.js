@@ -3,6 +3,11 @@
  * Responsabilidad única (SOLID - SRP).
  */
 export const SimulationMapper = {
+/**
+ * Mapea los datos del formulario a un payload DTO.
+ * @param {FormData} formData - Los datos recolectados del formulario.
+ * @returns {Object} El payload para la API.
+ */
   mapFormToPayload(formData) {
     const inversion = {
       objetivo_anr: parseFloat(formData.anr),
