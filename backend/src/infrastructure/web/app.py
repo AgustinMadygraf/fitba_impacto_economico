@@ -127,7 +127,7 @@ def post_simular(payload: SimularRequestSchema):
 
 # Servir Frontend Estático
 # Determinamos la ruta absoluta al directorio static
-static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend")
 
 if os.path.exists(static_dir):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
