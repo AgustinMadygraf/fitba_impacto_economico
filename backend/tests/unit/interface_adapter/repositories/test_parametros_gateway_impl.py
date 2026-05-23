@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-from src.interface_adapter.repositories.parametros_gateway_impl import DinamicoParametrosGateway
+from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 
 def test_parametros_gateway_impl_mapping():
     raw_data = {
@@ -15,6 +15,6 @@ def test_parametros_gateway_impl_mapping():
         "escenarios": {"test": {"nombre": "Test", "tasa_crecimiento_mensual": 0.01}}
     }
     
-    gateway = DinamicoParametrosGateway(raw_data)
+    gateway = JsonParametrosRepository(raw_data)
     inversion = gateway.get_inversion()
     assert inversion.monto_anr == 1000.0

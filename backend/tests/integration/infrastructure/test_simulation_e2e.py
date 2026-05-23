@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from src.infrastructure.api_gateway.app import app
+from src.infrastructure.web.routes import app
 
 client = TestClient(app)
 
@@ -18,8 +18,8 @@ def test_full_simulation_flow():
                 {
                     "id": "p1",
                     "nombre": "Bolsa Lisa",
-                    "precio": 150.0,
-                    "costo": 85.5
+                    "precio_unitario": 150.0,
+                    "costo_marginal_unitario": 85.5
                 }
             ],
             "lineas": [

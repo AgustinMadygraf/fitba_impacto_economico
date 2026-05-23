@@ -1,5 +1,5 @@
 import pytest
-from src.use_cases.simular_impacto_economico import SimularImpactoEconomico
+from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE

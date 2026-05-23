@@ -8,7 +8,7 @@ from src.entities.linea_produccion import LineaProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 
 class SimularImpactoEconomico:
-    """Caso de uso para calcular el punto de equilibrio con entidades desacopladas."""
+    """Caso de uso para calcular el punto de equilibrio con entidades desacopladas e inflación ajustada."""
     
     def __init__(
         self, 
@@ -42,7 +42,14 @@ class SimularImpactoEconomico:
         beneficio_base = self._calcular_beneficio_mensual(self.capacidad_instalada.capacidad_nominal_total * self.oee_base.valor)
         
         for mes in range(1, self.horizonte_maximo + 1):
-            target_actualizado_t = self.inversion.calcular_target_proyectado(mes)
+            # --- NUEVA LÓGICA DE INFLACIÓN ---
+            # El caso de uso delega la responsabilidad del cálculo a la entidad.
+            if self.inversion.indice_base:
+                factor_inflacion = self.inversion.indice_base.calcular_factor_capitalizacion(mes)
+                target_actualizado_t = self.inversion.monto_anr * factor_inflacion
+            else:
+                target_actualizado_t = self.inversion.monto_anr
+            # ---------------------------------
             
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             

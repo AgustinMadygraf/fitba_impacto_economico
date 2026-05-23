@@ -25,4 +25,4 @@ class Inversion:
         if not self.indice_base:
             return self.monto_actualizado
             
-        return self.monto_actualizado * self.indice_base.obtener_factor_acumulado(mes)
+        return self.monto_actualizado * self.indice_base.calcular_factor_capitalizacion(mes)
