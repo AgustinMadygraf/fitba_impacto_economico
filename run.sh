@@ -19,5 +19,5 @@ elif [ "$CMD" == "start" ]; then
     echo "Iniciando servidor Uvicorn..."
     echo "Por favor, abre tu navegador web en: http://localhost:8000"
     echo "------------------------------------------------------------"
-    uvicorn src.infrastructure.web.app:app --host 127.0.0.1 --port 8000 --reload --log-level info
+    uvicorn src.infrastructure.api_gateway.app:app --host 127.0.0.1 --port 8000 --reload --log-level info
 fi
