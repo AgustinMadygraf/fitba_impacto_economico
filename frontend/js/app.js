@@ -20,14 +20,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const form = document.getElementById('form-simulacion');
   const loading = document.getElementById('loading');
-  const ctx = document.getElementById('chart-proyeccion').getContext('2d');
+  const canvasElement = document.getElementById('chart-proyeccion');
+  const ctx = canvasElement ? canvasElement.getContext('2d') : null;
   let myChart = null;
 
   fetch('/api/v1/simulacion/parametros')
     .then(res => res.json())
     .then(async data => {
       poblarFormulario(data);
-      loading.classList.remove('d-none');
+      if (loading) loading.classList.remove('d-none');
       try {
         const formData = FormBinder.getSimulationData();
         const results = await SimulationController.runSimulation(formData);
@@ -35,14 +36,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (error) {
         if (getMode() === 'development') console.error('Error en simulación automática:', {error});
       } finally {
-        loading.classList.remove('d-none');
+        if (loading) loading.classList.add('d-none');
       }
     })
     .catch(err => { if (getMode() === 'development') console.error('Error cargando parámetros:', {err}) });
 
-  form.addEventListener('submit', async (e) => {
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    loading.classList.remove('d-none');
+    if (loading) loading.classList.remove('d-none');
     
     try {
       const formData = FormBinder.getSimulationData();
@@ -52,109 +53,72 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('[FITBA] Error crítico en simulación:', error);
       alert('Error en simulación: ' + error.message);
     } finally {
-      loading.classList.add('d-none');
+      if (loading) loading.classList.add('d-none');
     }
   });
 
-  /**
-   * Renderiza dinámicamente un producto en la UI.
-   * @param {Object} producto - Datos del producto.
-   */
-  function renderProductoRow(producto = { id: Date.now().toString(), nombre: "Nuevo Producto", precio: 0, costo: 0 }) {
+  function renderProductoRow(producto) {
     const container = document.getElementById("lista-productos");
+    if (!container) return;
     const div = document.createElement("div");
     div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-producto";
     div.dataset.id = producto.id;
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-producto-nombre" value="${producto.nombre}" placeholder="Nombre">
       <div class="d-flex gap-2">
-        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio}" placeholder="Precio">
-        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo}" placeholder="Costo">
+        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio_unitario}" placeholder="Precio">
+        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo_marginal_unitario}" placeholder="Costo">
       </div>
     `;
     container.appendChild(div);
-    
-    if (container.children.length >= 1) {
-      document.getElementById("add-producto").disabled = true;
-    }
   }
 
-  /**
-   * Renderiza dinámicamente una línea de producción en la UI.
-   * @param {Object} linea - Datos de la línea.
-   */
-  function renderLineaRow(linea = { id: Date.now().toString(), nombre: "Línea 1", capacidad: 0 }) {
+  function renderLineaRow(linea) {
     const container = document.getElementById("lista-lineas");
+    if (!container) return;
     const div = document.createElement("div");
     div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-linea";
     div.dataset.id = linea.id;
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-linea-nombre" value="${linea.nombre}" placeholder="Nombre">
-      <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad}" placeholder="Capacidad Nominal">
+      <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad_nominal}" placeholder="Capacidad Nominal">
     `;
     container.appendChild(div);
-
-    if (container.children.length >= 1) {
-      document.getElementById("add-linea").disabled = true;
-    }
   }
 
-  /**
-  * Pobla el formulario con datos iniciales.
-  * @param {Object} data - Datos iniciales.
-  */
   function poblarFormulario(data) {
     if (!data.inversion || !data.productos || !data.lineas_produccion) {
         console.error("Error: Contrato API violado, faltan campos en la respuesta", data);
         return;
     }
 
-    document.getElementById('input-anr').value = data.inversion.monto_actualizado;
+    const inputAnr = document.getElementById('input-anr');
+    if (inputAnr) inputAnr.value = data.inversion.monto_actualizado;
     
-    // Limpiar contenedores
-    document.getElementById("lista-productos").innerHTML = "";
-    document.getElementById("lista-lineas").innerHTML = "";
-    document.getElementById("lista-ipc").innerHTML = "";
+    const listaProductos = document.getElementById("lista-productos");
+    const listaLineas = document.getElementById("lista-lineas");
+    const listaIpc = document.getElementById("lista-ipc");
 
-    // Poblar productos
-    data.productos.forEach(p => {
-      renderProductoRow({
-        id: p.id,
-        nombre: p.nombre,
-        precio: p.precio_unitario,
-        costo: p.costo_marginal_unitario
-      });
-    });
+    if (listaProductos) listaProductos.innerHTML = "";
+    if (listaLineas) listaLineas.innerHTML = "";
+    if (listaIpc) listaIpc.innerHTML = "";
 
-    // Poblar líneas
-    data.lineas_produccion.forEach(l => {
-      renderLineaRow({
-        id: l.id,
-        nombre: l.nombre,
-        capacidad: l.capacidad_nominal
-      });
-    });
+    data.productos.forEach(p => renderProductoRow(p));
+    data.lineas_produccion.forEach(l => renderLineaRow(l));
     
-    // Poblar IPC (Si existe en la API)
-    if (data.ipc_serie) {
-       document.getElementById("lista-ipc").innerHTML = data.ipc_serie.map(item => `
+    if (listaIpc && data.ipc_serie) {
+       listaIpc.innerHTML = data.ipc_serie.map(item => `
          <div>Mes ${item.mes}: ${(item.tasa * 100).toFixed(1)}%</div>
        `).join('');
+    } else {
+       console.warn("[FITBA] lista-ipc no encontrado en el DOM o sin datos");
     }
-
-    document.getElementById('input-rate-desfavorable').value = 1.0;
-    document.getElementById('input-rate-proyectado').value = 1.5;
-    document.getElementById('input-rate-favorable').value = 2.0;
   }
 
-  /**
-   * Actualiza la UI con los resultados.
-   * @param {Object} results - Resultados de la simulación.
-   */
   function actualizarUI(results) {
     UIUpdater.actualizarKPIs(results);
     UIUpdater.renderizarTabla(results.resultados);
-    renderizarGrafico(results.proyecciones, results.target_repago);
+    if (ctx) renderizarGrafico(results.proyecciones, results.target_repago);
   }
 
   function renderizarGrafico(proyecciones, target) {
