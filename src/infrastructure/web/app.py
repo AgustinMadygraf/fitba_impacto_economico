@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 # Logger técnico
-web_logger = get_logger("FITBA.Web", debug=True)
+web_logger = get_logger("FITBA.Web")
 
 # Esquemas de Validación Pydantic
 class OEEBaseSchema(BaseModel):
@@ -107,7 +107,7 @@ def post_simular(payload: SimularRequestSchema):
         # Inyección de dependencias bajo Clean Architecture
         gateway = DinamicoParametrosGateway(raw_dict)
         presenter = JSONSimulacionPresenter()
-        sim_logger = get_logger("FITBA.SimulacionWeb", debug=True)
+        sim_logger = get_logger("FITBA.SimulacionWeb")
         
         controller = SimulacionController(
             gateway=gateway,
