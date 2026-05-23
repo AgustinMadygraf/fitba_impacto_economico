@@ -11,6 +11,7 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - Inversión
 - OEE Dinámico
 - Producción y Finanzas
+- Mix de Producción (Productos, Líneas, Mix Objetivo)
 - Escenarios
 - Productos (Mix)
 - Flujos de Producción (Agrupación de máquinas dependientes)

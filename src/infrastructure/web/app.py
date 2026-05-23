@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from src.infrastructure.settings.config import ConfigLoader
 from src.infrastructure.settings.logger import get_logger
@@ -39,14 +39,25 @@ class OEEBaseSchema(BaseModel):
     rendimiento: float = Field(..., ge=0.0, le=1.0)
     calidad: float = Field(..., ge=0.0, le=1.0)
 
-class ProduccionSchema(BaseModel):
-    volumen_mensual_base: float = Field(..., gt=0)
-    precio_unitario_promedio: float = Field(..., gt=0)
-    costos_variables: dict[str, float]
-
 class InversionSchema(BaseModel):
     objetivo_anr: float = Field(..., gt=0)
     factor_ipc_acumulado: float = Field(..., ge=1.0)
+
+class ProductoSchema(BaseModel):
+    id: str
+    nombre: str
+    precio_unitario: float = Field(..., gt=0)
+    costo_marginal_unitario: float = Field(..., ge=0)
+
+class LineaProduccionSchema(BaseModel):
+    id: str
+    nombre: str
+    capacidad_nominal: float = Field(..., gt=0)
+    productos_compatibles: List[str]
+
+class MixProduccionSchema(BaseModel):
+    producto_id: str
+    porcentaje: float = Field(..., ge=0.0, le=1.0)
 
 class EscenarioDetalleSchema(BaseModel):
     nombre: str
@@ -56,7 +67,9 @@ class EscenarioDetalleSchema(BaseModel):
 class SimularRequestSchema(BaseModel):
     inversion: InversionSchema
     oee: dict[str, Any]
-    produccion: ProduccionSchema
+    productos: List[ProductoSchema]
+    lineas_produccion: List[LineaProduccionSchema]
+    mix_objetivo: List[MixProduccionSchema]
     escenarios: dict[str, EscenarioDetalleSchema]
 
 

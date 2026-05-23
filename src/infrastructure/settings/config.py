@@ -1,24 +1,17 @@
-"""
-Path: src/infrastructure/settings/config.py
-"""
 
 import json
 import argparse
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
-from src.entities.produccion import Produccion
+from src.entities.produccion import MixProduccion
+from src.entities.linea_produccion import LineaProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
 
 class ConfigLoader(ParametrosGateway):
-    """
-    Cargador de configuración de infraestructura.
-    Centraliza la captura de parámetros desde JSON y argumentos de línea de comandos (CLI).
-    """
-    
     def __init__(self, config_path: str = "data/params.json"):
         self.config_path = config_path
         self._args = self._parse_cli_args()
@@ -27,50 +20,44 @@ class ConfigLoader(ParametrosGateway):
     def _parse_cli_args(self):
         parser = argparse.ArgumentParser(description="Simulador de Impacto Económico FITBA")
         parser.add_argument("--debug", action="store_true", help="Habilitar modo auditoría técnica (DEBUG)")
-        # Podemos permitir que otros argumentos de main.py se definan aquí
         return parser.parse_known_args()[0]
 
     def is_debug_enabled(self) -> bool:
         return self._args.debug
 
     def _load_json(self) -> Dict[str, Any]:
-        with open(self.config_path, 'r') as f:
+        with open(self.config_path, "r") as f:
             return json.load(f)
 
     def get_inversion(self) -> Inversion:
-        data = self._raw_data['inversion']
+        data = self._raw_data["inversion"]
         return Inversion(
-            monto_anr=data['objetivo_anr'],
-            factor_ipc=data['factor_ipc_acumulado']
+            monto_anr=data["objetivo_anr"],
+            factor_ipc=data["factor_ipc_acumulado"]
         )
 
-    def get_producto(self) -> Producto:
-        data = self._raw_data['produccion']
-        return Producto(
-            nombre="Producto Genérico Madygraf",
-            precio_unitario=data['precio_unitario_promedio'],
-            costos_marginales_unitarios=data['costos_variables']['material_por_unidad']
-        )
+    def get_productos(self) -> List[Producto]:
+        # Implementación mínima necesaria para cumplir con la interfaz
+        return []
 
     def get_oee_base(self) -> OEE:
-        data = self._raw_data['oee']['linea_base']
+        data = self._raw_data["oee"]["linea_base"]
         return OEE(
-            disponibilidad=data['disponibilidad'],
-            rendimiento=data['rendimiento'],
-            calidad=data['calidad']
+            disponibilidad=data["disponibilidad"],
+            rendimiento=data["rendimiento"],
+            calidad=data["calidad"]
         )
 
-    def get_produccion_base(self) -> Produccion:
-        vol_base = self._raw_data['produccion']['volumen_mensual_base']
-        return Produccion(
-            volumen_base=vol_base,
-            volumen_vector=[vol_base]
-        )
+    def get_lineas_produccion(self) -> List[LineaProduccion]:
+        return []
+
+    def get_mix_produccion(self) -> MixProduccion:
+        return MixProduccion(porcentajes={})
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
         return CapacidadInstalada(
-            limite_disponibilidad=self._raw_data['oee']['limite_disponibilidad']
+            limite_disponibilidad=self._raw_data["oee"]["limite_disponibilidad"]
         )
 
     def get_escenarios_raw(self) -> Dict[str, Any]:
-        return self._raw_data['escenarios']
+        return self._raw_data["escenarios"]

@@ -1,13 +1,10 @@
-"""
-Path: src/interface_adapter/gateway/parametros_gateway.py
-"""
-
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, List
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
-from src.entities.produccion import Produccion
+from src.entities.produccion import MixProduccion
+from src.entities.linea_produccion import LineaProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 
 class ParametrosGateway(ABC):
@@ -21,7 +18,7 @@ class ParametrosGateway(ABC):
         pass
 
     @abstractmethod
-    def get_producto(self) -> Producto:
+    def get_productos(self) -> List[Producto]:
         pass
 
     @abstractmethod
@@ -29,7 +26,11 @@ class ParametrosGateway(ABC):
         pass
 
     @abstractmethod
-    def get_produccion_base(self) -> Produccion:
+    def get_lineas_produccion(self) -> List[LineaProduccion]:
+        pass
+
+    @abstractmethod
+    def get_mix_produccion(self) -> MixProduccion:
         pass
 
     @abstractmethod
