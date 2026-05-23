@@ -25,59 +25,61 @@
       <!-- SECCIÓN 1: ENTRADAS -->
       <aside class="col-lg-4 col-xl-3 section-container" id="section-inputs">
         <h2 class="section-title">1. Datos de Entrada</h2>
-        <div class="glass-panel p-4">
-          <form id="form-simulacion">
-            <!-- Inversión -->
-            <div class="mb-4">
-              <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Inversión</div>
-              <div class="mb-3">
-                <label for="input-anr" class="form-label">ANR Otorgado ($)</label>
-                <input type="number" step="1000" class="form-control" id="input-anr" required>
+        <div class="card shadow-sm border-0 glass-card">
+          <div class="card-body p-4">
+            <form id="form-simulacion">
+              <!-- Inversión -->
+              <div class="mb-4">
+                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Inversión</div>
+                <div class="mb-3">
+                  <label for="input-anr" class="form-label">ANR Otorgado ($)</label>
+                  <input type="number" step="1000" class="form-control" id="input-anr" required>
+                </div>
+                <div class="mb-3">
+                  <label for="input-ipc" class="form-label">IPC Acumulado (%)</label>
+                  <input type="number" step="0.1" class="form-control" id="input-ipc" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="input-ipc" class="form-label">IPC Acumulado (%)</label>
-                <input type="number" step="0.1" class="form-control" id="input-ipc" required>
-              </div>
-            </div>
 
-            <!-- OEE -->
-            <div class="mb-4">
-              <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Línea Base OEE</div>
-              <div class="mb-2">
-                <label for="input-disp-base" class="form-label">Disponibilidad (%)</label>
-                <input type="number" step="0.1" class="form-control" id="input-disp-base" required>
+              <!-- OEE -->
+              <div class="mb-4">
+                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Línea Base OEE</div>
+                <div class="mb-2">
+                  <label for="input-disp-base" class="form-label">Disponibilidad (%)</label>
+                  <input type="number" step="0.1" class="form-control" id="input-disp-base" required>
+                </div>
+                <div class="mb-2 small text-muted">Rendimiento y Calidad fijos.</div>
+                <input type="hidden" id="input-perf"><input type="hidden" id="input-quality">
               </div>
-              <div class="mb-2 small text-muted">Rendimiento y Calidad fijos.</div>
-              <input type="hidden" id="input-perf"><input type="hidden" id="input-quality">
-            </div>
 
-            <!-- Producción -->
-            <div class="mb-4">
-              <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Producción</div>
-              <div class="mb-2">
-                <label for="input-vol-base" class="form-label">Volumen Base</label>
-                <input type="number" class="form-control" id="input-vol-base" required>
+              <!-- Producción -->
+              <div class="mb-4">
+                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Producción</div>
+                <div class="mb-2">
+                  <label for="input-vol-base" class="form-label">Volumen Base</label>
+                  <input type="number" class="form-control" id="input-vol-base" required>
+                </div>
+                <div class="mb-2">
+                  <label for="input-precio" class="form-label">Precio Unitario</label>
+                  <input type="number" step="0.1" class="form-control" id="input-precio" required>
+                </div>
+                <div class="mb-2">
+                  <label for="input-costo" class="form-label">Costo Material</label>
+                  <input type="number" step="0.1" class="form-control" id="input-costo" required>
+                </div>
               </div>
-              <div class="mb-2">
-                <label for="input-precio" class="form-label">Precio Unitario</label>
-                <input type="number" step="0.1" class="form-control" id="input-precio" required>
-              </div>
-              <div class="mb-2">
-                <label for="input-costo" class="form-label">Costo Material</label>
-                <input type="number" step="0.1" class="form-control" id="input-costo" required>
-              </div>
-            </div>
 
-            <!-- Escenarios -->
-            <div class="mb-4">
-              <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Tasas Crecimiento (r)</div>
-              <input type="number" step="0.1" class="form-control mb-2" id="input-rate-desfavorable" placeholder="Desfavorable" required>
-              <input type="number" step="0.1" class="form-control mb-2" id="input-rate-proyectado" placeholder="Proyectado" required>
-              <input type="number" step="0.1" class="form-control mb-2" id="input-rate-favorable" placeholder="Favorable" required>
-            </div>
+              <!-- Escenarios -->
+              <div class="mb-4">
+                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Tasas Crecimiento (r)</div>
+                <input type="number" step="0.1" class="form-control mb-2" id="input-rate-desfavorable" placeholder="Desfavorable" required>
+                <input type="number" step="0.1" class="form-control mb-2" id="input-rate-proyectado" placeholder="Proyectado" required>
+                <input type="number" step="0.1" class="form-control mb-2" id="input-rate-favorable" placeholder="Favorable" required>
+              </div>
 
-            <button type="submit" class="btn btn-primary w-100" id="btn-simular">Simular</button>
-          </form>
+              <button type="submit" class="btn btn-primary w-100" id="btn-simular">Simular</button>
+            </form>
+          </div>
         </div>
       </aside>
 
@@ -87,19 +89,21 @@
         <!-- SECCIÓN 2: DATOS INTERMEDIOS -->
         <section class="section-container" id="section-intermediates">
           <h2 class="section-title">2. Datos Intermedios</h2>
-          <div class="glass-panel p-4">
-            <div class="row g-4">
-              <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
-                <div class="text-secondary fs-7 text-uppercase">Inversión Actualizada</div>
-                <div class="fs-3 fw-bold text-white mt-1" id="kpi-target-actualizado">/usr/bin/bash</div>
-              </div>
-              <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
-                <div class="text-secondary fs-7 text-uppercase">OEE Base Real</div>
-                <div class="fs-3 fw-bold text-white mt-1" id="kpi-oee-base">0%</div>
-              </div>
-              <div class="col-md-4 text-center">
-                <div class="text-secondary fs-7 text-uppercase">Capacidad Máxima</div>
-                <div class="fs-3 fw-bold text-warning mt-1" id="kpi-oee-max">0%</div>
+          <div class="card shadow-sm border-0 glass-card">
+            <div class="card-body p-4">
+              <div class="row g-4">
+                <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
+                  <div class="text-secondary fs-7 text-uppercase">Inversión Actualizada</div>
+                  <div class="fs-3 fw-bold text-white mt-1" id="kpi-target-actualizado">/usr/bin/bash</div>
+                </div>
+                <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
+                  <div class="text-secondary fs-7 text-uppercase">OEE Base Real</div>
+                  <div class="fs-3 fw-bold text-white mt-1" id="kpi-oee-base">0%</div>
+                </div>
+                <div class="col-md-4 text-center">
+                  <div class="text-secondary fs-7 text-uppercase">Capacidad Máxima</div>
+                  <div class="fs-3 fw-bold text-warning mt-1" id="kpi-oee-max">0%</div>
+                </div>
               </div>
             </div>
           </div>
@@ -108,28 +112,30 @@
         <!-- SECCIÓN 3: SALIDAS -->
         <section class="section-container" id="section-outputs">
           <h2 class="section-title">3. Datos de Salida</h2>
-          <div class="glass-panel p-4">
-            <div class="row g-4">
-              <div class="col-lg-5">
-                <h3 class="fs-6 text-secondary mb-3">Análisis de Repago</h3>
-                <div id="loading" class="spinner-border spinner-border-sm text-info d-none" role="status"></div>
-                <div class="table-responsive">
-                  <table class="custom-table">
-                    <thead>
-                      <tr>
-                        <th>Escenario</th>
-                        <th class="text-center">Payback</th>
-                        <th class="text-center">Viabilidad</th>
-                      </tr>
-                    </thead>
-                    <tbody id="resultados-tbody"></tbody>
-                  </table>
+          <div class="card shadow-sm border-0 glass-card">
+            <div class="card-body p-4">
+              <div class="row g-4">
+                <div class="col-lg-5">
+                  <h3 class="fs-6 text-secondary mb-3">Análisis de Repago</h3>
+                  <div id="loading" class="spinner-border spinner-border-sm text-info d-none" role="status"></div>
+                  <div class="table-responsive">
+                    <table class="custom-table">
+                      <thead>
+                        <tr>
+                          <th>Escenario</th>
+                          <th class="text-center">Payback</th>
+                          <th class="text-center">Viabilidad</th>
+                        </tr>
+                      </thead>
+                      <tbody id="resultados-tbody"></tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <div class="col-lg-7">
-                <h3 class="fs-6 text-secondary mb-3">Proyección Beneficio Acumulado</h3>
-                <div style="height: 250px;">
-                  <canvas id="chart-proyeccion"></canvas>
+                <div class="col-lg-7">
+                  <h3 class="fs-6 text-secondary mb-3">Proyección Beneficio Acumulado</h3>
+                  <div style="height: 250px;">
+                    <canvas id="chart-proyeccion"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
