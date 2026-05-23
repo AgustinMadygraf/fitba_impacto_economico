@@ -22,7 +22,7 @@ measure_step() {
 }
 
 # 1. Validaciones Locales
-measure_step "Tests" cd backend && source .venv/bin/activate && pytest
+measure_step "Tests" "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/run.sh" test
 
 # 2. Configuración
 if [ -f .env ]; then
