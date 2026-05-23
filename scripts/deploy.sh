@@ -28,10 +28,10 @@ measure_step "Tests" cd backend && source .venv/bin/activate && pytest
 if [ -f .env ]; then
     source .env
 elif [ -f backend/.env ]; then
+    source backend/.env
 else
     log_error "No se encontró el archivo .env"
     exit 1
-fi
 fi
 
 : "${VPS_USER:?VPS_USER no definido}"
