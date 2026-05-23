@@ -1,7 +1,3 @@
-"""
-Path: src/infrastructure/web/app.py
-"""
-
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -71,6 +67,15 @@ class SimularRequestSchema(BaseModel):
     lineas_produccion: List[LineaProduccionSchema]
     mix_objetivo: List[MixProduccionSchema]
     escenarios: dict[str, EscenarioDetalleSchema]
+
+
+@app.get("/api/config")
+def get_config():
+    """
+    Retorna la configuración actual de la aplicación.
+    """
+    loader = ConfigLoader()
+    return {"mode": loader.get_app_mode()}
 
 
 @app.get("/api/params")

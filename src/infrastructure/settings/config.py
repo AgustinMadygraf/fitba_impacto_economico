@@ -1,5 +1,6 @@
 import json
 import argparse
+import os
 from typing import Dict, Any, List
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
@@ -19,6 +20,9 @@ class ConfigLoader(ParametrosGateway):
         parser = argparse.ArgumentParser(description="Simulador de Impacto Económico FITBA")
         parser.add_argument("--debug", action="store_true", help="Habilitar modo auditoría técnica (DEBUG)")
         return parser.parse_known_args()[0]
+
+    def get_app_mode(self) -> str:
+        return os.getenv("APP_MODE", "development")
 
     def is_debug_enabled(self) -> bool:
         return self._args.debug
