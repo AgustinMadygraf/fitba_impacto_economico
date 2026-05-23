@@ -6,34 +6,35 @@
   --bg-card: hsla(223, 20%, 12%, 0.6);
   --border-glass: hsla(223, 15%, 22%, 0.5);
   --accent-blue: hsl(195, 100%, 50%);
+  --text-primary: hsl(210, 20%, 98%);
+  --text-secondary: hsl(215, 15%, 72%);
   --btn-gradient: linear-gradient(135deg, hsl(195, 100%, 45%), hsl(145, 80%, 40%));
 }
 
-body { background-color: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+body { background-color: var(--bg-dark); font-family: 'Plus Jakarta Sans', sans-serif; }
 
-/* Estilo Glass-Card (reemplaza a glass-panel) */
-.glass-card {
-  background: var(--bg-card);
+/* Refinamiento de componentes Card para armonía */
+.card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-glass) !important;
 }
 
-.section-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.1rem;
-  color: var(--accent-blue);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-  padding-left: 0.5rem;
+/* Formularios dentro de card */
+.card .form-label { color: var(--text-secondary); }
+.card .form-control { 
+  background: rgba(0,0,0,0.3); 
+  border: 1px solid var(--border-glass); 
+  color: #fff; 
 }
+.card .text-muted { color: var(--text-secondary) !important; }
 
-/* Formulario y Botones */
-.form-label { color: #aaa; font-size: 0.8rem; }
-.form-control { background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); color: #fff; }
+/* Botones */
 .btn-primary { background: var(--btn-gradient); border: none; font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.1); }
 
-/* Tablas */
-.custom-table th { color: #888; font-size: 0.7rem; text-transform: uppercase; }
+/* Badges */
 .badge-escenario { border-radius: 4px; padding: 0.2rem 0.5rem; font-size: 0.7rem; }
 .badge-favorable { background: rgba(0,255,100,0.1); color: #0f6; border: 1px solid #0f6; }
 .badge-desfavorable { background: rgba(255,50,0,0.1); color: #f50; border: 1px solid #f50; }

@@ -6,7 +6,7 @@
 - [ ] **Fase 3: Refactorización a Bootstrap Estándar (Migración Progresiva)**
   - [x] **Paso 3.1: Layout**. Reemplazar grid custom por row/col de Bootstrap.
   - [x] **Paso 3.2: Componentes**. Convertir paneles custom en card de Bootstrap.
-  - [ ] **Paso 3.3: Tipografía**. Unificar títulos y utilidades de texto.
+  - [x] **Paso 3.3: Tipografía**. Unificar títulos y utilidades de texto.
   - [ ] **Paso 3.4: Theme**. Crear theme.css basado en variables CSS y eliminar custom.css.
 
 ## Próximos Pasos

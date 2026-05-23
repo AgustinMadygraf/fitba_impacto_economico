@@ -12,10 +12,10 @@
   <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 py-3 mb-4">
     <div class="container-fluid px-4">
       <span class="navbar-brand d-flex align-items-center gap-2 text-white">
-        <span class="fs-4 fw-bold tracking-tight">FITBA</span>
-        <span class="badge bg-secondary bg-opacity-25 text-white-50 border border-secondary border-opacity-50">v1.2.1</span>
+        <span class="h3 fw-bold mb-0">FITBA</span>
+        <span class="badge bg-secondary bg-opacity-25 text-white-50 border border-secondary border-opacity-50">v1.2.2</span>
       </span>
-      <span class="text-white-50 fs-7">Madygraf | Simulador de Impacto</span>
+      <span class="text-muted fs-7">Madygraf | Simulador de Impacto</span>
     </div>
   </nav>
 
@@ -23,55 +23,51 @@
     <div class="row g-4">
       
       <!-- SECCIÓN 1: ENTRADAS -->
-      <aside class="col-lg-4 col-xl-3 section-container" id="section-inputs">
-        <h2 class="section-title">1. Datos de Entrada</h2>
+      <aside class="col-lg-4 col-xl-3" id="section-inputs">
+        <h2 class="h5 text-primary text-uppercase fw-bold mb-3">1. Datos de Entrada</h2>
         <div class="card shadow-sm border-0 glass-card">
           <div class="card-body p-4">
             <form id="form-simulacion">
-              <!-- Inversión -->
               <div class="mb-4">
-                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Inversión</div>
+                <div class="h6 text-info text-uppercase mb-2">Inversión</div>
                 <div class="mb-3">
-                  <label for="input-anr" class="form-label">ANR Otorgado ($)</label>
+                  <label for="input-anr" class="form-label text-muted">ANR Otorgado ($)</label>
                   <input type="number" step="1000" class="form-control" id="input-anr" required>
                 </div>
                 <div class="mb-3">
-                  <label for="input-ipc" class="form-label">IPC Acumulado (%)</label>
+                  <label for="input-ipc" class="form-label text-muted">IPC Acumulado (%)</label>
                   <input type="number" step="0.1" class="form-control" id="input-ipc" required>
                 </div>
               </div>
 
-              <!-- OEE -->
               <div class="mb-4">
-                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Línea Base OEE</div>
+                <div class="h6 text-info text-uppercase mb-2">Línea Base OEE</div>
                 <div class="mb-2">
-                  <label for="input-disp-base" class="form-label">Disponibilidad (%)</label>
+                  <label for="input-disp-base" class="form-label text-muted">Disponibilidad (%)</label>
                   <input type="number" step="0.1" class="form-control" id="input-disp-base" required>
                 </div>
-                <div class="mb-2 small text-muted">Rendimiento y Calidad fijos.</div>
+                <small class="text-muted">Rendimiento y Calidad fijos.</small>
                 <input type="hidden" id="input-perf"><input type="hidden" id="input-quality">
               </div>
 
-              <!-- Producción -->
               <div class="mb-4">
-                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Producción</div>
+                <div class="h6 text-info text-uppercase mb-2">Producción</div>
                 <div class="mb-2">
-                  <label for="input-vol-base" class="form-label">Volumen Base</label>
+                  <label for="input-vol-base" class="form-label text-muted">Volumen Base</label>
                   <input type="number" class="form-control" id="input-vol-base" required>
                 </div>
                 <div class="mb-2">
-                  <label for="input-precio" class="form-label">Precio Unitario</label>
+                  <label for="input-precio" class="form-label text-muted">Precio Unitario</label>
                   <input type="number" step="0.1" class="form-control" id="input-precio" required>
                 </div>
                 <div class="mb-2">
-                  <label for="input-costo" class="form-label">Costo Material</label>
+                  <label for="input-costo" class="form-label text-muted">Costo Material</label>
                   <input type="number" step="0.1" class="form-control" id="input-costo" required>
                 </div>
               </div>
 
-              <!-- Escenarios -->
               <div class="mb-4">
-                <div class="text-info fs-7 fw-semibold text-uppercase mb-2">Tasas Crecimiento (r)</div>
+                <div class="h6 text-info text-uppercase mb-2">Tasas Crecimiento (r)</div>
                 <input type="number" step="0.1" class="form-control mb-2" id="input-rate-desfavorable" placeholder="Desfavorable" required>
                 <input type="number" step="0.1" class="form-control mb-2" id="input-rate-proyectado" placeholder="Proyectado" required>
                 <input type="number" step="0.1" class="form-control mb-2" id="input-rate-favorable" placeholder="Favorable" required>
@@ -87,22 +83,22 @@
       <main class="col-lg-8 col-xl-9 d-flex flex-column gap-4">
         
         <!-- SECCIÓN 2: DATOS INTERMEDIOS -->
-        <section class="section-container" id="section-intermediates">
-          <h2 class="section-title">2. Datos Intermedios</h2>
+        <section id="section-intermediates">
+          <h2 class="h5 text-primary text-uppercase fw-bold mb-3">2. Datos Intermedios</h2>
           <div class="card shadow-sm border-0 glass-card">
             <div class="card-body p-4">
               <div class="row g-4">
                 <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
-                  <div class="text-secondary fs-7 text-uppercase">Inversión Actualizada</div>
-                  <div class="fs-3 fw-bold text-white mt-1" id="kpi-target-actualizado">/usr/bin/bash</div>
+                  <div class="text-muted text-uppercase small">Inversión Actualizada</div>
+                  <div class="h3 fw-bold text-white mt-1" id="kpi-target-actualizado">/usr/bin/bash</div>
                 </div>
                 <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
-                  <div class="text-secondary fs-7 text-uppercase">OEE Base Real</div>
-                  <div class="fs-3 fw-bold text-white mt-1" id="kpi-oee-base">0%</div>
+                  <div class="text-muted text-uppercase small">OEE Base Real</div>
+                  <div class="h3 fw-bold text-white mt-1" id="kpi-oee-base">0%</div>
                 </div>
                 <div class="col-md-4 text-center">
-                  <div class="text-secondary fs-7 text-uppercase">Capacidad Máxima</div>
-                  <div class="fs-3 fw-bold text-warning mt-1" id="kpi-oee-max">0%</div>
+                  <div class="text-muted text-uppercase small">Capacidad Máxima</div>
+                  <div class="h3 fw-bold text-warning mt-1" id="kpi-oee-max">0%</div>
                 </div>
               </div>
             </div>
@@ -110,18 +106,18 @@
         </section>
 
         <!-- SECCIÓN 3: SALIDAS -->
-        <section class="section-container" id="section-outputs">
-          <h2 class="section-title">3. Datos de Salida</h2>
+        <section id="section-outputs">
+          <h2 class="h5 text-primary text-uppercase fw-bold mb-3">3. Datos de Salida</h2>
           <div class="card shadow-sm border-0 glass-card">
             <div class="card-body p-4">
               <div class="row g-4">
                 <div class="col-lg-5">
-                  <h3 class="fs-6 text-secondary mb-3">Análisis de Repago</h3>
+                  <h3 class="h6 text-muted mb-3">Análisis de Repago</h3>
                   <div id="loading" class="spinner-border spinner-border-sm text-info d-none" role="status"></div>
                   <div class="table-responsive">
-                    <table class="custom-table">
+                    <table class="table table-dark table-hover table-borderless align-middle">
                       <thead>
-                        <tr>
+                        <tr class="text-muted text-uppercase small">
                           <th>Escenario</th>
                           <th class="text-center">Payback</th>
                           <th class="text-center">Viabilidad</th>
@@ -132,7 +128,7 @@
                   </div>
                 </div>
                 <div class="col-lg-7">
-                  <h3 class="fs-6 text-secondary mb-3">Proyección Beneficio Acumulado</h3>
+                  <h3 class="h6 text-muted mb-3">Proyección Beneficio Acumulado</h3>
                   <div style="height: 250px;">
                     <canvas id="chart-proyeccion"></canvas>
                   </div>
@@ -147,8 +143,8 @@
     </div>
   </div>
 
-  <footer class="text-center text-secondary py-4 mt-4 fs-8">
-    FITBA v1.2.1 | Transparencia de Impacto Económico
+  <footer class="text-center text-secondary py-4 mt-4 small">
+    FITBA v1.2.2 | Transparencia de Impacto Económico
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
