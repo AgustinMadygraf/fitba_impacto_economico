@@ -45,7 +45,13 @@ class DinamicoParametrosGateway(ParametrosGateway):
         return MixProduccion(porcentajes=porcentajes)
 
     def get_oee_base(self) -> OEE:
-        data = self._raw_data["oee"]["linea_base"]
+        # Aceptamos la nueva estructura plana o la antigua para compatibilidad
+        oee_data = self._raw_data["oee"]
+        if "linea_base" in oee_data:
+            data = oee_data["linea_base"]
+        else:
+            data = oee_data
+            
         return OEE(
             disponibilidad=data["disponibilidad"],
             rendimiento=data["rendimiento"],
@@ -53,10 +59,11 @@ class DinamicoParametrosGateway(ParametrosGateway):
         )
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
-        # Nota: La lógica de capacidad instalada ahora debe derivarse de las lineas de producción
-        # Este método necesitará revisión cuando adaptemos el caso de uso.
+        oee_data = self._raw_data["oee"]
+        # Valor por defecto si no se envía, manteniendo compatibilidad
+        limite = oee_data.get("limite_disponibilidad", 0.85)
         return CapacidadInstalada(
-            limite_disponibilidad=self._raw_data["oee"]["limite_disponibilidad"]
+            limite_disponibilidad=limite
         )
 
     def get_escenarios_raw(self) -> Dict[str, Any]:

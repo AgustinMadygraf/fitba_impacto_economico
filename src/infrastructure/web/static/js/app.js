@@ -3,33 +3,37 @@
  */
 
 import { SimulationController } from './simulationController.js';
-import { Logger } from './logger.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    if (window.CONFIG_LOADED) await window.CONFIG_LOADED;
+  } catch (e) {
+    console.warn("Configuración no cargada, usando modo producción por defecto.");
+  }
+  
+  const getMode = () => (window.APP_CONFIG && window.APP_CONFIG.mode) || 'production';
+
   const form = document.getElementById('form-simulacion');
   const loading = document.getElementById('loading');
   const ctx = document.getElementById('chart-proyeccion').getContext('2d');
   let myChart = null;
 
-  // Inicialización: Cargar Parámetros y ejecutar simulación inicial
   fetch('/api/params')
     .then(res => res.json())
     .then(async data => {
       poblarFormulario(data);
-      // Automatización: Ejecutar simulación inicial
       loading.classList.remove('d-none');
       try {
         const results = await SimulationController.runSimulation(getFormData());
         actualizarUI(results);
       } catch (error) {
-        Logger.error('Error en simulación automática:', {error});
+        if (getMode() === 'development') console.error('Error en simulación automática:', {error});
       } finally {
         loading.classList.add('d-none');
       }
     })
-    .catch(err => Logger.error('Error cargando parámetros:', {err}));
+    .catch(err => { if (getMode() === 'development') console.error('Error cargando parámetros:', {err}) });
 
-  // Manejador de Simulación
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     loading.classList.remove('d-none');
@@ -44,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Funciones de Vista (Manipulación DOM)
   function getFormData() {
     return {
       anr: document.getElementById('input-anr').value,
@@ -64,11 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function poblarFormulario(data) {
     document.getElementById('input-anr').value = data.inversion.objetivo_anr;
     document.getElementById('input-ipc').value = ((data.inversion.factor_ipc_acumulado - 1) * 100).toFixed(1);
+    
     document.getElementById('input-disp-base').value = (data.oee.linea_base.disponibilidad * 100).toFixed(1);
     document.getElementById('input-perf').value = (data.oee.linea_base.rendimiento * 100).toFixed(1);
     document.getElementById('input-quality').value = (data.oee.linea_base.calidad * 100).toFixed(1);
     
-    // Mapeo actualizado para el nuevo modelo
     document.getElementById('input-vol-base').value = data.lineas_produccion[0].capacidad_nominal;
     document.getElementById('input-precio').value = data.productos[0].precio_unitario;
     document.getElementById('input-costo').value = data.productos[0].costo_marginal_unitario;
@@ -79,15 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function actualizarUI(results) {
-    document.getElementById('kpi-target-actualizado').textContent = '$' + results.targetRepago.toLocaleString('es-AR', { minimumFractionDigits: 0 });
-    document.getElementById('kpi-oee-base').textContent = (results.oeeBase * 100).toFixed(2) + '%';
+    document.getElementById('kpi-target-actualizado').textContent = '$' + results.target_repago.toLocaleString('es-AR', { minimumFractionDigits: 0 });
+    document.getElementById('kpi-oee-base').textContent = (results.oee_base * 100).toFixed(2) + '%';
     
-    // Cálculo de capacidad máxima (Frontend UI concern)
     const oeeMaxVal = 0.85 * (parseFloat(document.getElementById('input-perf').value)/100) * (parseFloat(document.getElementById('input-quality').value)/100);
     document.getElementById('kpi-oee-max').textContent = (oeeMaxVal * 100).toFixed(2) + '%';
     
     renderizarTabla(results.resultados);
-    renderizarGrafico(results.proyecciones, results.targetRepago);
+    renderizarGrafico(results.proyecciones, results.target_repago);
   }
 
   function renderizarTabla(resultados) {
@@ -106,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderizarGrafico(proyecciones, target) {
-    Logger.info('Renderizando gráfico', { proyecciones, target });
     try {
       const labels = Array.from({ length: 24 }, (_, i) => 'Mes ' + (i + 1));
       const datasets = [
@@ -134,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } catch (error) {
-      Logger.error('Error renderizando gráfico', { error });
+      if (getMode() === 'development') console.error('Error renderizando gráfico', { error });
     }
   }
 });

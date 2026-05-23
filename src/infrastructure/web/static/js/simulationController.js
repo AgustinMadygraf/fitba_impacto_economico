@@ -1,31 +1,25 @@
 import { ApiClient } from './apiClient.js';
-import { SimulationDomain } from './simulationDomain.js';
-import { Logger } from './logger.js';
+import { SimulationDomain } from './simulationDomain.js?v=3';
+import { SimulationMapper } from './simulationMapper.js?v=3';
 
 export const SimulationController = {
   async runSimulation(formData) {
-    const timerLabel = 'Simulación Total';
-    Logger.time(timerLabel);
-    Logger.info('Controller: Mapeando formulario...');
-    
     try {
-      const payload = SimulationDomain.mapFormToPayload(formData);
-      
+      // 1. Mapeo a DTO
+      const payload = SimulationMapper.mapFormToPayload(formData);
+
+      // 2. Ejecución Infraestructura
       const apiResponse = await ApiClient.post('/api/simular', payload);
-      
+
+      // 3. Ejecución Dominio
       const projections = SimulationDomain.calculateFrontendProjections(formData);
       
-      Logger.timeEnd(timerLabel);
-      
       return {
-        targetRepago: apiResponse.target_repago,
-        oeeBase: apiResponse.oee_base,
-        resultados: apiResponse.resultados,
+        ...apiResponse,
         proyecciones: projections
       };
     } catch (error) {
-      Logger.timeEnd(timerLabel);
-      Logger.error('Controller: Error crítico', { error });
+      if (window.APP_CONFIG && window.APP_CONFIG.mode === 'development') console.error('Controller: Error en simulación', { error });
       throw error;
     }
   }

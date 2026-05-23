@@ -62,7 +62,7 @@ class EscenarioDetalleSchema(BaseModel):
 
 class SimularRequestSchema(BaseModel):
     inversion: InversionSchema
-    oee: dict[str, Any]
+    oee: OEEBaseSchema
     productos: List[ProductoSchema]
     lineas_produccion: List[LineaProduccionSchema]
     mix_objetivo: List[MixProduccionSchema]
