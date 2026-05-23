@@ -13,8 +13,8 @@ def run():
     is_debug = config.is_debug_enabled()
     
     # 2. Inicialización de Loggers (Sin importar la librería logging)
-    main_logger = get_logger("FITBA.Main", debug=is_debug)
-    sim_logger = get_logger("FITBA.Simulacion", debug=is_debug)
+    main_logger = get_logger("FITBA.Main")
+    sim_logger = get_logger("FITBA.Simulacion")
     
     # 3. Ensamblaje y Ejecución
     controller = SimulacionController(
