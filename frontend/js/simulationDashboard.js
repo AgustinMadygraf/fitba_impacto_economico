@@ -12,16 +12,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loading = document.getElementById('loading');
   const canvasElement = document.getElementById('chart-proyeccion');
   const ctx = canvasElement ? canvasElement.getContext('2d') : null;
+  let realAnr = 0;
 
   fetch('/api/v1/simulacion/parametros')
     .then(res => res.json())
     .then(async data => {
+      realAnr = data.inversion.monto_anr_real;
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
       try {
         const formData = SimulationFormBinder.getSimulationData();
         const results = await SimulationController.runSimulation(formData);
-        actualizarUI(results);
+        actualizarUI(results, realAnr);
       } catch (error) {
         console.error("[FITBA ERROR] Simulation failed:", error);
       } finally {
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const formData = SimulationFormBinder.getSimulationData();
       const results = await SimulationController.runSimulation(formData);
-      actualizarUI(results);
+      actualizarUI(results, realAnr);
     } catch (error) {
       console.error("[FITBA ERROR] Submit simulation failed:", error);
     } finally {
@@ -94,8 +96,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  function actualizarUI(results) {
-    SimulationUIUpdater.actualizarKPIs(results);
+  function actualizarUI(results, realAnr) {
+    SimulationUIUpdater.actualizarKPIs(results, realAnr);
     SimulationUIUpdater.renderizarTabla(results.resultados);
     if (ctx) renderizarGrafico(results.proyecciones, results.target_repago);
   }
