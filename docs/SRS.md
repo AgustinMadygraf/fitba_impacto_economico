@@ -10,11 +10,10 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 ## 2. Entidades de Datos
 - Inversión
 - OEE Dinámico
-- Producción y Finanzas
-- Mix de Producción (Productos, Líneas, Mix Objetivo)
-- Escenarios
-- Productos (Mix)
-- Flujos de Producción (Agrupación de máquinas dependientes)
+- Líneas de Producción (Capacidad instalada, cuello de botella)
+- Mix de Producción (Productos, Mix Objetivo)
+- Productos (Margen de contribución)
+- Escenarios (Tasa de crecimiento, factor de demanda)
 
 ## 3. Requerimientos Funcionales
 - **RF01:** Carga y validación de parámetros por defecto (JSON).

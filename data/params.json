@@ -15,14 +15,28 @@
     "limite_disponibilidad": 0.85,
     "horizonte_max_meses": 24
   },
-  "produccion": {
-    "volumen_mensual_base": 450000,
-    "precio_unitario_promedio": 150.0,
-    "costos_variables": {
-      "material_por_unidad": 85.5,
-      "hora_operativa": 12000.0
+  "productos": [
+    {
+      "id": "bolsa_lisa",
+      "nombre": "Bolsa Lisa",
+      "precio_unitario": 150.0,
+      "costo_marginal_unitario": 85.5
     }
-  },
+  ],
+  "lineas_produccion": [
+    {
+      "id": "linea_principal",
+      "nombre": "Línea Principal",
+      "capacidad_nominal": 450000,
+      "productos_compatibles": ["bolsa_lisa"]
+    }
+  ],
+  "mix_objetivo": [
+    {
+      "producto_id": "bolsa_lisa",
+      "porcentaje": 1.0
+    }
+  ],
   "escenarios": {
     "desfavorable": {
       "nombre": "Desfavorable",
