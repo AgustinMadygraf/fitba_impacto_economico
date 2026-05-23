@@ -69,3 +69,20 @@ def test_get_capacidad_instalada(mock_params):
     loader = ConfigLoader(config_path=mock_params)
     capacidad = loader.get_capacidad_instalada()
     assert capacidad.limite_disponibilidad == 0.8
+
+def test_get_start_time(mock_params):
+    loader = ConfigLoader(config_path=mock_params)
+    start_time = loader.get_start_time()
+    assert isinstance(start_time, str)
+    # Debe ser una cadena ISO
+    assert "T" in start_time
+
+def test_is_debug_enabled_false(mock_params):
+    loader = ConfigLoader(config_path=mock_params)
+    assert loader.is_debug_enabled() is False
+
+def test_get_escenarios_raw(mock_params):
+    loader = ConfigLoader(config_path=mock_params)
+    escenarios = loader.get_escenarios_raw()
+    assert "esc1" in escenarios
+    assert escenarios["esc1"]["nombre"] == "E1"
