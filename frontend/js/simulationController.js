@@ -5,20 +5,23 @@ import { ApiClient } from './apiClient.js';
  */
 export const SimulationController = {
   async runSimulation(formData) {
+    // Observabilidad: Validar estado antes de procesar
+    if (!formData || Object.keys(formData).length === 0) {
+      console.warn('[FITBA] SimulationController: Form data is empty. Proceeding, but results might be invalid.');
+    }
+    
     try {
-      // 1. Mapeo a DTO (se mantiene por ahora en SimulationMapper)
       const { SimulationMapper } = await import('./simulationMapper.js');
       const payload = SimulationMapper.mapFormToPayload(formData);
 
-      // 2. Ejecución Infraestructura (Backend centralizado)
+      const startTime = performance.now();
       const apiResponse = await ApiClient.post('/api/v1/simulacion/ejecutar', payload);
+      const endTime = performance.now();
       
-      // 3. Ya no necesitamos SimulationDomain ni SimulationService en el frontend
-      // para el cálculo de proyecciones, el backend las provee.
-      
+      console.log(`[Observability] Simulation API call took: ${(endTime - startTime).toFixed(2)}ms`);
       return apiResponse;
     } catch (error) {
-      if (window.APP_CONFIG && window.APP_CONFIG.mode === 'development') console.error('Controller: Error en simulación', { error });
+      console.error('Controller: Error in runSimulation', { error });
       throw error;
     }
   }

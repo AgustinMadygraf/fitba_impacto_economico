@@ -8,7 +8,7 @@ from src.entities.produccion import MixProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 from src.entities.indice_financiero import IndiceFinanciero
 
-class DinamicoParametrosGateway(ParametrosGateway):
+class JsonParametrosRepository(ParametrosGateway):
     def __init__(self, raw_data: Dict[str, Any]):
         self._raw_data = raw_data
 

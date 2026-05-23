@@ -2,7 +2,7 @@ from typing import Any
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 from src.interface_adapter.presenter.simulacion_presenter import SimulacionPresenter
 from src.entities.escenario import Escenario
-from src.use_cases.simular_impacto_economico import SimularImpactoEconomico
+from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
 
 class SimulacionController:
     def __init__(self, gateway: Any, presenter: SimulacionPresenter, logger: Any):

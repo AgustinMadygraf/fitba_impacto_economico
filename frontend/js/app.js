@@ -20,29 +20,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     .then(async data => {
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
+      UINotifier.showInfo('Iniciando carga inicial...');
       try {
         const formData = FormBinder.getSimulationData();
         const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
+        UINotifier.showSuccess('Simulación inicial completada.');
       } catch (error) {
-        UINotifier.showError('Error en la simulación.');
+        console.warn("App UI Warning (Init): Check initialization state", error);
+        UINotifier.showError('Error en la simulación inicial: ' + error.message);
       } finally {
         if (loading) loading.classList.add('d-none');
       }
     })
     .catch(err => { 
+        console.error("App UI Error (Fetch Params):", err);
         UINotifier.showError('No se pudo conectar con el servidor.');
     });
 
+  if (!form) { console.warn("[FITBA] Simulation form not found in DOM"); }
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (loading) loading.classList.remove('d-none');
+    UINotifier.showInfo('Calculando nueva simulación...');
     try {
       const formData = FormBinder.getSimulationData();
       const results = await SimulationController.runSimulation(formData);
       actualizarUI(results);
+      UINotifier.showSuccess('Simulación calculada con éxito.');
     } catch (error) {
-      UINotifier.showError('Error en simulación: ' + error.message);
+      console.error("App UI Error (Submit):", error);
+      UINotifier.showError("Error en simulación: " + error.message);
     } finally {
       if (loading) loading.classList.add('d-none');
     }
