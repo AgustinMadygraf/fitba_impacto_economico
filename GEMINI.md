@@ -3,35 +3,19 @@
 ## 1. Mandatos Técnicos
 - Lenguaje: Python.
 - Patrón: Clean Architecture.
-- Entrada: JSON dinámico en data/params.json.
+- UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
 - Interfaz: Dashboard web con tres secciones (Entradas, Datos Intermedios, Salidas).
 
 ## 2. Reglas de Negocio (Fuente de Verdad)
 - Target de Repago: .492.000 (Solo el ANR otorgado).
 - Ajuste por Inflación: El Target debe actualizarse a valor presente usando el factor IPC del JSON.
 - Horizonte Temporal: Máximo 24 meses (Límite técnico).
-- Línea Base Operativa: 
-  - Disponibilidad (D0): 13,5% (0,135)
-  - Rendimiento (Performance): 44,0% (0,44) -> CONSTANTE
-  - Calidad (Quality): 84,0% (0,84) -> CONSTANTE
-  - OEE Base: 4,99%
-  - Límite de Disponibilidad: Definido dinámicamente mediante la entidad CapacidadInstalada.
+- Línea Base Operativa: OEE Base 4,99%.
 
-## 3. Lógica de Impacto Económico (Modelo Recursivo)
-- Crecimiento Disponibilidad (Dt): Dt = Dt-1 * (1 + r)
-- Producción Mensual (Pt): Volumen_Base * (Dt / D0)
-- Beneficio Mensual (Bt): (Pt - Volumen_Base) * (Precio - Costos_Marginales_Unitarios)
-- Política de Ventas: Venta Instantánea (limitada por Factor Demanda; no hay stock).
-- Costos Marginales: Incluyen materia prima (papel/pegamento) y energía marginal.
-- Tasas (r): Definidas por escenario (Desfavorable, Proyectado, Favorable).
-- Cálculo de Repago: Mes t donde sum(Bi) >= Inversion_Actualizada.
-- Análisis de Sensibilidad: Evaluación de riesgos ante variaciones en la tasa de crecimiento (r) del escenario base.
+## 3. Diseño de Interfaz (Transparencia de Proceso)
+- **Sección 1 (Entradas)**: Captura de parámetros.
+- **Sección 2 (Datos Intermedios)**: Transparencia de cálculos (Target IPC, OEE real).
+- **Sección 3 (Salidas)**: Resultados y Gráficos.
 
 ## 4. Estándares de Calidad
-- Cobertura de Tests: Mínimo 80% (unitarios y de integración).
-- CI: Ejecución de tests y chequeo de sintaxis obligatorio en pre-push.
-
-## 5. Diseño de Interfaz (Transparencia de Proceso)
-- **Sección 1 (Entradas)**: Captura de parámetros operativos.
-- **Sección 2 (Datos Intermedios)**: Visualización de valores calculados (Inversión IPC, OEE real, Margen unitario).
-- **Sección 3 (Salidas)**: Resultados de repago y gráficos dinámicos.
+- Bootstrap 100%: Los layouts deben ser responsivos mediante el sistema de grid nativo de Bootstrap.
