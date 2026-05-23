@@ -102,6 +102,12 @@ def get_params():
         gateway = DinamicoParametrosGateway(raw_data)
         inversion = gateway.get_inversion()
         
+        # Preparar serie IPC para frontend
+        ipc_serie = []
+        if "indices" in raw_data and "ipc" in raw_data["indices"]:
+            serie = raw_data["indices"]["ipc"]["serie_mensual"]
+            ipc_serie = [{"mes": k, "tasa": v} for k, v in serie.items()]
+            
         return {
             "inversion": {
                 "monto_anr": inversion.monto_anr,
@@ -117,7 +123,8 @@ def get_params():
             },
             "productos": raw_data["productos"],
             "lineas_produccion": raw_data["lineas_produccion"],
-            "mix_objetivo": {m["producto_id"]: m["porcentaje"] for m in raw_data["mix_objetivo"]}
+            "mix_objetivo": {m["producto_id"]: m["porcentaje"] for m in raw_data["mix_objetivo"]},
+            "ipc_serie": ipc_serie
         }
     except Exception as e:
         web_logger.error(f"Error cargando parámetros base: {str(e)}")

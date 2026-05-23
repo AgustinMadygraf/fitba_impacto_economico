@@ -30,13 +30,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       loading.classList.remove('d-none');
       try {
         const formData = FormBinder.getSimulationData();
-        if (getMode() === 'development') console.debug('[FITBA] Simulación inicial con datos:', formData);
         const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
       } catch (error) {
         if (getMode() === 'development') console.error('Error en simulación automática:', {error});
       } finally {
-        loading.classList.add('d-none');
+        loading.classList.remove('d-none');
       }
     })
     .catch(err => { if (getMode() === 'development') console.error('Error cargando parámetros:', {err}) });
@@ -47,23 +46,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     try {
       const formData = FormBinder.getSimulationData();
-      if (getMode() === 'development' || true) { // Forzado temporalmente para depuración solicitada
-        console.group('[FITBA] Depuración de Simulación');
-        console.info('1. Datos recolectados del formulario:', formData);
-      }
-
       const results = await SimulationController.runSimulation(formData);
-      
-      if (getMode() === 'development' || true) {
-        console.info('2. Resultados recibidos del Backend:', results);
-        console.groupEnd();
-      }
-
       actualizarUI(results);
     } catch (error) {
       console.error('[FITBA] Error crítico en simulación:', error);
       alert('Error en simulación: ' + error.message);
-      if (getMode() === 'development' || true) console.groupEnd();
     } finally {
       loading.classList.add('d-none');
     }
@@ -87,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     container.appendChild(div);
     
-    // Alcance Inicial: Restringir a 1 producto
     if (container.children.length >= 1) {
       document.getElementById("add-producto").disabled = true;
     }
@@ -108,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     container.appendChild(div);
 
-    // Alcance Inicial: Restringir a 1 línea
     if (container.children.length >= 1) {
       document.getElementById("add-linea").disabled = true;
     }
@@ -125,15 +110,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     document.getElementById('input-anr').value = data.inversion.monto_actualizado;
-    document.getElementById('input-ipc').value = 0; 
-    
-    document.getElementById("input-quality").value = (data.oee.calidad * 100).toFixed(1);
-    document.getElementById('input-disp-base').value = (data.oee.disponibilidad * 100).toFixed(1);
-    document.getElementById('input-perf').value = (data.oee.rendimiento * 100).toFixed(1);
     
     // Limpiar contenedores
     document.getElementById("lista-productos").innerHTML = "";
     document.getElementById("lista-lineas").innerHTML = "";
+    document.getElementById("lista-ipc").innerHTML = "";
 
     // Poblar productos
     data.productos.forEach(p => {
@@ -154,11 +135,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
     
-    // Mantener campos legacy por compatibilidad temporal con FormBinder
-    document.getElementById('input-precio').value = data.productos[0].precio_unitario;
-    document.getElementById('input-costo').value = data.productos[0].costo_marginal_unitario;
-    document.getElementById('input-vol-base').value = data.lineas_produccion[0].capacidad_nominal;
-    
+    // Poblar IPC (Si existe en la API)
+    if (data.ipc_serie) {
+       document.getElementById("lista-ipc").innerHTML = data.ipc_serie.map(item => `
+         <div>Mes ${item.mes}: ${(item.tasa * 100).toFixed(1)}%</div>
+       `).join('');
+    }
+
     document.getElementById('input-rate-desfavorable').value = 1.0;
     document.getElementById('input-rate-proyectado').value = 1.5;
     document.getElementById('input-rate-favorable').value = 2.0;
