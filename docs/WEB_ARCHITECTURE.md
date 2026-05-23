@@ -49,7 +49,7 @@ graph TD
     UseCase --> Escenario
 ```
 
-- **Capa de Dominio (`src/entities/`)**: **Inmutable.** No se permite la importación de librerías externas o dependencias del framework web.
+- **Capa de Dominio (`src/entities/`)**: **Inmutable.** No se permite la importación de libreráas externas o dependencias del framework web.
 - **Capa de Casos de Uso (`src/use_cases/`)**: **Inmutable.** Sigue ejecutando la simulación basada en el modelo recursivo puro.
 - **Capa de Adaptadores de Interfaz (`src/interface_adapter/`)**:
   - `JSONSimulacionPresenter`: Nueva clase que implementa la interfaz `SimulacionPresenter`. Almacena en memoria el resultado formateado como un diccionario JSON estándar de Python.
@@ -86,7 +86,51 @@ sequenceDiagram
     Gateway-->>Controller: Entidades de Dominio
     
     loop Para cada escenario (Desfavorable, Proyectado, Favorable)
-        Controller->>UseCase: Instanciar SimularImpactoEconomico(...)
+        Controller->>UseCase: Instanciar SimelarImpactoEconomico(...)
+        Controller->>UseCase: ejecutar()
+        activate UseCase
+        UseCase-->>Controller: Mes de repago (int o None)
+        deactivate UseCase
+    end
+    
+    Controller->>Presenter: presentar_resultados(target, oee_base, resultados)
+    activate Presenter
+    Note over Presenter: Convierte a DTO serializable<br/>y lo guarda en self.response_data
+    Presenter-->>Controller: Ok
+    deactivate Presenter
+    Controller-->>API: Ok
+    deactivate Controller
+    
+    API-->>JS: HTTP 200 OK (JSON Response)
+    deactivate API
+    activate JS
+    Note over JS: Actualiza tablas y<br/>redibuja Chart.js
+    JS-->>Usuario: Visualización del Dashboard Actualizado
+    deactivate JS
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant JS as Frontend (app.js)
+    participant API as FastAPI (app.py)
+    participant Gateway as RequestParametrosGateway
+    participant Presenter as JSONSimulacionPresenter
+    participant Controller as SimulacionController
+    participant UseCase as SimularImpactoEconomico
+
+    Usuario->>JS: Clic en "Ejecutar Simulación"
+    JS->>API: HTTP POST /api/simular (JSON Payload)
+    activate API
+    API->>Gateway: Instanciar con datos de Request
+    API->>Presenter: Instanciar JSONSimulacionPresenter
+    API->>Controller: Instanciar SimulacionController(Gateway, Presenter)
+    API->>Controller: ejecutar_simulacion()
+    activate Controller
+    Controller->>Gateway: get_inversion(), get_producto(), etc.
+    Gateway-->>Controller: Entidades de Dominio
+    
+    loop Para cada escenario (Desfavorable, Proyectado, Favorable)
+        Controller->>UseCase: Instanciar SimelarImpactoEconomico(...)
         Controller->>UseCase: ejecutar()
         activate UseCase
         UseCase-->>Controller: Mes de repago (int o None)
@@ -174,10 +218,10 @@ class JSONSimulacionPresenter(SimulacionPresenter):
             "oee_base": oee_base,
             "resultados": [
                 {
-                    "escenario": res['nombre'],
-                    "tasa": res['tasa'],
-                    "mes_repago": res['mes_repago'],
-                    "viable": res['mes_repago'] is not None and res['mes_repago'] <= 24
+                    "escenario": res["nombre"],
+                    "tasa": res["tasa"],
+                    "mes_repago": res["mes_repago"],
+                    "viable": res["mes_repago"] is not None and res["mes_repago"] <= 24
                 }
                 for res in resultados
             ]
@@ -188,7 +232,39 @@ class JSONSimulacionPresenter(SimulacionPresenter):
 
 ## 5. Diseño del Frontend (Wow Factor)
 
-La interfaz se construirá con un enfoque **Mobile First** y diseño **Premium Dashboard**. No utilizaremos colores planos genéricos, sino una paleta de tonos oscuros HSL sofisticados con efectos de **glassmorphism** (paneles translúcidos con desenfoque de fondo) y **micro-animaciones** fluidas.
+La interfaz se construirá con un enfoque **Mobile First** y diseño **Premium Dashboard**, organizada en tres secciones funcionales claras para mejorar la interpretabilidad de los datos.
+
+### Estructura de Tres Secciones
+
+1.  **Sección de Entradas (Variables de Control):**
+    - Controles interactivos para modificar los parámetros de inversión, OEE base, producción y escenarios.
+    - Ubicación: Panel lateral (Sidebar) o sección superior.
+    - Propósito: Permitir al usuario "jugar" con las variables del modelo.
+
+2.  **Sección de Datos Intermedios (Cálculos de Proceso):**
+    - Visualización de valores derivados que conectan las entradas con los resultados finales.
+    - Incluye:
+        - Inversión Actualizada (Valor Presente ajustado por IPC).
+        - OEE Base Calculado (D0 × Performance × Calidad).
+        - Margen de Contribución Unitario.
+        - Capacidad Máxima Operativa.
+    - Propósito: Proporcionar transparencia sobre cómo el motor transforma las entradas.
+
+3.  **Sección de Salidas (Resultados y Visualización):**
+    - Resultados finales de la simulación.
+    - Incluye:
+        - Tabla de Análisis de Repago (Payback) por escenario.
+        - Indicadores de Viabilidad (Semáforos).
+        - Gráfico Interactivo de Curvas de Proyección Financiera (Chart.js).
+    - Propósito: Facilitar la toma de decisiones basada en los resultados finales.
+
+### Estética y Experiencia de Usuario
+- **Glassmorphic Cards**: Bordes finos y semitransparentes con sombra suave y filtro de desenfoque (`backdrop-filter: blur(12px)`).
+- **Interactive Form Inputs**: Transiciones al enfocar (`focus`) ampliando ligeramente el campo y agregando un brillo neon sutil.
+- **Micro-animaciones**:
+  - Los botones tendrán efectos hover con transiciones CSS de 0.2 segundos.
+  - Spinner de carga personalizado para el estado de cálculo.
+- **Visualización Progresiva**: Los datos intermedios y de salida se actualizan automáticamente al cambiar cualquier entrada (Debounce asíncrono).
 
 ### Paleta de Colores (HSL Tailored CSS Variables)
 ```css
@@ -204,14 +280,6 @@ La interfaz se construirá con un enfoque **Mobile First** y diseño **Premium D
   --btn-gradient: linear-gradient(135deg, hsl(195, 100%, 45%), hsl(145, 80%, 40%));
 }
 ```
-
-### Elementos Premium del Dashboard
-- **Glassmorphic Cards**: Bordes finos y semitransparentes con sombra suave y filtro de desenfoque (`backdrop-filter: blur(12px)`).
-- **Interactive Form Inputs**: Transiciones al enfocar (`focus`) ampliando ligeramente el campo y agregando un brillo neon sutil.
-- **Gráfico Interactivo (Chart.js)**: Gráfico de líneas dinámico que representa la evolución acumulada de beneficios contra el umbral de la inversión actualizada, y un segundo gráfico de barras con los meses de repago finales.
-- **Micro-animaciones**:
-  - Los botones tendrán efectos hover con transiciones CSS de 0.2 segundos que modifican ligeramente el escalado (`transform: scale(1.02)`) y el gradiente de fondo.
-  - Spinner de carga personalizado para el estado de cálculo ("Calculando proyecciones...").
 
 ### Estructura HTML y Testeabilidad (IDs Únicos)
 Para garantizar la compatibilidad con frameworks de pruebas automatizadas, todos los campos de entrada y controles clave tendrán IDs únicos y semánticos:
@@ -235,6 +303,6 @@ Para garantizar la compatibilidad con frameworks de pruebas automatizadas, todos
 ## 6. Siguientes Pasos
 Una vez resueltas las dudas listadas en [DISCOVERY.md](file:///home/agustin/proyectos_software/fitba_impacto_economico/docs/DISCOVERY.md), se procederá a:
 1. Instalar dependencias (`fastapi`, `uvicorn`, `pydantic`).
-2. Crear la estructura de directorios para estáticos en `src/infrastructure/web/`.
+2. Crear la estructura de directorios para estático  en `src/infrastructure/web/`.
 3. Implementar el backend de FastAPI y probar los endpoints vía Swagger UI (`/docs`).
 4. Desarrollar la interfaz frontend de alto impacto visual.

@@ -3,3 +3,4 @@ data/*
 !data/*.json
 __pycache__/
 .coverage
+scripts/deploy.sh
