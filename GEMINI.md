@@ -11,6 +11,8 @@
 - Ajuste por Inflación: El Target debe actualizarse a valor presente usando el factor IPC del JSON.
 - Horizonte Temporal: Máximo 24 meses (Límite técnico).
 - Línea Base Operativa: OEE Base 4,99%.
+- **Mix de Productos:** El modelo soporta n productos. Cada producto define su propio `precio_unitario` y `costos_marginales_unitarios`.
+- **Relación Línea-Producto:** Cada línea de producción (máquina) es asignable a uno o más productos. El beneficio mensual se calcula como la sumatoria de las contribuciones ponderadas de la producción total del mix.
 
 ## 3. Diseño de Interfaz (Transparencia de Proceso)
 - **Sección 1 (Entradas)**: Captura de parámetros.

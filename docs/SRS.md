@@ -1,7 +1,7 @@
 # SRS - Especificación de Requerimientos del Sistema
 
 ## 1. Introducción
-El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf. 
+El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 
 **Horizontes Temporales:**
 - **Límite de Simulación:** Hasta 24 meses (capacidad técnica del motor).
@@ -12,6 +12,8 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - OEE Dinámico
 - Producción y Finanzas
 - Escenarios
+- Productos (Mix)
+- Líneas de Producción (Mapping)
 
 ## 3. Requerimientos Funcionales
 - **RF01:** Carga y validación de parámetros por defecto (JSON).
@@ -23,6 +25,9 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **RF07:** Visualización de Datos Intermedios (Sección Datos Intermedios): Mostrar cálculos derivados (Inversión Actualizada, OEE Base real, Márgenes) para transparencia del modelo.
 - **RF08:** Visualización Gráfica Interactiva (Sección Salidas): Resultados finales de repago, viabilidad y curvas de beneficio acumulado (Chart.js).
 - **RF09:** API REST (FastAPI): Endpoints para servir parámetros base y procesar simulaciones dinámicas.
+- **RF10:** Cálculo Multiproducto: El motor de simulación debe calcular el beneficio mensual ponderando el volumen producido según la configuración de mix de productos de cada ítem.
+- **RF11:** Gestión de Mix de Productos en Interfaz: Sección 1 debe permitir configurar productos, precios, costos y mix.
+- **RF12:** Mapeo Línea-Producto: La interfaz debe permitir asignar líneas de producción (máquinas) a productos específicos para una estimación de capacidad más precisa.
 
 ## 4. Requerimientos No Funcionales
 - **RNF01:** Clean Architecture y DDD.

@@ -1,0 +1,12 @@
+/* Base - Estilos Globales y Reset */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
+@import url('tokens.css');
+
+body { 
+  background-color: var(--bg-dark); 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
