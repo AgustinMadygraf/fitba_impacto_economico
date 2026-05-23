@@ -8,16 +8,16 @@ export const SimulationController = {
       const { SimulationMapper } = await import('./simulationMapper.js');
       const payload = SimulationMapper.mapFormToPayload(formData);
 
-      console.log('[DEBUG] Controller: Final payload before API:', payload);
+      // console.debug('[DEBUG] Controller: Final payload before API:', payload);
 
       const startTime = performance.now();
       const apiResponse = await ApiClient.post('/api/v1/simulacion/ejecutar', payload);
       const endTime = performance.now();
       
-      console.log(`[Observability] Simulation API call took: ${(endTime - startTime).toFixed(2)}ms`);
+      // console.debug(`[Observability] Simulation API call took: ${(endTime - startTime).toFixed(2)}ms`);
       return apiResponse;
     } catch (error) {
-      console.error('[FITBA] Controller: Error in runSimulation', error);
+      // console.error('[FITBA] Controller: Error in runSimulation', error);
       throw error; // Propagate for UI handling
     }
   }

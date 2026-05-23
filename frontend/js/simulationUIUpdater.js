@@ -3,7 +3,7 @@
  */
 export const SimulationUIUpdater = {
   actualizarKPIs(results) {
-    console.log('[DEBUG] UIUpdater.actualizarKPIs, results:', results);
+    // console.log('[DEBUG] UIUpdater.actualizarKPIs, results:', results);
     
     const kpiTarget = document.getElementById('kpi-target-actualizado');
     const kpiOeeBase = document.getElementById('kpi-oee-base');
@@ -12,7 +12,7 @@ export const SimulationUIUpdater = {
     if (results.target_repago !== undefined && kpiTarget) {
         kpiTarget.textContent = '$' + results.target_repago.toLocaleString('es-AR', { minimumFractionDigits: 0 });
     } else {
-        console.warn('[DEBUG] UIUpdater: target_repago missing or kpiTarget missing');
+        // console.warn('[DEBUG] UIUpdater: target_repago missing or kpiTarget missing');
     }
 
     if (results.oee_base !== undefined && kpiOeeBase) {
@@ -29,17 +29,17 @@ export const SimulationUIUpdater = {
   },
 
   renderizarTabla(resultados) {
-    console.log('[DEBUG] UIUpdater.renderizarTabla, resultados:', resultados);
+    // console.log('[DEBUG] UIUpdater.renderizarTabla, resultados:', resultados);
     const tbody = document.getElementById('resultados-tbody');
     if (!tbody) {
-        console.warn('[DEBUG] UIUpdater: tbody element not found');
+        // console.warn('[DEBUG] UIUpdater: tbody element not found');
         return;
     }
     
     try {
         tbody.innerHTML = '';
         resultados.forEach((res, index) => {
-          console.log(`[DEBUG] Rendering row ${index}:`, res);
+          // console.log(`[DEBUG] Rendering row ${index}:`, res);
           const mesText = res.mes_repago !== undefined ? 'Mes ' + res.mes_repago : 'Límite >24m';
           const viableClass = res.viable ? 'badge-favorable' : 'badge-desfavorable';
           tbody.innerHTML += '<tr>' +
@@ -50,7 +50,7 @@ export const SimulationUIUpdater = {
             '</tr>';
         });
     } catch (e) {
-        console.error('[FITBA ERROR] renderizarTabla failed:', e);
+        // console.error('[FITBA ERROR] renderizarTabla failed:', e);
     }
   }
 };

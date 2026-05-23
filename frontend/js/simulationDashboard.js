@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loading = document.getElementById('loading');
   const canvasElement = document.getElementById('chart-proyeccion');
   const ctx = canvasElement ? canvasElement.getContext('2d') : null;
-  let myChart = null;
 
   fetch('/api/v1/simulacion/parametros')
     .then(res => res.json())
@@ -78,9 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inputFechaBase = document.getElementById('input-fecha-base');
     const inputIpc = document.getElementById("input-ipc");
     
-    if (inputAnr) inputAnr.value = data.inversion.monto_actualizado;
+    if (inputAnr) inputAnr.value = data.inversion.monto_anr_nominal;
     if (inputFechaBase) inputFechaBase.value = data.inversion.fecha_base;
-    if (inputIpc) inputIpc.value = (data.tasa_proyectada * 100).toFixed(2);
+    if (inputIpc) {
+        inputIpc.value = ((data.inversion.ipc_acumulado - 1) * 100).toFixed(2);
+    }
     
     const listaProductos = document.getElementById("lista-productos");
     const listaLineas = document.getElementById("lista-lineas");
@@ -100,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function renderizarGrafico(proyecciones, target) {
-    if (myChart) myChart.destroy();
+    if (window.myChart) window.myChart.destroy();
     
     const labels = Object.values(proyecciones)[0].map(p => p.fecha);
     const datasets = Object.keys(proyecciones).map((key, i) => ({
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       fill: false
     }));
 
-    myChart = new Chart(ctx, {
+    window.myChart = new Chart(ctx, {
       type: 'line',
       data: { labels, datasets },
       options: { 

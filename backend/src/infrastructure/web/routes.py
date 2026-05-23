@@ -39,7 +39,6 @@ class SimularRequestSchema(BaseModel):
     mix_objetivo: List[MixProduccionSchema]
     escenarios: Dict[str, EscenarioDetalleSchema]
     ipc: Optional[float] = None
-    ipc: Optional[float] = None
 
 @app.get("/api/config")
 def get_config():
@@ -74,15 +73,16 @@ def get_params():
 
         return {
             "inversion": {
-                "monto_anr": raw_data["inversion"]["objetivo_anr"], 
-                "monto_actualizado": raw_data["inversion"]["objetivo_anr"],
+                "monto_anr_nominal": raw_data["inversion"]["objetivo_anr"], 
+                "monto_anr_real": round(raw_data["inversion"]["objetivo_anr"] * ipc_acumulado, 2),
                 "fecha_base": raw_data["inversion"]["fecha_base"],
-                "ipc_acumulado_fitba": ipc_acumulado
+                "ipc_acumulado": ipc_acumulado
             },
             "oee": raw_data["oee_base"],
             "productos": productos,
             "lineas_produccion": raw_data["catalogo"]["lineas"],
-            "ipc_serie": ipc_serie_flat, "tasa_proyectada": raw_data.get("ipc_serie", {}).get("tasa_proyectada", 0.02)
+            "ipc_serie": ipc_serie_flat,
+            "tasa_proyectada": raw_data.get("ipc_serie", {}).get("tasa_proyectada", 0.02)
         }
     except Exception as e:
         web_logger.error(f"Error en GET /api/v1/simulacion/parametros: {str(e)}")
@@ -100,7 +100,8 @@ def post_simular(payload: SimularRequestSchema):
             },
             "mix_objetivo": [m.model_dump() for m in payload.mix_objetivo],
             "escenarios": {k: v.model_dump() for k, v in payload.escenarios.items()},
-            "capacidad_instalada": {"capacidad_nominal_total_mensual": sum(l.capacidad_nominal for l in payload.catalogo.lineas)}, "ipc_override": payload.ipc, "ipc_override": payload.ipc
+            "capacidad_instalada": {"capacidad_nominal_total_mensual": sum(l.capacidad_nominal for l in payload.catalogo.lineas)},
+            "ipc_override": payload.ipc
         }
         gateway = JsonParametrosRepository(raw_dict)
         presenter = JSONSimulacionPresenter()
