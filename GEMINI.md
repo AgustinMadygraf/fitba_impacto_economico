@@ -5,14 +5,15 @@
 - Patrón: Clean Architecture.
 - UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
 - Interfaz: Dashboard web con tres secciones (Entradas, Datos Intermedios, Salidas).
+- Frontend: Arquitectura Clean (DDD) en JS para desacoplar lógica de la UI.
 
 ## 2. Reglas de Negocio (Fuente de Verdad)
 - Target de Repago: .492.000 (Solo el ANR otorgado).
 - Ajuste por Inflación: El Target debe actualizarse a valor presente usando el factor IPC del JSON.
 - Horizonte Temporal: Máximo 24 meses (Límite técnico).
 - Línea Base Operativa: OEE Base 4,99%.
-- **Mix de Productos:** El modelo soporta n productos. Cada producto define su propio `precio_unitario` y `costos_marginales_unitarios`.
-- **Relación Línea-Producto:** Cada línea de producción (máquina) es asignable a uno o más productos. El beneficio mensual se calcula como la sumatoria de las contribuciones ponderadas de la producción total del mix.
+- **Modelo de Producción:** El sistema opera bajo "Flujos de Producción" compuestos por una o más máquinas. La capacidad efectiva de un flujo es determinada por el cuello de botella (la máquina con menor capacidad o dependencia operativa).
+- **Dependencias Operativas:** Se soportan flujos secuenciales (donde una máquina A es necesaria para que B funcione).
 
 ## 3. Diseño de Interfaz (Transparencia de Proceso)
 - **Sección 1 (Entradas)**: Captura de parámetros.

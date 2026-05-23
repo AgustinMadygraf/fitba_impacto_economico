@@ -1,12 +1,9 @@
-# TODO - Tareas Completadas
+# Tareas Completadas - FITBA
 
-- [x] Definir base de repago (ANR: $8.49M).
-- [x] Diseñar esquema de JSON de entrada.
-- [x] Establecer Línea Base real (OEE: 4.99%).
-- [x] Modelar la función de crecimiento exponencial para Disponibilidad.
-- [x] Implementar motor de cálculo de "Integral de Beneficio" (Use Case).
-- [x] Implementar Inversión de Dependencias (DIP) para Gateway y Presenter.
-- [x] Implementar lógica de escenarios (Desfavorable, Proyectado, Favorable).
-- [x] Generar Reporte de Punto de Equilibrio profesional con 'rich'.
-- [x] Soporte para flag --debug en CLI (Control exclusivo por argumentos).
-- [x] Purificación arquitectónica: Eliminación de dependencias de infraestructura en Controller y Use Case.
+- [x] **Fase 1: Servidor y API (FastAPI Backend)**
+- [x] **Fase 2: Adaptadores de Arquitectura Limpia**
+- [x] **Fase 3: Refactorización a Bootstrap Estándar (Migración Progresiva)**
+  - [x] **Paso 3.1: Layout**.
+  - [x] **Paso 3.2: Componentes**.
+  - [x] **Paso 3.3: Tipografía**.
+  - [x] **Paso 3.4: Theme**.

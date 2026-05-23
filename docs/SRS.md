@@ -13,7 +13,7 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - Producción y Finanzas
 - Escenarios
 - Productos (Mix)
-- Líneas de Producción (Mapping)
+- Flujos de Producción (Agrupación de máquinas dependientes)
 
 ## 3. Requerimientos Funcionales
 - **RF01:** Carga y validación de parámetros por defecto (JSON).
@@ -27,7 +27,7 @@ El sistema calculará el punto de equilibrio (repago) del ANR de Madygraf.
 - **RF09:** API REST (FastAPI): Endpoints para servir parámetros base y procesar simulaciones dinámicas.
 - **RF10:** Cálculo Multiproducto: El motor de simulación debe calcular el beneficio mensual ponderando el volumen producido según la configuración de mix de productos de cada ítem.
 - **RF11:** Gestión de Mix de Productos en Interfaz: Sección 1 debe permitir configurar productos, precios, costos y mix.
-- **RF12:** Mapeo Línea-Producto: La interfaz debe permitir asignar líneas de producción (máquinas) a productos específicos para una estimación de capacidad más precisa.
+- **RF12:** Modelado de Flujos Productivos: La interfaz y el motor deben permitir agrupar máquinas en flujos dependientes, calculando la capacidad efectiva basándose en el cuello de botella (min(capacidad_máquinas_flujo)).
 
 ## 4. Requerimientos No Funcionales
 - **RNF01:** Clean Architecture y DDD.
