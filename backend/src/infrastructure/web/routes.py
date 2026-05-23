@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from src.infrastructure.settings.config import ConfigLoader
 from src.infrastructure.settings.logger import get_logger
@@ -38,6 +38,8 @@ class SimularRequestSchema(BaseModel):
     catalogo: CatalogoSchema
     mix_objetivo: List[MixProduccionSchema]
     escenarios: Dict[str, EscenarioDetalleSchema]
+    ipc: Optional[float] = None
+    ipc: Optional[float] = None
 
 @app.get("/api/config")
 def get_config():
@@ -98,7 +100,7 @@ def post_simular(payload: SimularRequestSchema):
             },
             "mix_objetivo": [m.model_dump() for m in payload.mix_objetivo],
             "escenarios": {k: v.model_dump() for k, v in payload.escenarios.items()},
-            "capacidad_instalada": {"capacidad_nominal_total_mensual": sum(l.capacidad_nominal for l in payload.catalogo.lineas)}
+            "capacidad_instalada": {"capacidad_nominal_total_mensual": sum(l.capacidad_nominal for l in payload.catalogo.lineas)}, "ipc_override": payload.ipc, "ipc_override": payload.ipc
         }
         gateway = JsonParametrosRepository(raw_dict)
         presenter = JSONSimulacionPresenter()

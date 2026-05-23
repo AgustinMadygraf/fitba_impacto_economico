@@ -16,6 +16,7 @@ class SimulacionController:
         mix = self.gateway.get_mix_produccion()
     
         escenarios_data = self.gateway.get_escenarios_raw()
+        ipc_override = self.gateway.get_ipc_override()
         
         resultados = []
         proyecciones = {}
@@ -34,7 +35,7 @@ class SimulacionController:
                 capacidad_instalada=capacidad,
                 mix_objetivo=mix,
                 oee_base=oee_base,
-                escenario=escenario,
+                escenario=escenario, ipc_override=ipc_override,
                 logger=self.logger
             )
     

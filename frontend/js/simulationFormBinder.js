@@ -20,10 +20,10 @@ export const SimulationFormBinder = {
       capacidad: parseFloat(div.querySelector(".input-linea-capacidad").value) || 0
     }));
 
-    console.log("[DEBUG] FormBinder: raw input fecha-base value is:", getVal('input-fecha-base'));
     const data = {
       anr: getVal('input-anr'),
       fechaBase: getVal('input-fecha-base'),
+      ipc: getVal('input-ipc'),
       dispBase: getVal('input-disp-base'),
       perf: getVal('input-perf'),
       quality: getVal('input-quality'),
@@ -34,7 +34,6 @@ export const SimulationFormBinder = {
       rateFavorable: getVal('input-rate-favorable'),
     };
     
-    console.debug('[FITBA] FormBinder: Datos recolectados:', data);
     return data;
   }
 };

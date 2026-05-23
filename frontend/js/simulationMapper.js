@@ -50,10 +50,10 @@ export const SimulationMapper = {
         oee_base, 
         catalogo: { productos, lineas }, 
         mix_objetivo, 
-        escenarios 
+        escenarios,
+        ipc: parseFloatOrDefault(formData.ipc, 0) / 100
     };
     
-    console.log("[DEBUG] SimulationMapper: payload to send:", payload);
     return payload;
   }
 };

@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
@@ -38,5 +38,6 @@ class JsonParametrosRepository(ParametrosGateway):
         data = self._raw_data["capacidad_instalada"]
         return CapacidadInstalada(capacidad_nominal_total=data["capacidad_nominal_total_mensual"])
 
+    def get_ipc_override(self) -> Optional[float]: return self._raw_data.get("ipc_override")
     def get_escenarios_raw(self) -> Dict[str, Any]:
         return self._raw_data["escenarios"]
