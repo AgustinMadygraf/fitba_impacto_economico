@@ -72,10 +72,13 @@ class SimularRequestSchema(BaseModel):
 @app.get("/api/config")
 def get_config():
     """
-    Retorna la configuración actual de la aplicación.
+    Retorna la configuración actual y el tiempo de inicio de la aplicación.
     """
     loader = ConfigLoader()
-    return {"mode": loader.get_app_mode()}
+    return {
+        "mode": loader.get_app_mode(),
+        "start_time": loader.get_start_time()
+    }
 
 
 @app.get("/api/params")

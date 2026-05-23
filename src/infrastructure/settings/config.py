@@ -1,6 +1,7 @@
 import json
 import argparse
 import os
+import datetime
 from typing import Dict, Any, List
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
@@ -9,6 +10,9 @@ from src.entities.linea_produccion import LineaProduccion
 from src.entities.produccion import MixProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
 from src.interface_adapter.gateway.parametros_gateway import ParametrosGateway
+
+# Capturar tiempo al importar el módulo (inicio del proceso)
+_START_TIME = datetime.datetime.now().isoformat()
 
 class ConfigLoader(ParametrosGateway):
     def __init__(self, config_path: str = "data/params.json"):
@@ -23,6 +27,9 @@ class ConfigLoader(ParametrosGateway):
 
     def get_app_mode(self) -> str:
         return os.getenv("APP_MODE", "development")
+
+    def get_start_time(self) -> str:
+        return _START_TIME
 
     def is_debug_enabled(self) -> bool:
         return self._args.debug
