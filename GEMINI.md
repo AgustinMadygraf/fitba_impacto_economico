@@ -1,33 +1,35 @@
 # Instrucciones Técnicas y Reglas de Negocio - FITBA
 
 ## 1. Mandatos Técnicos
-- **Rol Proactivo:** El agente opera como un consultor técnico senior. En cada interacción, debe proponer acciones concretras, identificar riesgos potenciales y guiar al usuario a través del roadmap, evitando estados de espera pasiva.
+- **Rol Proactivo:** El agente opera como un consultor técnico senior.
 - Lenguaje: Python.
-- Patrón: Clean Architecture.
+- Patrón: Clean Architecture + DDD.
 - UI Strategy: Minimizar CSS custom. Preferir clases utilitarias de Bootstrap 5.
-- Interfaz: Dashboard web con tres secciones (Entradas, Datos Intermedios, Salidas).
-- Frontend: Arquitectura Clean (DDD) en JS para desacoplar lógica de la UI.
+- **Regla de Oro - Persistencia Orientada al Dominio:** La configuración del sistema (`params.json`) debe mantener un mapeo 1 a 1 con las entidades del dominio. Cada entidad fundamental debe tener su propio nodo independiente en el archivo de configuración, asegurando desacoplamiento y cohesión.
 
 ## 2. Reglas de Negocio (Fuente de Verdad)
-- **Modelo de Precio y Valor Presente:** El sistema opera íntegramente a valor presente para flujos operativos. Los precios y costos están expresados en **moneda de hoy** (ya actualizados al valor presente de la simulación) y no se proyectan nominalmente; se asumen constantes en términos reales.
-- **Dinamismo Financiero (Inflación):** Debido al contexto inflacionario de Argentina, el dinero tiene una asociación temporal estricta. 
+- **Modelo de Precio y Valor Presente:** Flujos operativos a valor presente.
+- **Dinamismo Financiero (Inflación):** 
   - **Target de Repago:** 8.492.000 (Monto base del ANR).
-  - **Capitalización del Target:** El Target de Repago no es estático; se actualiza mes a mes durante la simulación aplicando un factor de capitalización compuesta basado en una serie de IPC (Índice de Precios al Consumidor).
-  - **IPC Exponencial:** El ajuste no es lineal. Se calcula como: Target_t = Target_{t-1} * (1 + IPC_t).
-- **Horizonte Temporal:** Máximo 24 meses (Límite técnico).
-- **KPI de Éxito:** Repago alcanzado en menos de 12 meses.
-- **Línea Base Operativa:** OEE Base 4,99%.
-- **Modelo de Producción:** El sistema opera bajo "Flujos de Producción" independientes.
-  - **Capacidad Instalada:** Define el límite físico/teórico de producción. Configuración independiente de la eficiencia operativa.
-  - **OEE:** Define los factores de eficiencia (Disponibilidad, Rendimiento, Calidad). Configuración independiente de la capacidad física.
-  - La **Capacidad Efectiva** es el resultado de la intersección de ambas entidades (Capacidad_Nominal * OEE_Valor).
-  - *Nota de Alcance Inicial*: El sistema se despliega restringido a una configuración de 1 Producto / 1 Máquina, manteniendo la estructura extensible.
-- **Dependencias Operativas:** Se soportan flujos secuenciales (donde una máquina A es necesaria para que B funcione).
+  - **Capitalización Compuesta:** Se utiliza la entidad `IndiceFinanciero` para actualizar el Target de forma exponencial mes a mes.
+- **Horizonte Temporal:** Máximo 24 meses.
+- **KPI de Éxito:** Repago alcanzado en < 12 meses.
+- **Modelo de Producción:** Flujos independientes basados en:
+  - **Capacidad Instalada:** Límite físico (independiente).
+  - **OEE:** Eficiencia operativa (independiente).
+  - La intersección (Capacidad Efectiva) se calcula en el Caso de Uso.
 
-## 3. Diseño de Interfaz (Transparencia de Proceso)
-- **Sección 1 (Entradas)**: Captura de parámetros.
-- **Sección 2 (Datos Intermedios)**: Transparencia de cálculos (Target IPC Actualizado, OEE real).
-- **Sección 3 (Salidas)**: Resultados y Gráficos.
+## 3. Estructura de Entidades (1:1 con Configuración)
+Para mantener la independencia, el sistema mapea las siguientes 8 entidades al archivo `params.json`:
+1. `inversion`
+2. `capacidad_instalada`
+3. `oee_base`
+4. `ipc_serie`
+5. `productos`
+6. `lineas`
+7. `mix_objetivo`
+8. `escenarios`
 
 ## 4. Estándares de Calidad
-- Bootstrap 100%: Los layouts deben ser responsivos mediante el sistema de grid nativo de Bootstrap.
+- Bootstrap 100%: Layouts responsivos nativos.
+- Cobertura de tests mínima: 80%.

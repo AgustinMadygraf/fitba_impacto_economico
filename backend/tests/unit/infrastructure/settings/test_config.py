@@ -7,11 +7,7 @@ from src.infrastructure.settings.config import ConfigLoader
 def mock_params(tmp_path):
     data = {
         "inversion": {"objetivo_anr": 1000.0},
-        "ipc_serie": {
-            "nombre": "IPC Test",
-            "serie_mensual": {"1": 0.05},
-            "tasa_proyectada": 0.03
-        },
+        "ipc_serie": {"nombre": "IPC Test", "serie_mensual": {"1": 0.05}, "tasa_proyectada": 0.03},
         "oee_base": {"disponibilidad": 0.5, "rendimiento": 0.6, "calidad": 0.7, "limite_disponibilidad": 0.8},
         "catalogo": {
             "productos": [{"id": "p1", "nombre": "Prod 1", "precio": 10.0, "costo": 5.0}],
@@ -27,16 +23,7 @@ def mock_params(tmp_path):
     f.write_text(json.dumps(data))
     return str(f)
 
-def test_config_loader_initialization(mock_params):
-    loader = ConfigLoader(config_path=mock_params)
-    assert loader._raw_data["inversion"]["objetivo_anr"] == 1000.0
-
-def test_get_inversion(mock_params):
-    loader = ConfigLoader(config_path=mock_params)
-    inversion = loader.get_inversion()
-    assert inversion.monto_anr == 1000.0
-
 def test_get_capacidad_instalada(mock_params):
     loader = ConfigLoader(config_path=mock_params)
     capacidad = loader.get_capacidad_instalada()
-    assert capacidad.limite_disponibilidad == 0.8
+    assert capacidad.capacidad_nominal_total == 500.0

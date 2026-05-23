@@ -5,10 +5,6 @@ from src.entities.escenario import Escenario
 from src.use_cases.simular_impacto_economico import SimularImpactoEconomico
 
 class SimulacionController:
-    """
-    Orquestador de la ejecución de la simulación multiproducto.
-    """
-    
     def __init__(self, gateway: Any, presenter: SimulacionPresenter, logger: Any):
         self.gateway = gateway
         self.presenter = presenter
@@ -19,6 +15,7 @@ class SimulacionController:
         productos = self.gateway.get_productos()
         oee_base = self.gateway.get_oee_base()
         lineas = self.gateway.get_lineas_produccion()
+        capacidad = self.gateway.get_capacidad_instalada()
         mix = self.gateway.get_mix_produccion()
         
         escenarios_data = self.gateway.get_escenarios_raw()
@@ -36,6 +33,7 @@ class SimulacionController:
                 inversion=inversion,
                 productos=productos,
                 lineas_produccion=lineas,
+                capacidad_instalada=capacidad,
                 mix_objetivo=mix,
                 oee_base=oee_base,
                 escenario=escenario,
@@ -43,13 +41,7 @@ class SimulacionController:
             )
             
             mes_repago, serie_proyeccion = simulador.ejecutar()
-            
-            resultados.append({
-                "nombre": escenario.nombre,
-                "tasa": escenario.tasa_crecimiento,
-                "mes_repago": mes_repago
-            })
-            
+            resultados.append({"nombre": escenario.nombre, "tasa": escenario.tasa_crecimiento, "mes_repago": mes_repago})
             proyecciones[clave] = serie_proyeccion
 
         self.presenter.presentar_resultados(

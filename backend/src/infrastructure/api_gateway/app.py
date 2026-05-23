@@ -16,13 +16,12 @@ app = FastAPI(title="FITBA - API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 web_logger = get_logger("FITBA.Web")
 
-# [Esquemas de Validación Pydantic (se mantienen igual)]
 class OEEBaseSchema(BaseModel):
     disponibilidad: float; rendimiento: float; calidad: float; limite_disponibilidad: float
 class InversionSchema(BaseModel):
     objetivo_anr: float
 class ProductoSchema(BaseModel):
-    id: str; nombre: str; precio_unitario: float; costo_marginal_unitario: float
+    id: str; nombre: str; precio: float; costo: float
 class LineaProduccionSchema(BaseModel):
     id: str; nombre: str; capacidad_nominal: float; productos_compatibles: List[str]
 class CatalogoSchema(BaseModel):
@@ -49,18 +48,10 @@ def get_params():
     try:
         loader = ConfigLoader()
         raw_data = loader._raw_data
-        
-        # Mapeo explícito para mantener compatibilidad con frontend
         productos = [
-            {
-                "id": p["id"],
-                "nombre": p["nombre"],
-                "precio_unitario": p["precio"],
-                "costo_marginal_unitario": p["costo"]
-            }
+            {"id": p["id"], "nombre": p["nombre"], "precio_unitario": p["precio"], "costo_marginal_unitario": p["costo"]}
             for p in raw_data["catalogo"]["productos"]
         ]
-            
         return {
             "inversion": {"monto_anr": raw_data["inversion"]["objetivo_anr"], "monto_actualizado": raw_data["inversion"]["objetivo_anr"]},
             "oee": raw_data["oee_base"],
@@ -78,21 +69,20 @@ def post_simular(payload: SimularRequestSchema, request: Request):
             "inversion": {"objetivo_anr": payload.inversion.objetivo_anr},
             "oee_base": payload.oee_base.model_dump(),
             "catalogo": {
-                "productos": [p.model_dump() for p in payload.catalogo.productos],
+                "productos": [{"id": p.id, "nombre": p.nombre, "precio_unitario": p.precio, "costo_marginal_unitario": p.costo} for p in payload.catalogo.productos],
                 "lineas": [l.model_dump() for l in payload.catalogo.lineas]
             },
             "mix_objetivo": [m.model_dump() for m in payload.mix_objetivo],
             "escenarios": {k: v.model_dump() for k, v in payload.escenarios.items()}
         }
-        
+        print(f"DEBUG: raw_dict keys before gateway: {list(raw_dict.keys())}")
         gateway = DinamicoParametrosGateway(raw_dict)
         presenter = JSONSimulacionPresenter()
         controller = SimulacionController(gateway, presenter, get_logger("FITBA.SimulacionWeb"))
         controller.ejecutar_simulacion()
-        
         return presenter.response_data
     except Exception as e:
-        web_logger.error(f"Error durante simulación: {str(e)}")
+        web_logger.error(f"Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend")

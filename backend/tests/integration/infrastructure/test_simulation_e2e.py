@@ -6,9 +6,7 @@ client = TestClient(app)
 
 def test_full_simulation_flow():
     payload = {
-        "inversion": {
-            "objetivo_anr": 850000.0
-        },
+        "inversion": {"objetivo_anr": 850000.0},
         "oee_base": {
             "disponibilidad": 0.135,
             "rendimiento": 0.44,
@@ -20,8 +18,8 @@ def test_full_simulation_flow():
                 {
                     "id": "p1",
                     "nombre": "Bolsa Lisa",
-                    "precio_unitario": 150.0,
-                    "costo_marginal_unitario": 85.5
+                    "precio": 150.0,
+                    "costo": 85.5
                 }
             ],
             "lineas": [
