@@ -44,6 +44,6 @@ measure_step "Git Push" git push origin main
 log_info "Ejecutando operaciones remotas..."
 # 1. Despliegue y 2. Actualización de timestamp en remoto
 TIMESTAMP=$(date +%s)
-$SSH_CMD "cd $REMOTE_DIR &&           echo '[REMOTE] Fetching...' && git fetch origin &&           echo '[REMOTE] Resetting...' && git reset --hard origin/main &&           echo '[REMOTE] Actualizando versión JS (Cache Busting)...' &&           sed -i 's/v=__TIMESTAMP__/v=$TIMESTAMP/g' frontend/index.html &&           echo '[REMOTE] Instalando dependencias...' && cd backend && ../.venv/bin/pip install -r requirements.txt && cd .. &&           echo '[REMOTE] Reiniciando servicio...' && sudo systemctl restart fitba-backend"
+$SSH_CMD "cd $REMOTE_DIR &&           echo '[REMOTE] Fetching...' && git fetch origin &&           echo '[REMOTE] Resetting...' && git reset --hard origin/main &&           echo '[REMOTE] Actualizando versión JS (Cache Busting)...' &&           sed -i 's/v=__TIMESTAMP__/v=$TIMESTAMP/g' frontend/index.html &&           echo '[REMOTE] Instalando dependencias...' && cd backend && ../.venv/bin/pip install -r requirements.txt && cd .. &&           echo '[REMOTE] Reiniciando servicio...' && curl -s https://fitba.datamaq.com.ar/api/config -o $REMOTE_DIR/backend/data/remote_params.json || true && sudo systemctl restart fitba-backend"
 
 log_info "Despliegue finalizado exitosamente. Versión cache-bust: $TIMESTAMP"
