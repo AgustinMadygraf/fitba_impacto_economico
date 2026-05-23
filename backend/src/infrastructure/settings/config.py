@@ -16,7 +16,10 @@ _START_TIME = datetime.datetime.now().isoformat()
 
 class ConfigLoader(ParametrosGateway):
     def __init__(self, config_path: str = "data/params.json"):
-        self.config_path = config_path
+        if os.path.isabs(config_path):
+            self.config_path = config_path
+        else:
+            self.config_path = os.path.join(os.path.dirname(__file__), "..", "..", config_path)
         self._args = self._parse_cli_args()
         self._raw_data = self._load_json()
 
