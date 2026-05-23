@@ -7,6 +7,13 @@ from src.infrastructure.settings.config import ConfigLoader
 def mock_params(tmp_path):
     data = {
         "inversion": {"objetivo_anr": 1000.0, "factor_ipc_acumulado": 1.1},
+        "indices": {
+            "ipc": {
+                "nombre": "IPC Test",
+                "serie_mensual": {"1": 0.05},
+                "tasa_proyectada": 0.03
+            }
+        },
         "oee": {"linea_base": {"disponibilidad": 0.5, "rendimiento": 0.6, "calidad": 0.7}, "limite_disponibilidad": 0.8},
         "productos": [{"id": "p1", "nombre": "Prod 1", "precio_unitario": 10.0, "costo_marginal_unitario": 5.0}],
         "lineas_produccion": [{"id": "l1", "nombre": "Linea 1", "capacidad_nominal": 100, "productos_compatibles": ["p1"]}],
@@ -39,7 +46,9 @@ def test_get_inversion(mock_params):
     loader = ConfigLoader(config_path=mock_params)
     inversion = loader.get_inversion()
     assert inversion.monto_anr == 1000.0
-    assert inversion.factor_ipc == 1.1
+    assert inversion.factor_correccion_inicial == 1.1
+    assert inversion.indice_base is not None
+    assert inversion.indice_base.nombre == "IPC Test"
 
 def test_get_productos(mock_params):
     loader = ConfigLoader(config_path=mock_params)
@@ -74,7 +83,6 @@ def test_get_start_time(mock_params):
     loader = ConfigLoader(config_path=mock_params)
     start_time = loader.get_start_time()
     assert isinstance(start_time, str)
-    # Debe ser una cadena ISO
     assert "T" in start_time
 
 def test_is_debug_enabled_false(mock_params):

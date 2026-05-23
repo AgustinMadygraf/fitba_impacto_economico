@@ -7,7 +7,7 @@ from src.entities.escenario import Escenario
 from src.entities.linea_produccion import LineaProduccion
 
 class SimularImpactoEconomico:
-    """Caso de uso para calcular el punto de equilibrio en la inversión con modelo multiproducto."""
+    """Caso de uso para calcular el punto de equilibrio en la inversión con modelo multiproducto e inflación dinámica."""
     
     def __init__(
         self, 
@@ -27,38 +27,37 @@ class SimularImpactoEconomico:
         self.escenario = escenario
         self.horizonte_maximo = 24
         self.logger = logger
-        
-        # Calcular capacidad total del sistema (Sumatoria de capacidades nominales)
         self.capacidad_total = sum(l.capacidad_nominal for l in lineas_produccion)
 
     def ejecutar(self) -> Tuple[Optional[int], List[float]]:
         """
-        Ejecuta la simulación y retorna una tupla con:
-        (mes_repago, proyeccion_acumulada_mensual)
+        Ejecuta la simulación considerando que el target de inversión se capitaliza 
+        mensualmente según la serie de IPC cargada.
         """
         beneficio_acumulado = 0.0
         disponibilidad_t = self.oee_base.disponibilidad
-        inversion_objetivo = self.inversion.monto_actualizado
         
         mes_repago = None
         proyeccion_mensual = []
         
-        # Volumen base operativo (línea de base inamovible)
-        # Capacidad Real = Capacidad Nominal * OEE
+        # Volumen base operativo (inalterado por la optimización)
         capacidad_base = self.capacidad_total * self.oee_base.valor
         beneficio_base = self._calcular_beneficio_mensual(capacidad_base)
         
         for mes in range(1, self.horizonte_maximo + 1):
-            # La optimización incrementa la disponibilidad
+            # 1. Capitalización del Target (Inflación Exponencial)
+            target_actualizado_t = self.inversion.calcular_target_proyectado(mes)
+            
+            # 2. Optimización de OEE (Crecimiento de disponibilidad)
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             
-            # Nueva Capacidad Real = Capacidad Nominal * (D_t * R_base * Q_base)
+            # 3. Nueva Capacidad Real
             oee_t = disponibilidad_t * self.oee_base.rendimiento * self.oee_base.calidad
             capacidad_efectiva = self.capacidad_total * min(oee_t, 1.0) * self.escenario.factor_demanda
             
             beneficio_mensual = self._calcular_beneficio_mensual(capacidad_efectiva)
             
-            # El impacto económico es el beneficio EXTRA generado por la optimización
+            # Impacto económico = Beneficio Incremental
             delta_beneficio = beneficio_mensual - beneficio_base
             
             if delta_beneficio > 0:
@@ -66,7 +65,8 @@ class SimularImpactoEconomico:
             
             proyeccion_mensual.append(beneficio_acumulado)
             
-            if mes_repago is None and beneficio_acumulado >= inversion_objetivo:
+            # Condición de Parada: El beneficio acumulado debe ganarle al Target Inflacionado
+            if mes_repago is None and beneficio_acumulado >= target_actualizado_t:
                 mes_repago = mes
             
         return mes_repago, proyeccion_mensual

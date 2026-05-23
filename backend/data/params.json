@@ -6,6 +6,19 @@
     "fecha_objetivo": "2026-03-01",
     "factor_ipc_acumulado": 1.3625
   },
+  "indices": {
+    "ipc": {
+      "nombre": "IPC Acumulado",
+      "serie_mensual": {
+        "1": 0.04,
+        "2": 0.038,
+        "3": 0.035,
+        "4": 0.032,
+        "5": 0.03
+      },
+      "tasa_proyectada": 0.03
+    }
+  },
   "oee": {
     "linea_base": {
       "disponibilidad": 0.135,

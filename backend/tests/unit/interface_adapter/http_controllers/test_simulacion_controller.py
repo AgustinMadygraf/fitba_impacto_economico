@@ -8,7 +8,11 @@ def test_ejecutar_simulacion():
     logger = MagicMock()
     
     # Prepara el gateway para retornar entidades con valores correctos
-    gateway.get_inversion.return_value = MagicMock(monto_actualizado=1000.0)
+    mock_inversion = MagicMock()
+    mock_inversion.monto_actualizado = 1000.0
+    mock_inversion.calcular_target_proyectado.return_value = 1100.0
+    gateway.get_inversion.return_value = mock_inversion
+    
     gateway.get_productos.return_value = [
         MagicMock(id="p1", margen_contribucion_unitario=5.0)
     ]

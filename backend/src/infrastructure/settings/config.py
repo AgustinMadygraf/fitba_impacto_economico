@@ -9,9 +9,9 @@ from src.entities.oee import OEE
 from src.entities.linea_produccion import LineaProduccion
 from src.entities.produccion import MixProduccion
 from src.entities.capacidad_instalada import CapacidadInstalada
+from src.entities.indice_financiero import IndiceFinanciero
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 
-# Capturar tiempo al importar el módulo (inicio del proceso)
 _START_TIME = datetime.datetime.now().isoformat()
 
 class ConfigLoader(ParametrosGateway):
@@ -43,9 +43,21 @@ class ConfigLoader(ParametrosGateway):
 
     def get_inversion(self) -> Inversion:
         data = self._raw_data["inversion"]
+        indice = None
+        if "indices" in self._raw_data and "ipc" in self._raw_data["indices"]:
+            idx_data = self._raw_data["indices"]["ipc"]
+            # Convertimos las llaves del dict de string a int (JSON solo soporta strings como llaves)
+            serie = {int(k): v for k, v in idx_data["serie_mensual"].items()}
+            indice = IndiceFinanciero(
+                nombre=idx_data["nombre"],
+                serie_mensual=serie,
+                tasa_proyectada=idx_data["tasa_proyectada"]
+            )
+            
         return Inversion(
             monto_anr=data["objetivo_anr"],
-            factor_ipc=data["factor_ipc_acumulado"]
+            indice_base=indice,
+            factor_correccion_inicial=data.get("factor_ipc_acumulado", 1.0)
         )
 
     def get_productos(self) -> List[Producto]:

@@ -10,8 +10,7 @@ from unittest.mock import MagicMock
 
 def test_simular_impacto_repago():
     # Setup
-    # Target: 1100
-    inversion = Inversion(monto_anr=1000.0, factor_ipc=1.1)
+    inversion = Inversion(monto_anr=1000.0, factor_correccion_inicial=1.1)
     
     productos = [
         Producto(id="p1", nombre="Producto 1", precio_unitario=10.0, costo_marginal_unitario=5.0)
@@ -24,9 +23,7 @@ def test_simular_impacto_repago():
     
     mix = MixProduccion(porcentajes={"p1": 1.0})
     
-    # OEE base ~3.7%
     oee_base = OEE(disponibilidad=0.1, rendimiento=0.44, calidad=0.84)
-    # Tasa de crecimiento agresiva para el test (10% mensual)
     escenario = Escenario(nombre="Test", tasa_crecimiento=0.10, factor_demanda=1.0)
     
     logger = MagicMock()
