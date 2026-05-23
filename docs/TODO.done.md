@@ -7,3 +7,4 @@
   - [x] **Paso 3.2: Componentes**.
   - [x] **Paso 3.3: Tipografía**.
   - [x] **Paso 3.4: Theme**.
+- [x] Implementar Mix de Productos

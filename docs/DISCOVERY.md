@@ -1,11 +1,14 @@
 # DISCOVERY - Dudas e Incertidumbres Pendientes
 
+## Decisiones de Alcance (Fuera de Scope)
+- **Gestión de Inventario Intermedio (Buffer):** Excluido del alcance. El sistema opera bajo un modelo de flujo puro sin stock intermedio.
+- **Prioridad del Backend:** El esfuerzo de desarrollo se centra exclusivamente en la precisión del modelo de costos marginales, precios de venta y la escalabilidad de costos operativos.
+
 ## 1. Modelo de Negocio
 1. **Mix de Ventas:** ¿Cómo se distribuye el mix de producción? ¿Es constante o varía con el volumen?
 2. **Capacidad de Absorción:** ¿Se garantiza la venta del 100% incremental (Factor Demanda)?
 3. **Costos de Escalamiento:** ¿A partir de qué volumen el costo de hora operativa (12.000) requiere la apertura de nuevos turnos?
 4. **Estandarización de Impresoras:** ¿La "Impresora de Bolsas" dedicada tiene la misma velocidad/capacidad que la "Impresora en línea"?
-5. **Gestión de Inventario Intermedio (Buffer):** ¿Existe stock intermedio entre máquinas dependientes o el sistema se detiene si una máquina falla (flujo puro)?
 
 ## 2. Interfaz Web de Tres Secciones
 1. **Reactividad vs. Botón:** ¿La actualización de las secciones "Datos Intermedios" y "Salidas" debe ser automática al cambiar un input (Debounce) o requiere pulsar "Ejecutar Simulación"?
