@@ -1,7 +1,7 @@
 /**
  * Responsabilidad: Actualizar la interfaz de usuario con los resultados.
  */
-export const UIUpdater = {
+export const SimulationUIUpdater = {
   actualizarKPIs(results) {
     console.log('[DEBUG] UIUpdater.actualizarKPIs, results:', results);
     

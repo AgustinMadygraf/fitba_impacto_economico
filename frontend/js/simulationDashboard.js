@@ -3,8 +3,8 @@
  */
 
 import { SimulationController } from './simulationController.js';
-import { FormBinder } from './formBinder.js';
-import { UIUpdater } from './uiUpdater.js';
+import { SimulationFormBinder } from './simulationFormBinder.js';
+import { SimulationUIUpdater } from './simulationUIUpdater.js';
 import { UINotifier } from './uiNotifier.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
       try {
-        const formData = FormBinder.getSimulationData();
+        const formData = SimulationFormBinder.getSimulationData();
         const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
       } catch (error) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     if (loading) loading.classList.remove('d-none');
     try {
-      const formData = FormBinder.getSimulationData();
+      const formData = SimulationFormBinder.getSimulationData();
       const results = await SimulationController.runSimulation(formData);
       actualizarUI(results);
     } catch (error) {
@@ -76,8 +76,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function poblarFormulario(data) {
     const inputAnr = document.getElementById('input-anr');
     const inputFechaBase = document.getElementById('input-fecha-base');
+    const inputIpc = document.getElementById("input-ipc");
+    
     if (inputAnr) inputAnr.value = data.inversion.monto_actualizado;
     if (inputFechaBase) inputFechaBase.value = data.inversion.fecha_base;
+    if (inputIpc) inputIpc.value = (data.tasa_proyectada * 100).toFixed(2);
     
     const listaProductos = document.getElementById("lista-productos");
     const listaLineas = document.getElementById("lista-lineas");
@@ -91,8 +94,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function actualizarUI(results) {
-    UIUpdater.actualizarKPIs(results);
-    UIUpdater.renderizarTabla(results.resultados);
+    SimulationUIUpdater.actualizarKPIs(results);
+    SimulationUIUpdater.renderizarTabla(results.resultados);
     if (ctx) renderizarGrafico(results.proyecciones, results.target_repago);
   }
 
@@ -101,16 +104,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const labels = Object.values(proyecciones)[0].map(p => p.fecha);
     const datasets = Object.keys(proyecciones).map((key, i) => ({
-      label: key,
-      data: proyecciones[key].map(p => p.beneficio_acumulado),
-      borderColor: i === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)',
+      label: key + ' (Valor Presente)',
+      data: proyecciones[key].map(p => p.beneficio_acumulado_presente),
+      borderColor: i === 0 ? 'rgba(75, 192, 192, 1)' : (i === 1 ? 'rgba(255, 99, 132, 1)' : 'rgba(153, 102, 255, 1)'),
       fill: false
     }));
 
     myChart = new Chart(ctx, {
       type: 'line',
       data: { labels, datasets },
-      options: { responsive: true, maintainAspectRatio: false }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: {
+            title: { display: true, text: 'Proyección de Beneficio Acumulado (Valor Presente)' }
+        }
+      }
     });
   }
 });

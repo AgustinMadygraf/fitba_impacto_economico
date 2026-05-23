@@ -1,7 +1,7 @@
 /**
  * Responsabilidad: Vincular el estado del DOM con el modelo de datos.
  */
-export const FormBinder = {
+export const SimulationFormBinder = {
   getSimulationData() {
     const getVal = (id) => document.getElementById(id)?.value || "0";
     

@@ -43,13 +43,12 @@ class SimularImpactoEconomico:
         
         fecha_base = datetime.strptime(self.inversion.fecha_base, "%Y-%m-%d")
         
-        beneficio_base = self._calcular_beneficio_mensual(self.capacidad_instalada.capacidad_nominal_total * self.oee_base.valor)
-        
         for mes in range(1, self.horizonte_maximo + 1):
             fecha_actual = add_months(fecha_base, mes)
             label_fecha = fecha_actual.strftime("%m/%Y")
             
             # Inflación
+            factor_inflacion = 1.0
             if self.inversion.indice_base:
                 factor_inflacion = self.inversion.indice_base.calcular_factor_capitalizacion(mes)
                 target_actualizado_t = self.inversion.monto_anr * factor_inflacion
@@ -63,16 +62,19 @@ class SimularImpactoEconomico:
             capacidad_efectiva = self.capacidad_instalada.capacidad_nominal_total * min(oee_t, 1.0) * self.escenario.factor_demanda
             
             beneficio_mensual = self._calcular_beneficio_mensual(capacidad_efectiva)
-            delta_beneficio = beneficio_mensual - beneficio_base
             
-            if delta_beneficio > 0:
-                beneficio_acumulado += delta_beneficio
+            # Acumular beneficio total
+            beneficio_acumulado += beneficio_mensual
             
-            # Enriquecer resultado con etiqueta temporal
+            # Calcular Valor Presente (deflactado por inflación acumulada)
+            beneficio_acumulado_presente = beneficio_acumulado / factor_inflacion
+            
+            # Enriquecer resultado
             proyeccion_mensual.append({
                 "mes": mes,
                 "fecha": label_fecha,
-                "beneficio_acumulado": beneficio_acumulado
+                "beneficio_acumulado": beneficio_acumulado,
+                "beneficio_acumulado_presente": beneficio_acumulado_presente
             })
             
             if mes_repago is None and beneficio_acumulado >= target_actualizado_t:

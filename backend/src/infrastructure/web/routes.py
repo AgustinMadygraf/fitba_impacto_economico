@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -48,21 +49,38 @@ def get_params():
     try:
         loader = ConfigLoader()
         raw_data = loader._raw_data
-        web_logger.info(f"Raw data: {raw_data}")
+        inversion = loader.get_inversion()
         productos = [
             {"id": p["id"], "nombre": p["nombre"], "precio": p["precio"], "costo": p["costo"]}
             for p in raw_data["catalogo"]["productos"]
         ]
+        
+        # Calculate Accumulated IPC
+        ipc_acumulado = 1.0
+        if inversion.indice_base:
+            today = datetime.now()
+            base = datetime.strptime(inversion.fecha_base, "%Y-%m-%d")
+            months_diff = (today.year - base.year) * 12 + (today.month - base.month)
+            ipc_acumulado = inversion.indice_base.calcular_factor_capitalizacion(max(0, months_diff))
+
+        # Flatten IPC for the UI
+        ipc_serie_flat = []
+        ipc_data = raw_data.get("ipc_serie", {})
+        for year, months in ipc_data.get("datos", {}).items():
+            for month, rate in months.items():
+                ipc_serie_flat.append({"mes": f"{year}-{month}", "tasa": rate})
+
         return {
             "inversion": {
                 "monto_anr": raw_data["inversion"]["objetivo_anr"], 
                 "monto_actualizado": raw_data["inversion"]["objetivo_anr"],
-                "fecha_base": raw_data["inversion"]["fecha_base"]
+                "fecha_base": raw_data["inversion"]["fecha_base"],
+                "ipc_acumulado_fitba": ipc_acumulado
             },
             "oee": raw_data["oee_base"],
             "productos": productos,
             "lineas_produccion": raw_data["catalogo"]["lineas"],
-            "ipc_serie": [{"mes": k, "tasa": v} for k, v in raw_data["ipc_serie"]["serie_mensual"].items()]
+            "ipc_serie": ipc_serie_flat, "tasa_proyectada": raw_data.get("ipc_serie", {}).get("tasa_proyectada", 0.02)
         }
     except Exception as e:
         web_logger.error(f"Error en GET /api/v1/simulacion/parametros: {str(e)}")

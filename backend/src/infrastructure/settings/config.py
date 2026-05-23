@@ -44,16 +44,21 @@ class ConfigLoader(ParametrosGateway):
 
     def get_inversion(self) -> Inversion:
         data = self._raw_data["inversion"]
-        indice_data = self._raw_data.get("ipc_serie")
+        ipc_data = self._raw_data.get("ipc_serie")
         indice = None
-        if indice_data:
-            serie = {int(k): v for k, v in indice_data["serie_mensual"].items()}
+        if ipc_data:
+            serie_mensual = {}
+            # Flatten YYYY -> MM structure
+            for year, months in ipc_data.get("datos", {}).items():
+                for month, rate in months.items():
+                    serie_mensual[len(serie_mensual) + 1] = rate
+            
             indice = IndiceFinanciero(
-                nombre=indice_data["nombre"],
-                serie_mensual=serie,
-                tasa_proyectada=indice_data["tasa_proyectada"]
+                nombre=ipc_data["nombre"],
+                serie_mensual=serie_mensual,
+                tasa_proyectada=0.02
             )
-        return Inversion(monto_anr=data["objetivo_anr"], indice_base=indice)
+        return Inversion(monto_anr=data["objetivo_anr"], fecha_base=data["fecha_base"], indice_base=indice)
 
     def get_productos(self) -> List[Producto]:
         return [
