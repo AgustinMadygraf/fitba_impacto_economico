@@ -26,7 +26,7 @@ measure_step "Tests" cd backend && source .venv/bin/activate && pytest
 
 # 2. Configuración
 if [ ! -f backend/.env ]; then
-    log_error "El archivo .env no existe."
+    log_error "El archivo backend/.env no existe."
     exit 1
 fi
 source backend/.env
