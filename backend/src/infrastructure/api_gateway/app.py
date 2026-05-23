@@ -9,7 +9,7 @@ from typing import Dict, Any, List
 from src.infrastructure.settings.config import ConfigLoader
 from src.infrastructure.settings.logger import get_logger
 from src.interface_adapter.controllers.simulacion_controller import SimulacionController
-from src.interface_adapter.repositories.dinamico_gateway import DinamicoParametrosGateway
+from src.interface_adapter.repositories.parametros_gateway_impl import DinamicoParametrosGateway
 from src.interface_adapter.presenter.json_presenter import JSONSimulacionPresenter
 
 app = FastAPI(

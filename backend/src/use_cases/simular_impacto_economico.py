@@ -65,6 +65,8 @@ class SimularImpactoEconomico:
             
             proyeccion_mensual.append(beneficio_acumulado)
             
+            self.logger.debug(f"Mes {mes}: Target={target_actualizado_t:.2f}, Acumulado={beneficio_acumulado:.2f}")
+
             # Condición de Parada: El beneficio acumulado debe ganarle al Target Inflacionado
             if mes_repago is None and beneficio_acumulado >= target_actualizado_t:
                 mes_repago = mes

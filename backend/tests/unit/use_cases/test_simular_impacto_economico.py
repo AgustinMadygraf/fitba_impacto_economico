@@ -1,5 +1,5 @@
 import pytest
-from src.use_cases.simular_impacto import SimularImpactoEconomico
+from src.use_cases.simular_impacto_economico import SimularImpactoEconomico
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
@@ -8,7 +8,7 @@ from src.entities.linea_produccion import LineaProduccion
 from src.entities.escenario import Escenario
 from unittest.mock import MagicMock
 
-def test_simular_impacto_repago():
+def test_simular_impacto_economico_repago():
     # Setup
     inversion = Inversion(monto_anr=1000.0, factor_correccion_inicial=1.1)
     

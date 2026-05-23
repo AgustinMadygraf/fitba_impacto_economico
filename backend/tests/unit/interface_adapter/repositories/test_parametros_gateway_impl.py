@@ -1,7 +1,7 @@
 import pytest
-from src.interface_adapter.repositories.dinamico_gateway import DinamicoParametrosGateway
+from src.interface_adapter.repositories.parametros_gateway_impl import DinamicoParametrosGateway
 
-def test_dinamico_gateway_mapping():
+def test_parametros_gateway_impl_mapping():
     raw_data = {
         "inversion": {"objetivo_anr": 1000.0, "factor_ipc_acumulado": 1.1},
         "productos": [{"id": "p1", "nombre": "Prod1", "precio_unitario": 10.0, "costo_marginal_unitario": 5.0}],
