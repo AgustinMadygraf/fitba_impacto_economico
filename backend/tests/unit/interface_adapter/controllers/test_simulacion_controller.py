@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-from src.interface_adapter.http_controllers.simulacion_controller import SimulacionController
+from src.interface_adapter.controllers.simulacion_controller import SimulacionController
 
 def test_ejecutar_simulacion():
     # Setup mocks

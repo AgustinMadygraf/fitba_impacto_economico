@@ -3,6 +3,8 @@
  */
 export const FormBinder = {
   getSimulationData() {
+    const getVal = (id) => document.getElementById(id)?.value || "0";
+    
     // Recolectar Productos
     const productos = Array.from(document.querySelectorAll(".item-producto")).map(div => ({
       id: div.dataset.id,
@@ -18,16 +20,19 @@ export const FormBinder = {
       capacidad: parseFloat(div.querySelector(".input-linea-capacidad").value) || 0
     }));
 
-    return {
-      anr: document.getElementById('input-anr').value,
-      dispBase: document.getElementById('input-disp-base').value,
-      perf: document.getElementById('input-perf').value,
-      quality: document.getElementById('input-quality').value,
+    const data = {
+      anr: getVal('input-anr'),
+      dispBase: getVal('input-disp-base'),
+      perf: getVal('input-perf'),
+      quality: getVal('input-quality'),
       productos: productos,
       lineas: lineas,
-      rateDesfavorable: document.getElementById('input-rate-desfavorable').value,
-      rateProyectado: document.getElementById('input-rate-proyectado').value,
-      rateFavorable: document.getElementById('input-rate-favorable').value,
+      rateDesfavorable: getVal('input-rate-desfavorable'),
+      rateProyectado: getVal('input-rate-proyectado'),
+      rateFavorable: getVal('input-rate-favorable'),
     };
+    
+    console.debug('[FITBA] FormBinder: Datos recolectados:', data);
+    return data;
   }
 };
