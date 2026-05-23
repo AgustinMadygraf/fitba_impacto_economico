@@ -9,14 +9,14 @@ export const SimulationMapper = {
     };
 
     const inversion = {
-      objetivo_anr: parseFloatOrDefault(formData.anr, 0),
-      factor_ipc_acumulado: 1.0 
+      objetivo_anr: parseFloatOrDefault(formData.anr, 0)
     };
 
-    const oee = {
+    const oee_base = {
       disponibilidad: parseFloatOrDefault(formData.dispBase, 0) / 100,
       rendimiento: parseFloatOrDefault(formData.perf, 0) / 100,
-      calidad: parseFloatOrDefault(formData.quality, 0) / 100
+      calidad: parseFloatOrDefault(formData.quality, 0) / 100,
+      limite_disponibilidad: 0.85
     };
 
     const productos = formData.productos.map(p => ({
@@ -26,7 +26,7 @@ export const SimulationMapper = {
       costo_marginal_unitario: parseFloatOrDefault(p.costo, 0)
     }));
 
-    const lineas_produccion = formData.lineas.map(l => ({
+    const lineas = formData.lineas.map(l => ({
       id: l.id,
       nombre: l.nombre,
       capacidad_nominal: parseFloatOrDefault(l.capacidad, 0),
@@ -44,6 +44,12 @@ export const SimulationMapper = {
       favorable: { nombre: 'Favorable', tasa_crecimiento_mensual: parseFloatOrDefault(formData.rateFavorable, 0) / 100, factor_demanda: 1.0 }
     };
 
-    return { inversion, oee, productos, lineas_produccion, mix_objetivo, escenarios };
+    return { 
+        inversion, 
+        oee_base, 
+        catalogo: { productos, lineas }, 
+        mix_objetivo, 
+        escenarios 
+    };
   }
 };

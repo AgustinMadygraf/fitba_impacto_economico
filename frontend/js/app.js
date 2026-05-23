@@ -8,9 +8,7 @@ import { UIUpdater } from './uiUpdater.js';
 import { UINotifier } from './uiNotifier.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try { if (window.CONFIG_LOADED) await window.CONFIG_LOADED; } catch (e) { console.warn("Configuración no cargada."); }
   const getMode = () => (window.APP_CONFIG && window.APP_CONFIG.mode) || 'production';
-
   const form = document.getElementById('form-simulacion');
   const loading = document.getElementById('loading');
   const canvasElement = document.getElementById('chart-proyeccion');
@@ -27,27 +25,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const results = await SimulationController.runSimulation(formData);
         actualizarUI(results);
       } catch (error) {
-        if (getMode() === 'development') console.error('Error en simulación:', {error});
         UINotifier.showError('Error en la simulación.');
       } finally {
         if (loading) loading.classList.add('d-none');
       }
     })
     .catch(err => { 
-        if (getMode() === 'development') console.error('Error cargando parámetros:', {err});
         UINotifier.showError('No se pudo conectar con el servidor.');
     });
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (loading) loading.classList.remove('d-none');
-    
     try {
       const formData = FormBinder.getSimulationData();
       const results = await SimulationController.runSimulation(formData);
       actualizarUI(results);
     } catch (error) {
-      console.error('[FITBA] Error crítico en simulación:', error);
       UINotifier.showError('Error en simulación: ' + error.message);
     } finally {
       if (loading) loading.classList.add('d-none');
@@ -63,8 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-producto-nombre" value="${producto.nombre}" placeholder="Nombre">
       <div class="d-flex gap-2">
-        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio_unitario}" placeholder="Precio">
-        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo_marginal_unitario}" placeholder="Costo">
+        <input type="number" step="0.1" class="form-control input-producto-precio" value="${producto.precio_unitario || 0}" placeholder="Precio">
+        <input type="number" step="0.1" class="form-control input-producto-costo" value="${producto.costo_marginal_unitario || 0}" placeholder="Costo">
       </div>
     `;
     container.appendChild(div);
@@ -78,21 +72,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     div.dataset.id = linea.id;
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-linea-nombre" value="${linea.nombre}" placeholder="Nombre">
-      <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad_nominal}" placeholder="Capacidad Nominal">
+      <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad_nominal || 0}" placeholder="Capacidad Nominal">
     `;
     container.appendChild(div);
   }
 
   function poblarFormulario(data) {
     if (!data.inversion || !data.productos || !data.lineas_produccion) return;
-    document.getElementById('input-anr').value = data.inversion.monto_actualizado;
-    document.getElementById("lista-productos").innerHTML = "";
-    document.getElementById("lista-lineas").innerHTML = "";
-    document.getElementById("lista-ipc").innerHTML = "";
-    data.productos.forEach(p => renderProductoRow(p));
-    data.lineas_produccion.forEach(l => renderLineaRow(l));
-    if (document.getElementById("lista-ipc") && data.ipc_serie) {
-       document.getElementById("lista-ipc").innerHTML = data.ipc_serie.map(item => `<div>Mes ${item.mes}: ${(item.tasa * 100).toFixed(1)}%</div>`).join('');
+    
+    const inputAnr = document.getElementById('input-anr');
+    if (inputAnr) inputAnr.value = data.inversion.monto_actualizado;
+    
+    const listaProductos = document.getElementById("lista-productos");
+    const listaLineas = document.getElementById("lista-lineas");
+    const listaIpc = document.getElementById("lista-ipc");
+
+    if (listaProductos) { listaProductos.innerHTML = ""; data.productos.forEach(p => renderProductoRow(p)); }
+    if (listaLineas) { listaLineas.innerHTML = ""; data.lineas_produccion.forEach(l => renderLineaRow(l)); }
+    
+    if (listaIpc && data.ipc_serie) {
+       listaIpc.innerHTML = data.ipc_serie.map(item => `<div>Mes ${item.mes}: ${(item.tasa * 100).toFixed(1)}%</div>`).join('');
     }
   }
 
@@ -102,7 +101,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (ctx) renderizarGrafico(results.proyecciones, results.target_repago);
   }
 
-  function renderizarGrafico(proyecciones, target) {
-    // ... lógica del gráfico
-  }
+  function renderizarGrafico(proyecciones, target) { /* ... */ }
 });

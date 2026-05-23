@@ -44,9 +44,8 @@ class ConfigLoader(ParametrosGateway):
     def get_inversion(self) -> Inversion:
         data = self._raw_data["inversion"]
         indice = None
-        if "indices" in self._raw_data and "ipc" in self._raw_data["indices"]:
-            idx_data = self._raw_data["indices"]["ipc"]
-            # Convertimos las llaves del dict de string a int (JSON solo soporta strings como llaves)
+        if "ipc_serie" in self._raw_data:
+            idx_data = self._raw_data["ipc_serie"]
             serie = {int(k): v for k, v in idx_data["serie_mensual"].items()}
             indice = IndiceFinanciero(
                 nombre=idx_data["nombre"],
@@ -56,18 +55,17 @@ class ConfigLoader(ParametrosGateway):
             
         return Inversion(
             monto_anr=data["objetivo_anr"],
-            indice_base=indice,
-            factor_correccion_inicial=data.get("factor_ipc_acumulado", 1.0)
+            indice_base=indice
         )
 
     def get_productos(self) -> List[Producto]:
         return [
-            Producto(id=p["id"], nombre=p["nombre"], precio_unitario=p["precio_unitario"], costo_marginal_unitario=p["costo_marginal_unitario"])
-            for p in self._raw_data["productos"]
+            Producto(id=p["id"], nombre=p["nombre"], precio_unitario=p["precio"], costo_marginal_unitario=p["costo"])
+            for p in self._raw_data["catalogo"]["productos"]
         ]
 
     def get_oee_base(self) -> OEE:
-        data = self._raw_data["oee"]["linea_base"]
+        data = self._raw_data["oee_base"]
         return OEE(
             disponibilidad=data["disponibilidad"],
             rendimiento=data["rendimiento"],
@@ -77,7 +75,7 @@ class ConfigLoader(ParametrosGateway):
     def get_lineas_produccion(self) -> List[LineaProduccion]:
         return [
             LineaProduccion(id=lp["id"], nombre=lp["nombre"], capacidad_nominal=lp["capacidad_nominal"], productos_compatibles=lp["productos_compatibles"])
-            for lp in self._raw_data["lineas_produccion"]
+            for lp in self._raw_data["catalogo"]["lineas"]
         ]
 
     def get_mix_produccion(self) -> MixProduccion:
@@ -85,8 +83,10 @@ class ConfigLoader(ParametrosGateway):
         return MixProduccion(porcentajes=porcentajes)
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
+        data = self._raw_data["capacidad_instalada"]
+        oee_data = self._raw_data["oee_base"]
         return CapacidadInstalada(
-            limite_disponibilidad=self._raw_data["oee"]["limite_disponibilidad"]
+            limite_disponibilidad=oee_data["limite_disponibilidad"]
         )
 
     def get_escenarios_raw(self) -> Dict[str, Any]:

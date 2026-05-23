@@ -2,51 +2,49 @@
   "inversion": {
     "objetivo_anr": 8492000.0,
     "moneda": "ARS",
-    "fecha_base": "2025-02-01",
-    "fecha_objetivo": "2026-03-01",
-    "factor_ipc_acumulado": 1.3625
+    "fecha_base": "2025-02-01"
   },
-  "indices": {
-    "ipc": {
-      "nombre": "IPC Acumulado",
-      "serie_mensual": {
-        "1": 0.04,
-        "2": 0.038,
-        "3": 0.035,
-        "4": 0.032,
-        "5": 0.03
-      },
-      "tasa_proyectada": 0.03
-    }
+  "capacidad_instalada": {
+    "capacidad_nominal_total_mensual": 450000.0
   },
-  "oee": {
-    "linea_base": {
-      "disponibilidad": 0.135,
-      "rendimiento": 0.44,
-      "calidad": 0.84
+  "oee_base": {
+    "disponibilidad": 0.135,
+    "rendimiento": 0.44,
+    "calidad": 0.84,
+    "limite_disponibilidad": 0.85
+  },
+  "ipc_serie": {
+    "nombre": "IPC Acumulado",
+    "serie_mensual": {
+      "1": 0.04,
+      "2": 0.038,
+      "3": 0.035,
+      "4": 0.032,
+      "5": 0.03
     },
-    "limite_disponibilidad": 0.85,
-    "horizonte_max_meses": 24
+    "tasa_proyectada": 0.03
   },
-  "productos": [
-    {
-      "id": "bolsa_lisa",
-      "nombre": "Bolsa Lisa",
-      "precio_unitario": 150.0,
-      "costo_marginal_unitario": 85.5
-    }
-  ],
-  "lineas_produccion": [
-    {
-      "id": "linea_principal",
-      "nombre": "Línea Principal",
-      "capacidad_nominal": 450000,
-      "productos_compatibles": ["bolsa_lisa"]
-    }
-  ],
+  "catalogo": {
+    "productos": [
+      {
+        "id": "p1",
+        "nombre": "Bolsa Lisa",
+        "precio": 150.0,
+        "costo": 85.5
+      }
+    ],
+    "lineas": [
+      {
+        "id": "l1",
+        "nombre": "Línea 1",
+        "capacidad_nominal": 450000.0,
+        "productos_compatibles": ["p1"]
+      }
+    ]
+  },
   "mix_objetivo": [
     {
-      "producto_id": "bolsa_lisa",
+      "producto_id": "p1",
       "porcentaje": 1.0
     }
   ],
