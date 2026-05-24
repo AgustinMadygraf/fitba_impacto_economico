@@ -46,3 +46,4 @@ Recibe los parámetros y devuelve el resultado de la simulación.
 ## 2. Notas Técnicas
 - **Valor Presente**: El backend calcula `monto_anr_real` como fuente de verdad (`monto_anr_nominal * ipc_acumulado`). El frontend consume este valor para su visualización.
 - **IPC Acumulado**: El campo `ipc_acumulado` es una instantánea (snapshot) dinámica calculada por el backend, representando el factor acumulado desde la `fecha_base` de la inversión hasta la fecha actual, derivado exclusivamente de la serie histórica y proyectada proporcionada en el JSON de configuración (fuente única de verdad).
+- **Modelo de Datos IPC (`params.json`)**: El objeto `ipc_serie.datos` contiene exclusivamente datos observados (históricos). Para cualquier mes no presente en la serie histórica, el motor financiero aplica automáticamente `tasa_proyectada` para calcular la inflación a futuro.
