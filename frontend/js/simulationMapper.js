@@ -45,12 +45,21 @@ export const SimulationMapper = {
       favorable: { nombre: 'Favorable', tasa_crecimiento_mensual: parseFloatOrDefault(formData.rateFavorable, 0) / 100, factor_demanda: 1.0 }
     };
 
+    const capacidad_instalada = {
+      capacidad_nominal_por_hora: 2500.0,
+      horas_por_turno: 8,
+      turnos_por_dia: 1,
+      dias_habiles_por_mes: 22,
+      dias_inhabiles_mensuales: 1
+    };
+
     const payload = { 
         inversion, 
         oee_base, 
         catalogo: { productos, lineas }, 
         mix_objetivo, 
         escenarios,
+        capacidad_instalada,
         ipc: parseFloatOrDefault(formData.ipc, 0) / 100
     };
     

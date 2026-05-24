@@ -14,9 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ctx = canvasElement ? canvasElement.getContext('2d') : null;
   let realAnr = 0;
 
+  console.log('[FITBA] Dashboard: Cargando parámetros iniciales');
   fetch('/api/v1/simulacion/parametros')
     .then(res => res.json())
     .then(async data => {
+      console.log('[FITBA] Dashboard: Parámetros cargados', data);
       realAnr = data.inversion.monto_anr_real;
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
@@ -29,10 +31,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       } finally {
         if (loading) loading.classList.add('d-none');
       }
+    })
+    .catch(error => {
+      console.error('[FITBA] Dashboard: Error cargando parámetros', error);
+      UINotifier.showError('Error cargando configuración inicial');
     });
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('[FITBA] Dashboard: Form submit');
     if (loading) loading.classList.remove('d-none');
     try {
       const formData = SimulationFormBinder.getSimulationData();

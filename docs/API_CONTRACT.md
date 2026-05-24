@@ -16,11 +16,7 @@ Devuelve la configuración actual del sistema utilizada para las simulaciones. E
     "fecha_base": "2025-02-01",
     "ipc_acumulado": 1.52
   },
-  "oee": {
-    "disponibilidad": 0.135,
-    "rendimiento": 0.44,
-    "calidad": 0.84
-  },
+  "disponibilidad_operativa_target": 0.95,
   "productos": [],
   "ipc_serie": [],
   "tasa_proyectada": 0.02
@@ -34,7 +30,10 @@ Recibe los parámetros y devuelve el resultado de la simulación.
 ```json
 {
   "target_repago": 8492000.0,
-  "oee_base": 0.0499,
+  "kpis": {
+    "oee_calendario": 0.85,
+    "oee_inherente": 0.92
+  },
   "resultados": [],
   "proyecciones": {
     "proyectado": []
