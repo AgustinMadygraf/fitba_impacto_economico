@@ -26,6 +26,12 @@ class ProductoSchema(BaseModel):
     id: str; nombre: str; precio_unitario: float; costo_marginal_unitario: float
 class LineaProduccionSchema(BaseModel):
     id: str; nombre: str; capacidad_nominal: float; productos_compatibles: List[str]
+class CapacidadInstaladaSchema(BaseModel):
+    capacidad_nominal_por_hora: float
+    horas_por_turno: int
+    turnos_por_dia: int
+    dias_habiles_por_mes: int
+    dias_inhabiles_mensuales: int
 class CatalogoSchema(BaseModel):
     productos: List[ProductoSchema]
     lineas: List[LineaProduccionSchema]
@@ -39,6 +45,7 @@ class SimularRequestSchema(BaseModel):
     catalogo: CatalogoSchema
     mix_objetivo: List[MixProduccionSchema]
     escenarios: Dict[str, EscenarioDetalleSchema]
+    capacidad_instalada: CapacidadInstaladaSchema
     ipc: Optional[float] = None
 
 @app.get("/api/config")
@@ -79,6 +86,7 @@ def get_params():
             "oee": raw_data["oee_base"],
             "productos": productos,
             "lineas_produccion": raw_data["catalogo"]["lineas"],
+            "capacidad_instalada": raw_data["capacidad_instalada"],
             "ipc_serie": ipc_serie_flat,
             "tasa_proyectada": raw_data.get("ipc_serie", {}).get("tasa_proyectada", 0.02)
         }
@@ -100,7 +108,7 @@ def post_simular(payload: SimularRequestSchema, request: Request):
             },
             "mix_objetivo": [m.model_dump() for m in payload.mix_objetivo],
             "escenarios": {k: v.model_dump() for k, v in payload.escenarios.items()},
-            "capacidad_instalada": {"capacidad_nominal_total_mensual": sum(l.capacidad_nominal for l in payload.catalogo.lineas)},
+            "capacidad_instalada": payload.capacidad_instalada.model_dump(),
             "ipc_override": payload.ipc
         }
         gateway = JsonParametrosRepository(raw_dict)

@@ -10,7 +10,7 @@
 
 ## 3. Reglas de Negocio
 - **Ajuste por Inflación (Target de Repago):** Ajuste mensual compuesto basado en `IndiceFinanciero`.
-- **Independencia Operativa:** `CapacidadInstalada` y `OEE_Base` son independientes; el caso de uso calcula la capacidad efectiva.
+- **Independencia Operativa:** `CapacidadInstalada` (gestiona restricciones físicas, calendarios y límites operativos de diseño) y `OEE_Base` (gestiona métricas de eficiencia: disponibilidad operacional, rendimiento, calidad) son entidades independientes.
 
 ## 4. Estándares de Calidad
 - Bootstrap 100%.

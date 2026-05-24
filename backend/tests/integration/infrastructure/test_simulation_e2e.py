@@ -10,8 +10,7 @@ def test_full_simulation_flow():
         "oee_base": {
             "disponibilidad": 0.135,
             "rendimiento": 0.44,
-            "calidad": 0.84,
-            "limite_disponibilidad": 0.85
+            "calidad": 0.84
         },
         "catalogo": {
             "productos": [
@@ -43,6 +42,13 @@ def test_full_simulation_flow():
                 "tasa_crecimiento_mensual": 0.02,
                 "factor_demanda": 1.0
             }
+        },
+        "capacidad_instalada": {
+            "capacidad_nominal_por_hora": 2500.0,
+            "horas_por_turno": 8,
+            "turnos_por_dia": 1,
+            "dias_habiles_por_mes": 22,
+            "dias_inhabiles_mensuales": 1
         }
     }
 

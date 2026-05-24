@@ -1,5 +1,11 @@
 # TODO - FITBA Development Roadmap
 
+## Fase 7: OEE Dinámico y Sensibilidad a Escenarios (En curso)
+- [x] Desacoplar `limite_disponibilidad` de `OEE` y mover a `CapacidadInstalada`.
+- [ ] Implementar evolución dinámica de componentes de OEE (Disponibilidad, Rendimiento, Calidad).
+- [ ] Integrar factores de mejora de OEE en la entidad `Escenario`.
+- [ ] Refactorizar `SimularImpactoEconomico` para utilizar la lógica dinámica de OEE del dominio.
+
 ## Fase 8: Estabilización y Testing Extendido
 - [ ] Implementar tests de integración E2E para el flujo completo de simulación.
 - [ ] Mejorar manejo de errores global en el Frontend (interceptor de errores HTTP).

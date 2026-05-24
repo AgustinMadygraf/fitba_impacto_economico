@@ -10,3 +10,7 @@
 
 ## 3. Entidades
 (1:1 mapeo: Inversion, CapacidadInstalada, OEE, IndiceFinanciero, Producto, LineaProduccion, MixProduccion, Escenario).
+
+## 4. Restricciones Operativas
+- **CapacidadInstalada (RC-OP-01):** Define la frontera máxima de producción teórica, integrando limitaciones físicas, políticas de turnos y mantenimiento preventivo necesario.
+- **OEE (RC-OP-02):** Métrica de desempeño post-capacidad instalada. Cualquier valor inferior al 100% (1.0) representa ineficiencias gestionables en el uso de la capacidad definida.

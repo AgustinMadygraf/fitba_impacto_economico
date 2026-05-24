@@ -43,7 +43,14 @@ class JsonParametrosRepository(ParametrosGateway):
         return OEE(oee_data["disponibilidad"], oee_data["rendimiento"], oee_data["calidad"])
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
-        return CapacidadInstalada(self._data["capacidad_instalada"]["capacidad_nominal_total_mensual"])
+        data = self._data["capacidad_instalada"]
+        return CapacidadInstalada(
+            capacidad_nominal_por_hora=data["capacidad_nominal_por_hora"],
+            horas_por_turno=data["horas_por_turno"],
+            turnos_por_dia=data["turnos_por_dia"],
+            dias_habiles_por_mes=data["dias_habiles_por_mes"],
+            dias_inhabiles_mensuales=data["dias_inhabiles_mensuales"]
+        )
 
     def get_escenarios_raw(self) -> dict:
         return self._data["escenarios"]

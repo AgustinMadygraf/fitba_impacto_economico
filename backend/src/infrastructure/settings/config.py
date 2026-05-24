@@ -81,7 +81,13 @@ class ConfigLoader(ParametrosGateway):
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
         data = self._raw_data["capacidad_instalada"]
-        return CapacidadInstalada(capacidad_nominal_total=data["capacidad_nominal_total_mensual"])
+        return CapacidadInstalada(
+            capacidad_nominal_por_hora=data["capacidad_nominal_por_hora"],
+            horas_por_turno=data["horas_por_turno"],
+            turnos_por_dia=data["turnos_por_dia"],
+            dias_habiles_por_mes=data["dias_habiles_por_mes"],
+            dias_inhabiles_mensuales=data["dias_inhabiles_mensuales"]
+        )
 
     def get_ipc_override(self) -> Optional[float]:
         return None
