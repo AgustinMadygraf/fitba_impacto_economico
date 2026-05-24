@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
 from src.entities.oee import OEE
@@ -28,3 +28,6 @@ class ParametrosGateway(ABC):
 
     @abstractmethod
     def get_escenarios_raw(self) -> Dict[str, Any]: pass
+    
+    @abstractmethod
+    def get_ipc_override(self) -> Optional[float]: pass

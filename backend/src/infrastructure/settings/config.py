@@ -2,7 +2,7 @@ import json
 import argparse
 import os
 import datetime
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from src.entities.inversion import Inversion
 from src.entities.producto import Producto
@@ -54,9 +54,9 @@ class ConfigLoader(ParametrosGateway):
                     serie_mensual[len(serie_mensual) + 1] = rate
             
             indice = IndiceFinanciero(
-                nombre=ipc_data["nombre"],
+                nombre="IPC",
                 serie_mensual=serie_mensual,
-                tasa_proyectada=0.02
+                tasa_proyectada=ipc_data.get("tasa_proyectada", 0.02)
             )
         return Inversion(monto_anr=data["objetivo_anr"], fecha_base=data["fecha_base"], indice_base=indice)
 
@@ -68,7 +68,7 @@ class ConfigLoader(ParametrosGateway):
 
     def get_oee_base(self) -> OEE:
         data = self._raw_data["oee_base"]
-        return OEE(disponibilidad=data["disponibilidad"], rendimiento=data["rendimiento"], calidad=data["calidad"])
+        return OEE(disponibilidad=data["disponibilidad"], rendimiento=data["rendimiento"], calidad=data["calidad"], limite_disponibilidad=data["limite_disponibilidad"])
 
     def get_lineas_produccion(self) -> List[LineaProduccion]:
         return [
@@ -82,6 +82,9 @@ class ConfigLoader(ParametrosGateway):
     def get_capacidad_instalada(self) -> CapacidadInstalada:
         data = self._raw_data["capacidad_instalada"]
         return CapacidadInstalada(capacidad_nominal_total=data["capacidad_nominal_total_mensual"])
+
+    def get_ipc_override(self) -> Optional[float]:
+        return None
 
     def get_escenarios_raw(self) -> Dict[str, Any]:
         return self._raw_data["escenarios"]
