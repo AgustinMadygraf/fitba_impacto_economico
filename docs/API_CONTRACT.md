@@ -19,8 +19,7 @@ Devuelve la configuración actual del sistema utilizada para las simulaciones. E
   "oee": {
     "disponibilidad": 0.135,
     "rendimiento": 0.44,
-    "calidad": 0.84,
-    "limite_disponibilidad": 0.85
+    "calidad": 0.84
   },
   "productos": [],
   "ipc_serie": [],

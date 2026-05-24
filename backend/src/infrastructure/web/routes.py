@@ -19,7 +19,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, 
 web_logger = get_logger("FITBA.Web")
 
 class OEEBaseSchema(BaseModel):
-    disponibilidad: float; rendimiento: float; calidad: float; limite_disponibilidad: float
+    disponibilidad: float; rendimiento: float; calidad: float
 class InversionSchema(BaseModel):
     objetivo_anr: float; fecha_base: str
 class ProductoSchema(BaseModel):

@@ -68,7 +68,7 @@ class ConfigLoader(ParametrosGateway):
 
     def get_oee_base(self) -> OEE:
         data = self._raw_data["oee_base"]
-        return OEE(disponibilidad=data["disponibilidad"], rendimiento=data["rendimiento"], calidad=data["calidad"], limite_disponibilidad=data["limite_disponibilidad"])
+        return OEE(disponibilidad=data["disponibilidad"], rendimiento=data["rendimiento"], calidad=data["calidad"])
 
     def get_lineas_produccion(self) -> List[LineaProduccion]:
         return [

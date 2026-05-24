@@ -10,8 +10,7 @@
   "oee_base": {
     "disponibilidad": 0.135,
     "rendimiento": 0.44,
-    "calidad": 0.84,
-    "limite_disponibilidad": 0.85
+    "calidad": 0.84
   },
   "ipc_serie": {
     "tasa_proyectada": 0.02,
