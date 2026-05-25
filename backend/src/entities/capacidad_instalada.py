@@ -1,3 +1,7 @@
+"""
+Path: backend/src/entities/capacidad_instalada.py
+"""
+
 from dataclasses import dataclass
 
 @dataclass(frozen=True)

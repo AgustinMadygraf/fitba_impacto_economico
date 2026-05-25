@@ -13,3 +13,9 @@
 ## Fase 10: Optimización y Nuevas Funcionalidades (Pendiente)
 - [ ] Implementar caché de simulaciones para mejorar rendimiento en visualización de gráficos.
 - [ ] Explorar integración de nuevos escenarios productivos (dependencias operativas).
+## Fase 9: Migración Frontend a React + TypeScript (Nueva)
+- [ ] Configurar entorno de pruebas unitarias (Vitest).
+- [ ] Configurar nuevo bundle frontend (Vite).
+- [ ] Definir tipos de datos (TypeScript) basados en Pydantic del Backend.
+- [ ] Migración progresiva de componentes imperativos a React.
+

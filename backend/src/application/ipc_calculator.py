@@ -1,3 +1,7 @@
+"""
+Path: backend/src/application/ipc_calculator.py
+"""
+
 from datetime import datetime
 from src.entities.indice_financiero import IndiceFinanciero
 

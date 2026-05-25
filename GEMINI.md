@@ -15,3 +15,6 @@
 ## 4. Estándares de Calidad
 - Bootstrap 100%.
 - Cobertura de tests > 80%.
+## 5. Estrategia de Frontend
+- Migración gradual hacia React + TypeScript.
+- Testing-first: Se requiere cobertura de tests (Vitest) antes de migrar componentes.

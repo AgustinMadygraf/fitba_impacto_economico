@@ -1,3 +1,7 @@
+"""
+Path: backend/src/entities/inversion.py
+"""
+
 from dataclasses import dataclass
 from typing import Optional
 from src.entities.indice_financiero import IndiceFinanciero

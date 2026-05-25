@@ -1,3 +1,7 @@
+"""
+Path: backend/src/entities/indice_financiero.py
+"""
+
 from dataclasses import dataclass
 from typing import Dict
 
