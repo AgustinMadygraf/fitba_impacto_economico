@@ -6,7 +6,7 @@ from src.entities.operacional.capacidad_instalada import CapacidadInstalada
 from src.entities.operacional.oee import OEE
 from src.entities.comercial.produccion import MixProduccion
 from src.entities.entorno.escenario import Escenario
-from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
+from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
 
 def test_simular_impacto_repago():
     inversion = Inversion(monto_anr=1000.0, fecha_base="2025-01-01")
@@ -23,7 +23,7 @@ def test_simular_impacto_repago():
     mix = MixProduccion(porcentajes={"p1": 1.0})
     escenario = Escenario(nombre="Test", tasa_crecimiento=0.0, factor_demanda=1.0)
     
-    use_case = SimularImpactoEconomico(
+    use_case = CasoUsoSimularImpactoEconomico(
         inversion=inversion,
         productos=productos,
         lineas_produccion=lineas,

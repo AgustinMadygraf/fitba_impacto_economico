@@ -1,11 +1,11 @@
 """
-Path: backend/src/application/ipc_calculator.py
+Path: backend/src/application/calculador_ipc.py
 """
 
 from datetime import datetime
 from src.entities.financiero.indice_financiero import IndiceFinanciero
 
-class IPCCalculator:
+class CalculadorIPC:
     @staticmethod
     def calculate_factor(indice: IndiceFinanciero, fecha_base: str, fecha_objetivo: datetime) -> float:
         base = datetime.strptime(fecha_base, "%Y-%m-%d")

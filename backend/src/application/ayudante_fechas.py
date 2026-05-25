@@ -1,11 +1,11 @@
 """
-Path: backend/src/application/date_helper.py
+Path: backend/src/application/ayudante_fechas.py
 """
 
 from datetime import datetime
 import calendar
 
-def add_months(sourcedate, months):
+def agregar_meses(sourcedate, months):
     month = sourcedate.month - 1 + months
     year = sourcedate.year + month // 12
     month = month % 12 + 1

@@ -11,8 +11,8 @@ from src.infrastructure.settings.logger import get_logger
 from src.interface_adapter.controllers.simulacion_controller import SimulacionController
 from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 from src.interface_adapter.presenter.json_presenter import JSONSimulacionPresenter
-from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
-from src.application.ipc_calculator import IPCCalculator
+from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
+from src.application.calculador_ipc import CalculadorIPC
 
 app = FastAPI(title="FITBA - API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -64,10 +64,10 @@ def get_params():
             for p in raw_data["catalogo"]["productos"]
         ]
         
-        # Calculate Accumulated IPC using IPCCalculator service
+        # Calculate Accumulated IPC using CalculadorIPC service
         ipc_acumulado = 1.0
         if inversion.indice_base:
-            ipc_acumulado = IPCCalculator.calculate_factor(inversion.indice_base, inversion.fecha_base, datetime.now())
+            ipc_acumulado = CalculadorIPC.calculate_factor(inversion.indice_base, inversion.fecha_base, datetime.now())
 
         # Flatten IPC for the UI
         ipc_serie_flat = []

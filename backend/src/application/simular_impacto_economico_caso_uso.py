@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.application.date_helper import add_months
+from src.application.ayudante_fechas import agregar_meses
 from typing import Optional, Any, List, Dict, Tuple
 
 
@@ -11,9 +11,9 @@ from src.entities.entorno.escenario import Escenario
 from src.entities.operacional.linea_produccion import LineaProduccion
 from src.entities.operacional.capacidad_instalada import CapacidadInstalada
 from src.entities.financiero.indice_financiero import IndiceFinanciero
-from src.application.ipc_calculator import IPCCalculator
+from src.application.calculador_ipc import CalculadorIPC
 
-class SimularImpactoEconomico:
+class CasoUsoSimularImpactoEconomico:
     
     def __init__(
         self, 
@@ -58,14 +58,14 @@ class SimularImpactoEconomico:
             )
         
         for mes in range(1, self.horizonte_maximo + 1):
-            fecha_actual = add_months(fecha_base, mes)
+            fecha_actual = agregar_meses(fecha_base, mes)
             label_fecha = fecha_actual.strftime("%m/%Y")
             
-            # Inflación using IPCCalculator
+            # Inflación using CalculadorIPC
             factor_inflacion = 1.0
             if indice_base:
                 # We need to simulate the "today" as the fecha_actual
-                factor_inflacion = IPCCalculator.calculate_factor(indice_base, self.inversion.fecha_base, fecha_actual)
+                factor_inflacion = CalculadorIPC.calculate_factor(indice_base, self.inversion.fecha_base, fecha_actual)
                 target_actualizado_t = self.inversion.monto_anr * factor_inflacion
             else:
                 target_actualizado_t = self.inversion.monto_anr

@@ -1,4 +1,4 @@
-from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
+from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
 from src.entities.entorno.escenario import Escenario
 
 class SimulacionController:
@@ -28,7 +28,7 @@ class SimulacionController:
                 factor_demanda=datos.get("factor_demanda", 1.0)
             )
     
-            simulador = SimularImpactoEconomico(
+            simulador = CasoUsoSimularImpactoEconomico(
                 inversion=inversion,
                 productos=productos,
                 lineas_produccion=lineas,
