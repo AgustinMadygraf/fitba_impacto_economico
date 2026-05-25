@@ -4,7 +4,7 @@ Path: backend/src/interface_adapter/repositories/linea_repository.py
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.entities.linea_produccion import LineaProduccion
+from src.entities.operacional.linea_produccion import LineaProduccion
 
 class ILineaProduccionRepository(ABC):
     @abstractmethod

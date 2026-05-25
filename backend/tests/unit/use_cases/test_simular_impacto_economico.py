@@ -1,11 +1,11 @@
 import pytest
-from src.entities.inversion import Inversion
-from src.entities.producto import Producto
-from src.entities.linea_produccion import LineaProduccion
-from src.entities.capacidad_instalada import CapacidadInstalada
-from src.entities.oee import OEE
-from src.entities.produccion import MixProduccion
-from src.entities.escenario import Escenario
+from src.entities.financiero.inversion import Inversion
+from src.entities.comercial.producto import Producto
+from src.entities.operacional.linea_produccion import LineaProduccion
+from src.entities.operacional.capacidad_instalada import CapacidadInstalada
+from src.entities.operacional.oee import OEE
+from src.entities.comercial.produccion import MixProduccion
+from src.entities.entorno.escenario import Escenario
 from src.application.simular_impacto_economico_use_case import SimularImpactoEconomico
 
 def test_simular_impacto_repago():

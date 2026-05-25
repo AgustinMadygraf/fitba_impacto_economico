@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 from src.interface_adapter.controllers.simulacion_controller import SimulacionController
-from src.entities.inversion import Inversion
-from src.entities.indice_financiero import IndiceFinanciero
+from src.entities.financiero.inversion import Inversion
+from src.entities.financiero.indice_financiero import IndiceFinanciero
 
 def test_ejecutar_simulacion():
     gateway = MagicMock()

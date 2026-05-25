@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List, Optional
-from src.entities.inversion import Inversion
-from src.entities.producto import Producto
-from src.entities.oee import OEE
-from src.entities.linea_produccion import LineaProduccion
-from src.entities.produccion import MixProduccion
-from src.entities.capacidad_instalada import CapacidadInstalada
+from src.entities.financiero.inversion import Inversion
+from src.entities.comercial.producto import Producto
+from src.entities.operacional.oee import OEE
+from src.entities.operacional.linea_produccion import LineaProduccion
+from src.entities.comercial.produccion import MixProduccion
+from src.entities.operacional.capacidad_instalada import CapacidadInstalada
 
 class ParametrosGateway(ABC):
     @abstractmethod

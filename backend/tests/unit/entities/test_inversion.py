@@ -1,5 +1,5 @@
-from src.entities.inversion import Inversion
-from src.entities.indice_financiero import IndiceFinanciero
+from src.entities.financiero.inversion import Inversion
+from src.entities.financiero.indice_financiero import IndiceFinanciero
 import pytest
 
 def test_inversion_monto_actualizado():

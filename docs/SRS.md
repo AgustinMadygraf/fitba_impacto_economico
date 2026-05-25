@@ -13,8 +13,12 @@ Este documento define los requerimientos funcionales y técnicos para el sistema
 - **Regla (RC-TEM-01):** La etiqueta temporal se calcula como `fecha_base + N meses`, formateada como `MM/YYYY`. 
 - **Responsabilidad:** La capa de Caso de Uso debe enriquecer el resultado de la simulación con estas etiquetas antes de delegar la presentación al `JSONSimulacionPresenter`.
 
-### 2.3 Entidades
-(1:1 mapeo: Inversion, CapacidadInstalada, OEE, IndiceFinanciero, Producto, LineaProduccion, MixProduccion, Escenario).
+### 2.3 Entidades (Arquitectura DDD)
+El modelo de dominio se organiza jerárquicamente para mejorar la cohesión y mantenibilidad:
+- **Operacional:** CapacidadInstalada, LineaProduccion, OEE.
+- **Financiero:** Inversion, IndiceFinanciero.
+- **Comercial:** Producto, MixProduccion.
+- **Entorno:** Escenario.
 
 ### 2.4 Modelo de KPIs Dinámicos (RF-KPI-01)
 - El OEE (Overall Equipment Effectiveness) se calcula dinámicamente como salida de la simulación.

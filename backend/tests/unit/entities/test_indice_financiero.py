@@ -1,4 +1,4 @@
-from src.entities.indice_financiero import IndiceFinanciero
+from src.entities.financiero.indice_financiero import IndiceFinanciero
 
 def test_indice_financiero_acumulado_lineal():
     # 4% mensual fijo

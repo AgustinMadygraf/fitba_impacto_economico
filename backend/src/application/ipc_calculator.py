@@ -3,7 +3,7 @@ Path: backend/src/application/ipc_calculator.py
 """
 
 from datetime import datetime
-from src.entities.indice_financiero import IndiceFinanciero
+from src.entities.financiero.indice_financiero import IndiceFinanciero
 
 class IPCCalculator:
     @staticmethod
