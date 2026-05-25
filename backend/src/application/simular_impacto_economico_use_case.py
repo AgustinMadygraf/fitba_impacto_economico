@@ -74,9 +74,14 @@ class SimularImpactoEconomico:
             
             # OEE
             oee_t = disponibilidad_t * self.oee_base.rendimiento * self.oee_base.calidad
-            capacidad_efectiva = self.capacidad_instalada.capacidad_nominal_total * min(oee_t, 1.0) * self.escenario.factor_demanda
             
-            beneficio_mensual, ingresos_mensuales, costos_mensuales = self._calcular_beneficio_mensual(capacidad_efectiva)
+            # Producción vs Ventas
+            volumen_produccion_mensuales = self.capacidad_instalada.capacidad_nominal_total * min(oee_t, 1.0)
+            volumen_ventas_mensuales = volumen_produccion_mensuales * self.escenario.factor_demanda
+            
+            beneficio_mensual, ingresos_mensuales, costos_mensuales = self._calcular_beneficio_mensual(
+                volumen_produccion_mensuales, volumen_ventas_mensuales
+            )
             
             # Acumular beneficio total
             beneficio_acumulado += beneficio_mensual
@@ -88,6 +93,8 @@ class SimularImpactoEconomico:
             proyeccion_mensual.append({
                 "mes": mes,
                 "fecha": label_fecha,
+                "volumen_produccion": volumen_produccion_mensuales,
+                "volumen_ventas": volumen_ventas_mensuales,
                 "ingresos_mensuales": ingresos_mensuales,
                 "costos_mensuales": costos_mensuales,
                 "beneficio_mensual": beneficio_mensual,
@@ -100,7 +107,7 @@ class SimularImpactoEconomico:
             
         return mes_repago, proyeccion_mensual
 
-    def _calcular_beneficio_mensual(self, volumen_total: float) -> Tuple[float, float, float]:
+    def _calcular_beneficio_mensual(self, vol_prod: float, vol_ventas: float) -> Tuple[float, float, float]:
         ingresos_totales = 0.0
         costos_totales = 0.0
         
@@ -108,9 +115,9 @@ class SimularImpactoEconomico:
             producto = self.productos.get(prod_id)
             if not producto: continue
             
-            volumen_producto = volumen_total * porcentaje
-            ingresos_totales += volumen_producto * producto.precio_unitario
-            costos_totales += volumen_producto * producto.costo_marginal_unitario
+            # Asumimos que el mix se aplica tanto a la producción como a las ventas
+            ingresos_totales += (vol_ventas * porcentaje) * producto.precio_unitario
+            costos_totales += (vol_prod * porcentaje) * producto.costo_marginal_unitario
             
         beneficio_total = ingresos_totales - costos_totales
         return beneficio_total, ingresos_totales, costos_totales

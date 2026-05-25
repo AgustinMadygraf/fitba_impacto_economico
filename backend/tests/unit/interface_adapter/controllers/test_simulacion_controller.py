@@ -11,8 +11,14 @@ def test_ejecutar_simulacion():
     indice = IndiceFinanciero("IPC", {1: 0.1}, 0.1)
     inversion = Inversion(monto_anr=1000.0, fecha_base="2025-01-01", indice_base=indice)
 
+    # Corregimos el mock del producto para que tenga los atributos necesarios
+    mock_producto = MagicMock()
+    mock_producto.id = "p1"
+    mock_producto.precio_unitario = 10.0
+    mock_producto.costo_marginal_unitario = 5.0
+
     gateway.get_inversion.return_value = inversion
-    gateway.get_productos.return_value = [MagicMock(id="p1", margen_contribucion_unitario=5.0)]
+    gateway.get_productos.return_value = [mock_producto]
     gateway.get_oee_base.return_value = MagicMock(valor=0.04, disponibilidad=0.1, rendimiento=0.44, calidad=0.84)
     gateway.get_lineas_produccion.return_value = [MagicMock(capacidad_nominal=1000.0)]
     gateway.get_capacidad_instalada.return_value = MagicMock(capacidad_nominal_total=1000.0)
