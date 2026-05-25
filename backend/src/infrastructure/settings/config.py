@@ -4,13 +4,13 @@ import os
 import datetime
 from typing import Dict, Any, List, Optional
 
-from src.entities.financiero.inversion import Inversion
-from src.entities.comercial.producto import Producto
-from src.entities.operacional.oee import OEE
-from src.entities.operacional.linea_produccion import LineaProduccion
-from src.entities.comercial.produccion import MixProduccion
-from src.entities.operacional.capacidad_instalada import CapacidadInstalada
-from src.entities.financiero.indice_financiero import IndiceFinanciero
+from src.domain.entities.financiero.inversion import Inversion
+from src.domain.entities.comercial.producto import Producto
+from src.domain.entities.operacional.oee import OEE
+from src.domain.entities.operacional.linea_produccion import LineaProduccion
+from src.domain.entities.comercial.produccion import MixProduccion
+from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
+from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 
 _START_TIME = datetime.datetime.now().isoformat()

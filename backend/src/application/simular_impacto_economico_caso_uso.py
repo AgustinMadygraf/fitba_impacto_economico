@@ -3,15 +3,16 @@ from src.application.ayudante_fechas import agregar_meses
 from typing import Optional, Any, List, Dict, Tuple
 
 
-from src.entities.financiero.inversion import Inversion
-from src.entities.comercial.producto import Producto
-from src.entities.operacional.oee import OEE
-from src.entities.comercial.produccion import MixProduccion
-from src.entities.entorno.escenario import Escenario
-from src.entities.operacional.linea_produccion import LineaProduccion
-from src.entities.operacional.capacidad_instalada import CapacidadInstalada
-from src.entities.financiero.indice_financiero import IndiceFinanciero
-from src.application.calculador_ipc import CalculadorIPC
+from src.domain.entities.financiero.inversion import Inversion
+from src.domain.entities.comercial.producto import Producto
+from src.domain.entities.operacional.oee import OEE
+from src.domain.entities.comercial.produccion import MixProduccion
+from src.domain.entities.entorno.escenario import Escenario
+from src.domain.entities.operacional.linea_produccion import LineaProduccion
+from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
+from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
+from src.domain.services.calculador_impacto_operativo import CalculadorImpactoOperativo
+from src.domain.services.calculador_impacto_financiero import CalculadorImpactoFinanciero
 
 class CasoUsoSimularImpactoEconomico:
     
@@ -37,6 +38,9 @@ class CasoUsoSimularImpactoEconomico:
         self.horizonte_maximo = 24
         self.logger = logger
         self.ipc_override = ipc_override
+        # Injecting domain services
+        self.calculador_operativo = CalculadorImpactoOperativo()
+        self.calculador_financiero = CalculadorImpactoFinanciero()
 
     def ejecutar(self) -> Tuple[Optional[int], List[Dict[str, Any]]]:
         beneficio_acumulado = 0.0
@@ -61,23 +65,15 @@ class CasoUsoSimularImpactoEconomico:
             fecha_actual = agregar_meses(fecha_base, mes)
             label_fecha = fecha_actual.strftime("%m/%Y")
             
-            # Inflación using CalculadorIPC
-            factor_inflacion = 1.0
-            if indice_base:
-                # We need to simulate the "today" as the fecha_actual
-                factor_inflacion = CalculadorIPC.calculate_factor(indice_base, self.inversion.fecha_base, fecha_actual)
-                target_actualizado_t = self.inversion.monto_anr * factor_inflacion
-            else:
-                target_actualizado_t = self.inversion.monto_anr
+            factor_inflacion, target_actualizado_t = self.calculador_financiero.calcular_inflacion(
+                self.inversion, indice_base, fecha_actual
+            )
             
             disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
             
-            # OEE
-            oee_t = disponibilidad_t * self.oee_base.rendimiento * self.oee_base.calidad
-            
-            # Producción vs Ventas
-            volumen_produccion_mensuales = self.capacidad_instalada.capacidad_nominal_total * min(oee_t, 1.0)
-            volumen_ventas_mensuales = volumen_produccion_mensuales * self.escenario.factor_demanda
+            volumen_produccion_mensuales, volumen_ventas_mensuales = self.calculador_operativo.calcular_volumenes(
+                disponibilidad_t, self.oee_base, self.capacidad_instalada, self.escenario
+            )
             
             beneficio_mensual, ingresos_mensuales, costos_mensuales = self._calcular_beneficio_mensual(
                 volumen_produccion_mensuales, volumen_ventas_mensuales

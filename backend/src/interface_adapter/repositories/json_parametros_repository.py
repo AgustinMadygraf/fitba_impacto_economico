@@ -1,11 +1,11 @@
-from src.entities.operacional.capacidad_instalada import CapacidadInstalada
-from src.entities.entorno.escenario import Escenario
-from src.entities.financiero.indice_financiero import IndiceFinanciero
-from src.entities.financiero.inversion import Inversion
-from src.entities.operacional.linea_produccion import LineaProduccion
-from src.entities.operacional.oee import OEE
-from src.entities.comercial.produccion import MixProduccion
-from src.entities.comercial.producto import Producto
+from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
+from src.domain.entities.entorno.escenario import Escenario
+from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
+from src.domain.entities.financiero.inversion import Inversion
+from src.domain.entities.operacional.linea_produccion import LineaProduccion
+from src.domain.entities.operacional.oee import OEE
+from src.domain.entities.comercial.produccion import MixProduccion
+from src.domain.entities.comercial.producto import Producto
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 
 class JsonParametrosRepository(ParametrosGateway):

@@ -4,7 +4,7 @@ Path: backend/src/interface_adapter/repositories/producto_repository.py
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.entities.comercial.producto import Producto
+from src.domain.entities.comercial.producto import Producto
 
 class IProductoRepository(ABC):
     @abstractmethod

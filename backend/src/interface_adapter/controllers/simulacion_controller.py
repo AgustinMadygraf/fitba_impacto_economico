@@ -1,5 +1,5 @@
 from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
-from src.entities.entorno.escenario import Escenario
+from src.domain.entities.entorno.escenario import Escenario
 
 class SimulacionController:
     def __init__(self, gateway, presenter, logger):

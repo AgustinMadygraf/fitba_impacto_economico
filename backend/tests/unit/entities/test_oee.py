@@ -1,4 +1,4 @@
-from src.entities.operacional.oee import OEE
+from src.domain.entities.operacional.oee import OEE
 import pytest
 
 def test_oee_calculation():
