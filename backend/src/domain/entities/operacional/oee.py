@@ -1,4 +1,7 @@
-""" Path: src/entities/oee.py """
+"""
+Path: backend/src/domain/entities/operacional/oee.py
+"""
+
 from dataclasses import dataclass
 
 @dataclass(frozen=True)

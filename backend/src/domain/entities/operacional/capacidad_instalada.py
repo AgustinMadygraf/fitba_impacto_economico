@@ -1,5 +1,5 @@
 """
-Path: backend/src/entities/capacidad_instalada.py
+Path: backend/src/domain/entities/operacional/capacidad_instalada.py
 """
 
 from dataclasses import dataclass

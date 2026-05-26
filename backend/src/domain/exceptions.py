@@ -1,3 +1,7 @@
+"""
+Path: backend/src/domain/exceptions.py
+"""
+
 class FITBAError(Exception):
     """Excepción base para errores de negocio."""
     pass

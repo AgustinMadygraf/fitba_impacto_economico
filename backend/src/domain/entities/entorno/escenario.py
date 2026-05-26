@@ -1,5 +1,5 @@
 """
-Path: backend/src/entities/escenario.py
+Path: backend/src/domain/entities/entorno/escenario.py
 """
 
 from dataclasses import dataclass

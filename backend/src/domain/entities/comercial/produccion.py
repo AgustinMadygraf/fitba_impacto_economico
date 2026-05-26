@@ -1,3 +1,7 @@
+"""
+Path: backend/src/domain/entities/comercial/produccion.py
+"""
+
 from dataclasses import dataclass
 from typing import Dict
 

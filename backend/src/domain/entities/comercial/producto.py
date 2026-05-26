@@ -1,3 +1,7 @@
+"""
+Path: backend/src/domain/entities/comercial/producto.py
+"""
+
 from dataclasses import dataclass
 
 @dataclass(frozen=True)

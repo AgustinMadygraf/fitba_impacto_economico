@@ -1,3 +1,7 @@
+"""
+Path: backend/src/domain/entities/operacional/linea_produccion.py
+"""
+
 from dataclasses import dataclass
 from typing import List
 

@@ -1,5 +1,5 @@
 """
-Path: backend/src/entities/inversion.py
+Path: backend/src/domain/entities/financiero/inversion.py
 """
 
 from dataclasses import dataclass

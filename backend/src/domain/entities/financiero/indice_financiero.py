@@ -1,5 +1,5 @@
 """
-Path: backend/src/entities/indice_financiero.py
+Path: backend/src/domain/entities/financiero/indice_financiero.py
 """
 
 from dataclasses import dataclass
