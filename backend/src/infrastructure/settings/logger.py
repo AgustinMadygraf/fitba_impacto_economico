@@ -25,7 +25,7 @@ def get_logger(name: str = "FITBA"):
     setup_uvicorn_logging()
     
     # Obtener nivel de log, default WARNING para producción
-    level_name = os.getenv("LOG_LEVEL", "WARNING").upper()
+    level_name = "INFO"
     level = getattr(logging, level_name, logging.WARNING)
     
     logger = logging.getLogger(name)

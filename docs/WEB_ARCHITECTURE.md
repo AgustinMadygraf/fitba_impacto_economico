@@ -18,3 +18,14 @@ El frontend actual se está refactorizando para mejorar su observabilidad y prep
   2. Migración del sistema de construcción a Vite.
   3. Definición de contratos de datos compartidos (TS).
   4. Portado progresivo de componentes.
+
+
+## 5. Principio de Capa de Infraestructura Delgada (Thin Infrastructure Layer)
+Para mantener el desacoplamiento:
+- Las rutas web (`routes.py`) **solo** deben gestionar la recepción de peticiones HTTP y la delegación a controladores.
+- Cualquier lógica de transformación de datos (DTOs, formateo JSON) **debe** delegarse a un `Presenter`.
+- Cualquier lógica de negocio, cálculo o agregación de datos **debe** delegarse al Dominio o a Servicios de Aplicación.
+- Está terminantemente prohibido implementar lógica de cálculo en `routes.py`.
+
+
+- Se debe utilizar **Inyección de Dependencias (FastAPI Depends)** para instanciar controladores, repositorios o servicios, evitando la instanciación manual dentro de las funciones de ruta. Esto promueve la desacoplación y facilita las pruebas unitarias de los componentes.

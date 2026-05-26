@@ -112,7 +112,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderizarGrafico(proyecciones, target) {
     if (window.myChart) window.myChart.destroy();
     
-    const labels = Object.values(proyecciones)[0].map(p => p.fecha);
+    const firstProyeccion = Object.values(proyecciones)[0];
+    if (!firstProyeccion) return;
+    const labels = firstProyeccion.map(p => p.fecha);
     const datasets = Object.keys(proyecciones).map((key, i) => ({
       label: key + ' (Valor Presente)',
       data: proyecciones[key].map(p => p.beneficio_acumulado_presente),

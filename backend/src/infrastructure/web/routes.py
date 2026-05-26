@@ -1,21 +1,22 @@
+"""
+Path: backend/src/infrastructure/web/routes.py
+"""
+
 import os
-from datetime import datetime
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel
-from typing import Dict, Any, List, Optional
+from typing import Dict, List, Optional
 
 from src.infrastructure.settings.config import ConfigLoader
 from src.infrastructure.settings.logger import get_logger
 from src.interface_adapter.controllers.simulacion_controller import SimulacionController
-from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 from src.interface_adapter.presenter.json_presenter import JSONSimulacionPresenter
-from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
-from src.domain.services.calculador_ipc import CalculadorIPC
-from src.domain.exceptions import FITBAError, ErrorValidacionDatos, ErrorCalculoFinanciero
+from src.interface_adapter.presenter.parametros_presenter import ParametrosPresenter
+from src.domain.exceptions import FITBAError, ErrorValidacionDatos
 
 app = FastAPI(title="FITBA - API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -72,51 +73,16 @@ def get_config():
 @app.get("/api/v1/simulacion/parametros")
 def get_params():
     loader = ConfigLoader()
-    raw_data = loader._raw_data
     inversion = loader.get_inversion()
-    
-    # Calculamos el costo marginal para la respuesta API
-    def calcular_costo(p):
-        ancho_bobina = (p["ancho_bolsa"] * 2) + (p["fuelle"] * 2) + 4
-        longitud_corte = p["alto_bolsa"] + (p["fuelle"] / 2) + 2
-        superficie_m2 = (ancho_bobina * longitud_corte) / 10000
-        peso_gr = superficie_m2 * p["gramaje"]
-        return (peso_gr / 1000) * p["precio_bobina_kg"]
-
-    productos = [
-        {
-            "sku": p["sku"], "nombre": p["nombre"], "precio_unitario": p["precio_unitario"], 
-            "costo_marginal_unitario": calcular_costo(p)
-        }
-        for p in raw_data["catalogo"]["productos"]
-    ]
-    
-    ipc_acumulado = 1.0
-    if inversion.indice_base:
-        ipc_acumulado = CalculadorIPC.calculate_factor(inversion.indice_base, inversion.fecha_base, datetime.now())
-
-    ipc_serie_flat = [{"mes": f"{year}-{month}", "tasa": rate} for year, months in raw_data.get("ipc_serie", {}).get("datos", {}).items() for month, rate in months.items()]
-
-    return {
-        "inversion": {
-            "monto_anr_nominal": raw_data["inversion"]["objetivo_anr"], 
-            "monto_anr_real": round(raw_data["inversion"]["objetivo_anr"] * ipc_acumulado, 2),
-            "fecha_base": raw_data["inversion"]["fecha_base"],
-            "ipc_acumulado": ipc_acumulado
-        },
-        "oee": raw_data["oee_base"],
-        "productos": productos,
-        "lineas_produccion": raw_data["catalogo"]["lineas"],
-        "capacidad_instalada": raw_data["capacidad_instalada"],
-        "ipc_serie": ipc_serie_flat,
-        "tasa_proyectada": raw_data.get("ipc_serie", {}).get("tasa_proyectada", 0.02)
-    }
+    presenter = ParametrosPresenter()
+    return presenter.formatear(loader._raw_data, inversion)
 
 @app.post("/api/v1/simulacion/ejecutar")
 def post_simular(payload: SimularRequestSchema, request: Request):
     correlation_id = request.headers.get("X-Correlation-ID", "N/A")
     web_logger.info(f"[CID: {correlation_id}] POST /api/v1/simulacion/ejecutar iniciado")
     
+    # Transformation logic is now hidden in the controller/gateway
     raw_dict = {
         "inversion": {"objetivo_anr": payload.inversion.objetivo_anr, "fecha_base": payload.inversion.fecha_base},
         "oee_base": payload.oee_base.model_dump(),
@@ -129,11 +95,15 @@ def post_simular(payload: SimularRequestSchema, request: Request):
         "capacidad_instalada": payload.capacidad_instalada.model_dump(),
         "ipc_override": payload.ipc
     }
-    gateway = JsonParametrosRepository(raw_dict)
+    
+    # Minimal infrastructure setup
     presenter = JSONSimulacionPresenter()
-    controller = SimulacionController(gateway, presenter, get_logger(f"FITBA.Simulacion.{correlation_id}"))
-    controller.ejecutar_simulacion()
+    # Repository is created inside controller now
+    controller = SimulacionController(None, presenter, get_logger(f"FITBA.Simulacion.{correlation_id}"))
+    controller.ejecutar_simulacion_con_payload(raw_dict)
+    
     web_logger.info(f"[CID: {correlation_id}] POST /api/v1/simulacion/ejecutar finalizado exitosamente")
+    web_logger.info(f"Presenter response: {presenter.response_data.keys()}")
     return presenter.response_data
 
 static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend")
