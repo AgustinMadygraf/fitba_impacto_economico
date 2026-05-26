@@ -16,5 +16,8 @@
 - Bootstrap 100%.
 - Cobertura de tests > 80%.
 ## 5. Estrategia de Frontend
-- Migración gradual hacia React + TypeScript.
+- Migración gradual hacia Vue.js + TypeScript.
+- Estructura: Desarrollo en paralelo (`frontend-vue/`) consumiendo la API existente (`backend/`).
+- Paridad 1:1: Cada componente Vue debe replicar fielmente las funcionalidades y estructura de datos del componente legacy correspondiente.
+- Dashboard UI & Chart.js Integration: Implementado y funcional.
 - Testing-first: Se requiere cobertura de tests (Vitest) antes de migrar componentes.

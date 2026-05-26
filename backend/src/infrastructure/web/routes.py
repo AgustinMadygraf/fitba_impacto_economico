@@ -58,6 +58,6 @@ def post_simular(payload: SimularRequestSchema, request: Request):
     web_logger.info(f"[CID: {correlation_id}] POST /api/v1/simulacion/ejecutar finalizado exitosamente")
     return presenter.response_data
 
-static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend")
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "frontend-legacy")
 if os.path.exists(static_dir):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
