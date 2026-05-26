@@ -4,6 +4,7 @@ Path: backend/src/domain/services/calculador_impacto_financiero.py
 
 from datetime import datetime
 from src.domain.services.costeo.estrategia_costeo import EstrategiaCosteo
+from src.domain.services.costeo.parametros_costeo import ParametrosCosteo
 from src.domain.entities.comercial.producto import Producto
 from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
 from src.domain.entities.financiero.inversion import Inversion
@@ -26,7 +27,7 @@ class CalculadorImpactoFinanciero:
         estrategia: EstrategiaCosteo,
         producto: Producto,
         capacidad: CapacidadInstalada,
-        datos_financieros: dict
+        parametros: ParametrosCosteo
     ) -> float:
-        return estrategia.calcular_costo_unitario(producto, capacidad, datos_financieros)
+        return estrategia.calcular_costo_unitario(producto, capacidad, parametros)
 

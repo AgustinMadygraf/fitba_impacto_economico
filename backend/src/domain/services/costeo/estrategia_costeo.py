@@ -1,11 +1,7 @@
-"""
-Path: backend/src/domain/services/costeo/estrategia_costeo.py
-"""
-
 from abc import ABC, abstractmethod
-from typing import Dict
 from src.domain.entities.comercial.producto import Producto
 from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
+from .parametros_costeo import ParametrosCosteo
 
 class EstrategiaCosteo(ABC):
     """Interfaz base para las estrategias de cálculo de costos."""
@@ -15,7 +11,7 @@ class EstrategiaCosteo(ABC):
         self,
         producto: Producto,
         capacidad: CapacidadInstalada,
-        datos_financieros: Dict
+        parametros: ParametrosCosteo
     ) -> float:
         """Calcula el costo unitario según la estrategia específica."""
         pass

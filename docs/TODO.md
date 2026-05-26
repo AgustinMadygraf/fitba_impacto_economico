@@ -1,11 +1,13 @@
 # TODO - FITBA Development Roadmap
 
 ## Fase 8: Estabilización, Testing Extendido y Gestión de Costos
-- [ ] Implementar tests de integración E2E para el flujo completo de simulación.
-- [ ] Mejorar manejo de errores global en el Frontend (interceptor de errores HTTP).
-- [ ] Refactorizar `CapacidadInstalada` (Nominal vs. Normal).
 - [ ] Implementar lógica de Tasa de Absorción de CIF en `CalculadorImpactoFinanciero`.
 - [ ] Implementar Módulo de Variaciones (Capacidad, Eficiencia, Volumen).
+- [ ] Implementar tests de integración E2E para el flujo completo de simulación.
+- [ ] Mejorar manejo de errores global en el Frontend (interceptor de errores HTTP).
+
+
+
 
 ## Fase 9: Migración Frontend a React + TypeScript (Nueva)
 - [ ] Configurar entorno de pruebas unitarias (Vitest).

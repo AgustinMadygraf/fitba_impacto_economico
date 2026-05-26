@@ -33,3 +33,11 @@
   - [x] Implementar evolución dinámica de componentes de OEE (Disponibilidad, Rendimiento, Calidad).
   - [x] Integrar factores de mejora de OEE en la entidad `Escenario`.
   - [x] Refactorizar `SimularImpactoEconomico` para utilizar la lógica dinámica de OEE del dominio.
+
+- [x] **Fase 8: Implementación de Estrategias de Costeo (Patrón Estrategia)**
+  - [x] Crear interfaz `EstrategiaCosteo`.
+  - [x] Implementar `CompletoResultanteAbsorcion`.
+  - [x] Implementar `CompletoResultanteIntegral`.
+  - [x] Implementar `VariableResultante`.
+  - [x] Implementar `CompletoNormalizadoIntegral`.
+  - [x] Implementar `VariableNormalizado`.

@@ -5,6 +5,7 @@ Path: backend/src/interface_adapter/controllers/simulacion_controller.py
 from src.interface_adapter.mappers.simulacion_mapper import SimulacionMapper
 from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
 from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
+from src.domain.services.servicio_datos_simulacion import ServicioDatosSimulacion
 
 class SimulacionController:
     def __init__(self, gateway, presenter, logger):
@@ -32,8 +33,7 @@ class SimulacionController:
         mix = self.gateway.get_mix_produccion()
         escenarios_data = self.gateway.get_escenarios_raw()
         ipc_override = self.gateway.get_ipc_override()
-        # servicio_datos needs to be initialized with gateway
-        from src.domain.services.servicio_datos_simulacion import ServicioDatosSimulacion
+
         self.servicio_datos = ServicioDatosSimulacion(self.gateway)
         oee_base = self.servicio_datos.obtener_oee()
     
