@@ -12,6 +12,7 @@ class CapacidadInstalada:
     turnos_por_dia: int
     dias_habiles_por_mes: int
     dias_inhabiles_mensuales: int
+    capacidad_normal_mensual: float
 
     @property
     def capacidad_nominal_total(self) -> float:

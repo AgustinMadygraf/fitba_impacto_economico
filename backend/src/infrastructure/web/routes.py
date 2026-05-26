@@ -37,7 +37,14 @@ class OEEBaseSchema(BaseModel):
 class InversionSchema(BaseModel):
     objetivo_anr: float; fecha_base: str
 class ProductoSchema(BaseModel):
-    sku: str; nombre: str; precio_unitario: float; ancho_bolsa: float; alto_bolsa: float; fuelle: float; gramaje: float; precio_bobina_kg: float
+    sku: str
+    nombre: str
+    precio_unitario: float
+    ancho_bolsa: Optional[float] = 0.0
+    alto_bolsa: Optional[float] = 0.0
+    fuelle: Optional[float] = 0.0
+    gramaje: Optional[float] = 0.0
+    precio_bobina_kg: Optional[float] = 0.0
 class LineaProduccionSchema(BaseModel):
     sku: str; nombre: str; capacidad_nominal: float; productos_compatibles: List[str]
 class CapacidadInstaladaSchema(BaseModel):

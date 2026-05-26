@@ -29,7 +29,8 @@ def test_simular_impacto_repago():
         horas_por_turno=8,
         turnos_por_dia=1,
         dias_habiles_por_mes=22,
-        dias_inhabiles_mensuales=1
+        dias_inhabiles_mensuales=1,
+        capacidad_normal_mensual=1000.0
     )
     oee = OEE(disponibilidad=0.5, rendimiento=0.5, calidad=0.5)
     mix = MixProduccion(porcentajes={"p1": 1.0})

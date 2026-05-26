@@ -58,12 +58,17 @@ class JsonParametrosRepository(ParametrosGateway):
 
     def get_capacidad_instalada(self) -> CapacidadInstalada:
         data = self._data["capacidad_instalada"]
+        # If gestion_costos is missing, fallback to nominal capacity for normal capacity
+        costos_data = self._data.get("gestion_costos", {})
+        capacidad_normal = costos_data.get("capacidad_normal_mensual", 0.0)
+        
         return CapacidadInstalada(
             capacidad_nominal_por_hora=data["capacidad_nominal_por_hora"],
             horas_por_turno=data["horas_por_turno"],
             turnos_por_dia=data["turnos_por_dia"],
             dias_habiles_por_mes=data["dias_habiles_por_mes"],
-            dias_inhabiles_mensuales=data["dias_inhabiles_mensuales"]
+            dias_inhabiles_mensuales=data["dias_inhabiles_mensuales"],
+            capacidad_normal_mensual=capacidad_normal
         )
 
     def get_estructura_costos(self) -> EstructuraCostos:

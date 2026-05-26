@@ -15,7 +15,11 @@ export const SimulationMapper = {
             sku: p.id, 
             nombre: p.nombre,
             precio_unitario: parseFloatOrDefault(p.precio, 0),
-            costo_marginal_unitario: parseFloatOrDefault(p.costo, 0)
+            ancho_bolsa: parseFloatOrDefault(p.ancho_bolsa, 0),
+            alto_bolsa: parseFloatOrDefault(p.alto_bolsa, 0),
+            fuelle: parseFloatOrDefault(p.fuelle, 0),
+            gramaje: parseFloatOrDefault(p.gramaje, 0),
+            precio_bobina_kg: parseFloatOrDefault(p.precio_bobina_kg, 0)
         };
     });
 
