@@ -20,4 +20,16 @@
 - Estructura: Desarrollo en paralelo (`frontend-vue/`) consumiendo la API existente (`backend/`).
 - Paridad 1:1: Cada componente Vue debe replicar fielmente las funcionalidades y estructura de datos del componente legacy correspondiente.
 - Dashboard UI & Chart.js Integration: Implementado y funcional.
+- Migración completada: Se alcanzó paridad 1:1 con arquitectura legado, refactorizando a componentes Vue reactivos y tipados.
+- Migración completada: Se alcanzó paridad 1:1 con arquitectura legado, refactorizando a componentes Vue reactivos y tipados.
 - Testing-first: Se requiere cobertura de tests (Vitest) antes de migrar componentes.
+
+## 6. Notas de Migración (Finalizada)
+
+## 6. Notas de Migración (Finalizada)
+- Se ha completado la transición del frontend legacy hacia Vue.js + TypeScript.
+- La arquitectura ha pasado de manipulación imperativa del DOM a un modelo declarativo/reactivo.
+- La paridad 1:1 está garantizada a nivel funcional y estético (paridad de tokens CSS).
+- Funcionalidad: Se implementó `SimulationMapper.ts` para asegurar la paridad de transformación de datos (DTO) entre el frontend y el backend.
+- Paridad Visual: Se implementó la estructura de grid de Bootstrap (1:1 con `index.html` legado) y se importó Bootstrap vía npm para asegurar consistencia estética.
+- Funcionalidad Dinámica: Se implementaron métodos para agregar y eliminar productos y líneas de producción en tiempo real (paridad 1:1 con `simulationDashboard.js` legado).
