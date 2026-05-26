@@ -1,3 +1,7 @@
+"""
+Path: backend/src/interface_adapter/repositories/json_parametros_repository.py
+"""
+
 from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
 from src.domain.entities.entorno.escenario import Escenario
 from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
@@ -6,6 +10,7 @@ from src.domain.entities.operacional.linea_produccion import LineaProduccion
 from src.domain.entities.operacional.oee import OEE
 from src.domain.entities.comercial.produccion import MixProduccion
 from src.domain.entities.comercial.producto import Producto
+from src.domain.entities.financiero.estructura_costos import EstructuraCostos
 from src.interface_adapter.repositories.parametros_gateway import ParametrosGateway
 
 class JsonParametrosRepository(ParametrosGateway):
@@ -59,6 +64,15 @@ class JsonParametrosRepository(ParametrosGateway):
             turnos_por_dia=data["turnos_por_dia"],
             dias_habiles_por_mes=data["dias_habiles_por_mes"],
             dias_inhabiles_mensuales=data["dias_inhabiles_mensuales"]
+        )
+
+    def get_estructura_costos(self) -> EstructuraCostos:
+        data = self._data["gestion_costos"]
+        return EstructuraCostos(
+            capacidad_normal_mensual=data["capacidad_normal_mensual"],
+            costos_fijos_mensuales=data["costos_fijos_mensuales"],
+            costo_mod_unitario=data["costo_mod_unitario"],
+            costo_cif_variable_unitario=data["costo_cif_variable_unitario"]
         )
 
     def get_escenarios_raw(self) -> dict:

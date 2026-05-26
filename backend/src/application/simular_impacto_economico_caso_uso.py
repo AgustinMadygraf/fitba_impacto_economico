@@ -45,7 +45,7 @@ class CasoUsoSimularImpactoEconomico:
         capacidad_instalada = self.servicio_datos.obtener_capacidad()
         
         beneficio_acumulado = 0.0
-        disponibilidad_t = oee_base.disponibilidad
+        oee_t = oee_base
         
         mes_repago = None
         proyeccion_mensual = []
@@ -68,10 +68,10 @@ class CasoUsoSimularImpactoEconomico:
                 self.inversion, indice_base, fecha_actual
             )
             
-            disponibilidad_t *= (1 + self.escenario.tasa_crecimiento)
+            oee_t = oee_t.evolucionar(self.escenario)
             
             volumen_produccion_mensuales, volumen_ventas_mensuales = self.calculador_operativo.calcular_volumenes(
-                disponibilidad_t, oee_base, capacidad_instalada, self.escenario
+                oee_t.disponibilidad, oee_t, capacidad_instalada, self.escenario
             )
             
             beneficio_mensual, ingresos_mensuales, costos_mensuales = self.calculador_ingresos.calcular_beneficio_mensual(

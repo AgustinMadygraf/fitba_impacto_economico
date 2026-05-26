@@ -1,4 +1,7 @@
-import pytest
+"""
+Path: backend/tests/unit/use_cases/test_simular_impacto_economico.py
+"""
+
 from unittest.mock import MagicMock
 from src.domain.entities.financiero.inversion import Inversion
 from src.domain.entities.comercial.producto import Producto
@@ -30,7 +33,7 @@ def test_simular_impacto_repago():
     )
     oee = OEE(disponibilidad=0.5, rendimiento=0.5, calidad=0.5)
     mix = MixProduccion(porcentajes={"p1": 1.0})
-    escenario = Escenario(nombre="Test", tasa_crecimiento=0.0, factor_demanda=1.0)
+    escenario = Escenario(nombre="Test", tasa_disponibilidad=0.0, tasa_rendimiento=0.0, tasa_calidad=0.0, factor_demanda=1.0)
     
     # Mock ServicioDatosSimulacion
     servicio_datos = MagicMock(spec=ServicioDatosSimulacion)
