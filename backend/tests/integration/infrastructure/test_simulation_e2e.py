@@ -18,7 +18,11 @@ def test_full_simulation_flow():
                     "sku": "p1",
                     "nombre": "Bolsa Lisa",
                     "precio_unitario": 150.0,
-                    "costo_marginal_unitario": 85.5
+                    "ancho_bolsa": 22.0,
+                    "alto_bolsa": 30.0,
+                    "fuelle": 10.0,
+                    "gramaje": 100.0,
+                    "precio_bobina_kg": 2.5
                 }
             ],
             "lineas": [

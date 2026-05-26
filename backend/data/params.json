@@ -47,16 +47,20 @@
       {
         "nombre": "Bolsa Lisa 100gr 22 10 30 Sin Manijas marrones",
         "precio_unitario": 150.0,
-        "costo_marginal_unitario": 85.5,
+        "ancho_bolsa": 22.0,
+        "alto_bolsa": 30.0,
+        "fuelle": 10.0,
+        "gramaje": 100.0,
+        "precio_bobina_kg": 1150,
         "sku": "221030MLSM100"
       }
     ],
     "lineas": [
       {
-        "nombre": "L\u00ednea 1",
+        "nombre": "Línea 1",
         "capacidad_nominal": 450000.0,
         "productos_compatibles": [
-          "p1"
+          "221030MLSM100"
         ],
         "sku": "l1"
       }
@@ -64,7 +68,7 @@
   },
   "mix_objetivo": [
     {
-      "producto_id": "p1",
+      "producto_id": "221030MLSM100",
       "porcentaje": 1.0
     }
   ],

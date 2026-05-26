@@ -1,7 +1,3 @@
-"""
-Path: backend/src/infrastructure/web/routes.py
-"""
-
 import os
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, status
@@ -25,42 +21,29 @@ app = FastAPI(title="FITBA - API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 web_logger = get_logger("FITBA.Web")
 
-# Manejador de excepciones de validación (422)
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     web_logger.error(f"Error de Validación de Pydantic: {exc.errors()}")
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"detail": exc.errors()},
-    )
+    return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()})
 
-# Manejador de excepciones centralizado
 @app.exception_handler(FITBAError)
 async def fitba_exception_handler(request: Request, exc: FITBAError):
     status_code = status.HTTP_400_BAD_REQUEST if isinstance(exc, ErrorValidacionDatos) else status.HTTP_500_INTERNAL_SERVER_ERROR
     web_logger.error(f"Error de Negocio: {str(exc)}")
-    return JSONResponse(
-        status_code=status_code,
-        content={"detail": str(exc)},
-    )
+    return JSONResponse(status_code=status_code, content={"detail": str(exc)})
 
 class OEEBaseSchema(BaseModel):
     disponibilidad: float; rendimiento: float; calidad: float
 class InversionSchema(BaseModel):
     objetivo_anr: float; fecha_base: str
 class ProductoSchema(BaseModel):
-    sku: str; nombre: str; precio_unitario: float; costo_marginal_unitario: float
+    sku: str; nombre: str; precio_unitario: float; ancho_bolsa: float; alto_bolsa: float; fuelle: float; gramaje: float; precio_bobina_kg: float
 class LineaProduccionSchema(BaseModel):
     sku: str; nombre: str; capacidad_nominal: float; productos_compatibles: List[str]
 class CapacidadInstaladaSchema(BaseModel):
-    capacidad_nominal_por_hora: float
-    horas_por_turno: int
-    turnos_por_dia: int
-    dias_habiles_por_mes: int
-    dias_inhabiles_mensuales: int
+    capacidad_nominal_por_hora: float; horas_por_turno: int; turnos_por_dia: int; dias_habiles_por_mes: int; dias_inhabiles_mensuales: int
 class CatalogoSchema(BaseModel):
-    productos: List[ProductoSchema]
-    lineas: List[LineaProduccionSchema]
+    productos: List[ProductoSchema]; lineas: List[LineaProduccionSchema]
 class MixProduccionSchema(BaseModel):
     producto_id: str; porcentaje: float
 class EscenarioDetalleSchema(BaseModel):
@@ -84,8 +67,20 @@ def get_params():
     loader = ConfigLoader()
     raw_data = loader._raw_data
     inversion = loader.get_inversion()
+    
+    # Calculamos el costo marginal para la respuesta API
+    def calcular_costo(p):
+        ancho_bobina = (p["ancho_bolsa"] * 2) + (p["fuelle"] * 2) + 4
+        longitud_corte = p["alto_bolsa"] + (p["fuelle"] / 2) + 2
+        superficie_m2 = (ancho_bobina * longitud_corte) / 10000
+        peso_gr = superficie_m2 * p["gramaje"]
+        return (peso_gr / 1000) * p["precio_bobina_kg"]
+
     productos = [
-        {"sku": p["sku"], "nombre": p["nombre"], "precio_unitario": p["precio_unitario"], "costo_marginal_unitario": p["costo_marginal_unitario"]}
+        {
+            "sku": p["sku"], "nombre": p["nombre"], "precio_unitario": p["precio_unitario"], 
+            "costo_marginal_unitario": calcular_costo(p)
+        }
         for p in raw_data["catalogo"]["productos"]
     ]
     
@@ -93,11 +88,7 @@ def get_params():
     if inversion.indice_base:
         ipc_acumulado = CalculadorIPC.calculate_factor(inversion.indice_base, inversion.fecha_base, datetime.now())
 
-    ipc_serie_flat = []
-    ipc_data = raw_data.get("ipc_serie", {})
-    for year, months in ipc_data.get("datos", {}).items():
-        for month, rate in months.items():
-            ipc_serie_flat.append({"mes": f"{year}-{month}", "tasa": rate})
+    ipc_serie_flat = [{"mes": f"{year}-{month}", "tasa": rate} for year, months in raw_data.get("ipc_serie", {}).get("datos", {}).items() for month, rate in months.items()]
 
     return {
         "inversion": {
@@ -123,7 +114,7 @@ def post_simular(payload: SimularRequestSchema, request: Request):
         "inversion": {"objetivo_anr": payload.inversion.objetivo_anr, "fecha_base": payload.inversion.fecha_base},
         "oee_base": payload.oee_base.model_dump(),
         "catalogo": {
-            "productos": [{"sku": p.sku, "nombre": p.nombre, "precio_unitario": p.precio_unitario, "costo_marginal_unitario": p.costo_marginal_unitario} for p in payload.catalogo.productos],
+            "productos": [p.model_dump() for p in payload.catalogo.productos],
             "lineas": [l.model_dump() for l in payload.catalogo.lineas]
         },
         "mix_objetivo": [m.model_dump() for m in payload.mix_objetivo],

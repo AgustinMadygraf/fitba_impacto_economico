@@ -1,7 +1,4 @@
-"""
-Path: backend/tests/unit/use_cases/test_simular_impacto_economico.py
-"""
-
+import pytest
 from unittest.mock import MagicMock
 from src.domain.entities.financiero.inversion import Inversion
 from src.domain.entities.comercial.producto import Producto
@@ -14,7 +11,16 @@ from src.domain.services.servicio_datos_simulacion import ServicioDatosSimulacio
 
 def test_simular_impacto_repago():
     inversion = Inversion(monto_anr=1000.0, fecha_base="2025-01-01")
-    producto = Producto(sku="p1", nombre="P1", precio_unitario=10.0, costo_marginal_unitario=5.0)
+    producto = Producto(
+        sku="p1", 
+        nombre="P1", 
+        precio_unitario=10.0, 
+        ancho_bolsa=10.0,
+        alto_bolsa=10.0,
+        fuelle=5.0,
+        gramaje=100.0,
+        precio_bobina_kg=2.0
+    )
     capacidad = CapacidadInstalada(
         capacidad_nominal_por_hora=100.0,
         horas_por_turno=8,

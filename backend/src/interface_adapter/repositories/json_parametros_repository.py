@@ -30,7 +30,16 @@ class JsonParametrosRepository(ParametrosGateway):
         return Inversion(inv_data["objetivo_anr"], inv_data["fecha_base"], indice)
 
     def get_productos(self) -> list[Producto]:
-        return [Producto(p["sku"], p["nombre"], p["precio_unitario"], p["costo_marginal_unitario"]) for p in self._data["catalogo"]["productos"]]
+        return [Producto(
+            sku=p["sku"], 
+            nombre=p["nombre"], 
+            precio_unitario=p["precio_unitario"],
+            ancho_bolsa=p["ancho_bolsa"],
+            alto_bolsa=p["alto_bolsa"],
+            fuelle=p["fuelle"],
+            gramaje=p["gramaje"],
+            precio_bobina_kg=p["precio_bobina_kg"]
+        ) for p in self._data["catalogo"]["productos"]]
 
     def get_lineas_produccion(self) -> list[LineaProduccion]:
         return [LineaProduccion(l["sku"], l["nombre"], l["capacidad_nominal"], l["productos_compatibles"]) for l in self._data["catalogo"]["lineas"]]
