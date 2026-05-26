@@ -28,3 +28,8 @@
 - [x] Refactorización: Centralización de cálculo de IPC en `IPCCalculator` (Servicio de Dominio)
 - [x] Corrección de KPIs: Refactorización de cálculo de `monto_anr_real` y visualización centralizada
 - [x] **Arquitectura Dinámica de IPC**: Implementación de modelo basado solo en datos observados con proyección automática por backend- [x] Desacoplar `limite_disponibilidad` de `OEE` y mover a `CapacidadInstalada`.
+
+- [x] **Fase 7: OEE Dinámico y Sensibilidad a Escenarios**
+  - [x] Implementar evolución dinámica de componentes de OEE (Disponibilidad, Rendimiento, Calidad).
+  - [x] Integrar factores de mejora de OEE en la entidad `Escenario`.
+  - [x] Refactorizar `SimularImpactoEconomico` para utilizar la lógica dinámica de OEE del dominio.
