@@ -2,6 +2,7 @@
 Path: backend/src/interface_adapter/controllers/simulacion_controller.py
 """
 
+from src.interface_adapter.mappers.simulacion_mapper import SimulacionMapper
 from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
 from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 
@@ -10,7 +11,7 @@ class SimulacionController:
         self.gateway = gateway
         self.presenter = presenter
         self.logger = logger
-        self.servicio_datos = None # Will be set later or via factory
+        self.servicio_datos = None
 
     def set_servicio_datos(self, servicio_datos):
         self.servicio_datos = servicio_datos
@@ -18,6 +19,10 @@ class SimulacionController:
     def ejecutar_simulacion(self):
         # Deprecated: use ejecutar_simulacion_con_payload
         self.ejecutar_simulacion_con_payload(self.gateway._data)
+
+    def ejecutar_simulacion_con_request(self, payload):
+        payload_dict = SimulacionMapper.map_request_to_dict(payload)
+        self.ejecutar_simulacion_con_payload(payload_dict)
 
     def ejecutar_simulacion_con_payload(self, payload_dict):
         # Mover lógica de preparación de repositorio aquí

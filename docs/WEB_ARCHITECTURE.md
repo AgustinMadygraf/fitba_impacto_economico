@@ -29,3 +29,8 @@ Para mantener el desacoplamiento:
 
 
 - Se debe utilizar **Inyección de Dependencias (FastAPI Depends)** para instanciar controladores, repositorios o servicios, evitando la instanciación manual dentro de las funciones de ruta. Esto promueve la desacoplación y facilita las pruebas unitarias de los componentes.
+
+## 6. Mapeo y Orquestación (Clean Architecture)
+- **Mapper de Payload**: Toda transformación de esquemas de API (Pydantic/DTO) a estructuras internas del repositorio debe encapsularse en un `Mapper` especializado (Interface Adapter Layer).
+- **Controladores Delgado**: Los controladores (`SimulacionController`) orquestan la ejecución y el mapeo, eliminando lógica de transformación de la capa de rutas.
+- **Inyección de Dependencias**: Utilizar `FastAPI.Depends` para proveer controladores y servicios, evitando instanciación manual dentro de las funciones de ruta.

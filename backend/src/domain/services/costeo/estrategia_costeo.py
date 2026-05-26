@@ -1,3 +1,7 @@
+"""
+Path: backend/src/domain/services/costeo/estrategia_costeo.py
+"""
+
 from abc import ABC, abstractmethod
 from typing import Dict
 from src.domain.entities.comercial.producto import Producto

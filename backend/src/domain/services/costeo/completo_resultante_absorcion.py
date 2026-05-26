@@ -1,5 +1,9 @@
+"""
+Path: backend/src/domain/services/costeo/completo_resultante_absorcion.py
+"""
+
 from typing import Dict
-from .estrategia_costeo import EstrategiaCosteo
+from src.domain.services.costeo.estrategia_costeo import EstrategiaCosteo
 from src.domain.entities.comercial.producto import Producto
 from src.domain.entities.operacional.capacidad_instalada import CapacidadInstalada
 
