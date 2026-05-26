@@ -1,7 +1,11 @@
+"""
+Path: backend/src/domain/services/calculador_impacto_financiero.py
+"""
+
 from datetime import datetime
 from src.domain.entities.financiero.inversion import Inversion
 from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
-from src.application.calculador_ipc import CalculadorIPC
+from src.domain.services.calculador_ipc import CalculadorIPC
 
 class CalculadorImpactoFinanciero:
     @staticmethod

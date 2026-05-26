@@ -19,7 +19,7 @@ def calcular_desde_cli():
     
     # Obtener datos reales
     productos_list = repo.get_productos()
-    productos = {p.id: p for p in productos_list}
+    productos = {p.sku: p for p in productos_list}
     mix = repo.get_mix_produccion()
     
     # Valores de ejemplo

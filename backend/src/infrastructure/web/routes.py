@@ -1,3 +1,7 @@
+"""
+Path: backend/src/infrastructure/web/routes.py
+"""
+
 import os
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, status
@@ -14,7 +18,7 @@ from src.interface_adapter.controllers.simulacion_controller import SimulacionCo
 from src.interface_adapter.repositories.json_parametros_repository import JsonParametrosRepository
 from src.interface_adapter.presenter.json_presenter import JSONSimulacionPresenter
 from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImpactoEconomico
-from src.application.calculador_ipc import CalculadorIPC
+from src.domain.services.calculador_ipc import CalculadorIPC
 from src.domain.exceptions import FITBAError, ErrorValidacionDatos, ErrorCalculoFinanciero
 
 app = FastAPI(title="FITBA - API", version="1.0.0")

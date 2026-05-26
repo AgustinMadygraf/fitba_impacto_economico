@@ -1,5 +1,5 @@
 """
-Path: backend/src/application/calculador_ipc.py
+Path: backend/src/domain/services/calculador_ipc.py
 """
 
 from datetime import datetime
