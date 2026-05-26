@@ -19,7 +19,7 @@ def test_ejecutar_simulacion():
 
     gateway.get_inversion.return_value = inversion
     gateway.get_productos.return_value = [mock_producto]
-    gateway.get_oee_base.return_value = MagicMock(valor=0.04, disponibilidad=0.1, rendimiento=0.44, calidad=0.84)
+    oee_mock = MagicMock(); oee_mock.disponibilidad = 0.1; oee_mock.rendimiento = 0.44; oee_mock.calidad = 0.84; oee_mock.valor = 0.04; oee_mock.evolucionar.return_value = oee_mock; gateway.get_oee_base.return_value = oee_mock
     gateway.get_lineas_produccion.return_value = [MagicMock(capacidad_nominal=1000.0)]
     gateway.get_capacidad_instalada.return_value = MagicMock(capacidad_nominal_total=1000.0)
     gateway.get_mix_produccion.return_value = MagicMock(porcentajes={"p1": 1.0})

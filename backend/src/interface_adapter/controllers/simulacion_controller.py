@@ -26,7 +26,9 @@ class SimulacionController:
         for clave, datos in escenarios_data.items():
             escenario = Escenario(
                 nombre=datos["nombre"],
-                tasa_crecimiento=datos["tasa_crecimiento_mensual"],
+                tasa_disponibilidad=datos.get("tasa_disponibilidad", datos.get("tasa_crecimiento_mensual", 0.0)),
+                tasa_rendimiento=datos.get("tasa_rendimiento", 0.0),
+                tasa_calidad=datos.get("tasa_calidad", 0.0),
                 factor_demanda=datos.get("factor_demanda", 1.0)
             )
     
@@ -42,7 +44,7 @@ class SimulacionController:
             mes_repago, serie_proyeccion = simulador.ejecutar()
             resultados.append({
                 "escenario": escenario.nombre, 
-                "tasa": escenario.tasa_crecimiento, 
+                "tasa": escenario.tasa_disponibilidad, 
                 "mes_repago": mes_repago,
                 "viable": mes_repago is not None
             })

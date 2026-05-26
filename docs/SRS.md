@@ -33,3 +33,11 @@ El sistema soporta los siguientes métodos:
 5. Variable normalizado.
 
 Cada estrategia encapsula su propia lógica de cálculo, permitiendo al sistema adaptarse dinámicamente a distintos requerimientos de gestión sin modificar la lógica del caso de uso.
+
+
+### 3.9. Mejoras de Dominio (Domain-Driven Design)
+Para asegurar la robustez, el mantenimiento y la consistencia del modelo, se implementan las siguientes directrices DDD:
+
+1. **Tipado Estricto en Costeo**: Los servicios de costeo abandonan el uso de diccionarios (`Dict`) en favor de **Value Objects** (`ParametrosCosteo`), garantizando un contrato de datos explícito y validado.
+2. **Encapsulamiento de Reglas**: Se promueve la migración de cálculos dispersos a métodos de dominio dentro de las entidades (Agregados), asegurando que la lógica contable y operativa sea autovalidada.
+3. **Consistencia de Agregados**: Se consolida la información técnica y de costos bajo la raíz de agregado `Producto`, permitiendo que el objeto sea autosuficiente para operaciones de simulación.
