@@ -11,6 +11,7 @@ from src.domain.entities.entorno.escenario import Escenario
 from src.domain.services.calculador_impacto_operativo import CalculadorImpactoOperativo
 from src.domain.services.calculador_impacto_financiero import CalculadorImpactoFinanciero
 from src.domain.services.calculador_ingresos import CalculadorIngresos
+from src.domain.services.costeo.calculador_variaciones import CalculadorVariaciones
 from src.domain.services.servicio_datos_simulacion import ServicioDatosSimulacion
 from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
 from src.infrastructure.utils.ayudante_fechas import agregar_meses
@@ -81,6 +82,17 @@ class CasoUsoSimularImpactoEconomico:
             beneficio_acumulado += beneficio_mensual
             beneficio_acumulado_presente = beneficio_acumulado / factor_inflacion
             
+            # Cálculo de variaciones (simplificado para el reporte mensual)
+            variaciones = {
+                "capacidad": CalculadorVariaciones.calcular_variacion_capacidad(
+                    self.inversion.monto_anr, # Placeholder
+                    volumen_produccion_mensuales, 
+                    1.0 # Placeholder tasa
+                ),
+                "eficiencia": 0.0,
+                "volumen": 0.0
+            }
+
             proyeccion_mensual.append({
                 "mes": mes,
                 "fecha": label_fecha,
@@ -90,7 +102,8 @@ class CasoUsoSimularImpactoEconomico:
                 "costos_mensuales": costos_mensuales,
                 "beneficio_mensual": beneficio_mensual,
                 "beneficio_acumulado": beneficio_acumulado,
-                "beneficio_acumulado_presente": beneficio_acumulado_presente
+                "beneficio_acumulado_presente": beneficio_acumulado_presente,
+                "variaciones": variaciones
             })
             
             if mes_repago is None and beneficio_acumulado >= target_actualizado_t:

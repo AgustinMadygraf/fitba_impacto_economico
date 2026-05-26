@@ -41,3 +41,12 @@ Para asegurar la robustez, el mantenimiento y la consistencia del modelo, se imp
 1. **Tipado Estricto en Costeo**: Los servicios de costeo abandonan el uso de diccionarios (`Dict`) en favor de **Value Objects** (`ParametrosCosteo`), garantizando un contrato de datos explícito y validado.
 2. **Encapsulamiento de Reglas**: Se promueve la migración de cálculos dispersos a métodos de dominio dentro de las entidades (Agregados), asegurando que la lógica contable y operativa sea autovalidada.
 3. **Consistencia de Agregados**: Se consolida la información técnica y de costos bajo la raíz de agregado `Producto`, permitiendo que el objeto sea autosuficiente para operaciones de simulación.
+
+
+### 3.10. Módulo de Variaciones (Variances Module)
+El sistema incluye un servicio de dominio `CalculadorVariaciones` para la gestión y trazabilidad contable, calculando:
+- **Variación de Capacidad**: Impacto financiero de la sub/sobre-utilización de la capacidad normal de planta.
+- **Variación de Eficiencia**: Desviación en el uso de recursos respecto al costo estándar unitario.
+- **Variación de Volumen**: Efecto contable derivado de la diferencia entre producción y ventas reales.
+
+Este módulo permite reconstruir las causas raíz de las desviaciones presupuestarias para auditorías fiscales y de gestión.

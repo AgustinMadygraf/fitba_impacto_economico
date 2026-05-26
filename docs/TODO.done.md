@@ -41,3 +41,6 @@
   - [x] Implementar `VariableResultante`.
   - [x] Implementar `CompletoNormalizadoIntegral`.
   - [x] Implementar `VariableNormalizado`.
+
+- [x] **Fase 8: Implementación del Módulo de Variaciones**
+  - [x] Implementar servicio `CalculadorVariaciones` con cálculos de capacidad, eficiencia y volumen.

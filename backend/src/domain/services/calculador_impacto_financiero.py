@@ -22,6 +22,13 @@ class CalculadorImpactoFinanciero:
             target_actualizado = inversion.monto_anr
         return factor_inflacion, target_actualizado
 
+
+    def calcular_tasa_absorcion_cif(self, capacidad: CapacidadInstalada, costos_fijos_totales: float) -> float:
+        """Calcula la tasa de absorción de CIF basada en la capacidad normal."""
+        if capacidad.capacidad_normal_mensual <= 0:
+            return 0.0
+        return costos_fijos_totales / capacidad.capacidad_normal_mensual
+
     def calcular_costo_unitario(
         self,
         estrategia: EstrategiaCosteo,
