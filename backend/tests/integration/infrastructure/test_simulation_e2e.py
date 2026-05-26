@@ -15,7 +15,7 @@ def test_full_simulation_flow():
         "catalogo": {
             "productos": [
                 {
-                    "id": "p1",
+                    "sku": "p1",
                     "nombre": "Bolsa Lisa",
                     "precio_unitario": 150.0,
                     "costo_marginal_unitario": 85.5
@@ -23,7 +23,7 @@ def test_full_simulation_flow():
             ],
             "lineas": [
                 {
-                    "id": "l1",
+                    "sku": "l1",
                     "nombre": "Linea 1",
                     "capacidad_nominal": 450000.0,
                     "productos_compatibles": ["p1"]

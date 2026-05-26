@@ -13,7 +13,7 @@ def test_ejecutar_simulacion():
 
     # Corregimos el mock del producto para que tenga los atributos necesarios
     mock_producto = MagicMock()
-    mock_producto.id = "p1"
+    mock_producto.sku = "p1"
     mock_producto.precio_unitario = 10.0
     mock_producto.costo_marginal_unitario = 5.0
 

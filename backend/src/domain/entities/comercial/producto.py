@@ -3,7 +3,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class Producto:
     """Representa las características económicas estáticas del producto."""
-    id: str
+    sku: str
     nombre: str
     precio_unitario: float
     costo_marginal_unitario: float

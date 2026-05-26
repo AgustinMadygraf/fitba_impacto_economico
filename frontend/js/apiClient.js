@@ -5,7 +5,7 @@ const generateCorrelationId = () => Math.random().toString(36).substring(2, 15) 
 export const ApiClient = {
     async post(url, data) {
         const correlationId = generateCorrelationId();
-        console.log(`[API REQUEST CID: ${correlationId}] POST ${url}`, data);
+        // console.log(`[API REQUEST CID: ${correlationId}] POST ${url}`, data);
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -22,7 +22,7 @@ export const ApiClient = {
                 throw new Error(`[CID: ${correlationId}] API Error: ${response.status} - ${JSON.stringify(errorData)}`);
             }
             const result = await response.json();
-            console.log(`[API RESPONSE CID: ${correlationId}] ${url} success`);
+            // console.log(`[API RESPONSE CID: ${correlationId}] ${url} success`);
             return result;
         } catch (error) {
             console.error(`[API ERROR CID: ${correlationId}] ${url}:`, error);

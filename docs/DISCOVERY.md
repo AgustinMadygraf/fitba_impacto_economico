@@ -21,3 +21,4 @@
 - **Integración de Precio/Costo Marginal:** RESUELTO (Refactorización realizada).
 ## 4. Próximos Pasos (Refactorización)
 - **Extracción a Servicios de Dominio:** Refactorizar `CasoUsoSimularImpactoEconomico` para extraer la lógica operativa (volúmenes) y financiera (inflación/valor presente) en `CalculadorImpactoOperativo` y `CalculadorImpactoFinanciero` respectivamente, aplicando el principio de Single Responsibility.
+- **Extracción de Cálculo de Ingresos:** Refactorizado `CasoUsoSimularImpactoEconomico` para delegar la lógica de cálculo a `CalculadorIngresos` en `src/domain/services/`, mejorando la cohesión.

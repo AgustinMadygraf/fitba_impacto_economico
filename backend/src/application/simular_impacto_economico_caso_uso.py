@@ -1,3 +1,7 @@
+"""
+Path: backend/src/application/simular_impacto_economico_caso_uso.py
+"""
+
 from datetime import datetime
 from src.application.ayudante_fechas import agregar_meses
 from typing import Optional, Any, List, Dict, Tuple
@@ -13,6 +17,7 @@ from src.domain.entities.operacional.capacidad_instalada import CapacidadInstala
 from src.domain.entities.financiero.indice_financiero import IndiceFinanciero
 from src.domain.services.calculador_impacto_operativo import CalculadorImpactoOperativo
 from src.domain.services.calculador_impacto_financiero import CalculadorImpactoFinanciero
+from src.domain.services.calculador_ingresos import CalculadorIngresos
 
 class CasoUsoSimularImpactoEconomico:
     
@@ -29,7 +34,7 @@ class CasoUsoSimularImpactoEconomico:
         ipc_override: Optional[float] = None
     ):
         self.inversion = inversion
-        self.productos = {p.id: p for p in productos}
+        self.productos = {p.sku: p for p in productos}
         self.lineas = lineas_produccion
         self.capacidad_instalada = capacidad_instalada
         self.mix = mix_objetivo
@@ -41,6 +46,7 @@ class CasoUsoSimularImpactoEconomico:
         # Injecting domain services
         self.calculador_operativo = CalculadorImpactoOperativo()
         self.calculador_financiero = CalculadorImpactoFinanciero()
+        self.calculador_ingresos = CalculadorIngresos()
 
     def ejecutar(self) -> Tuple[Optional[int], List[Dict[str, Any]]]:
         beneficio_acumulado = 0.0
@@ -75,8 +81,8 @@ class CasoUsoSimularImpactoEconomico:
                 disponibilidad_t, self.oee_base, self.capacidad_instalada, self.escenario
             )
             
-            beneficio_mensual, ingresos_mensuales, costos_mensuales = self._calcular_beneficio_mensual(
-                volumen_produccion_mensuales, volumen_ventas_mensuales
+            beneficio_mensual, ingresos_mensuales, costos_mensuales = self.calculador_ingresos.calcular_beneficio_mensual(
+                self.productos, self.mix, volumen_produccion_mensuales, volumen_ventas_mensuales
             )
             
             # Acumular beneficio total
@@ -102,18 +108,3 @@ class CasoUsoSimularImpactoEconomico:
                 mes_repago = mes
             
         return mes_repago, proyeccion_mensual
-
-    def _calcular_beneficio_mensual(self, vol_prod: float, vol_ventas: float) -> Tuple[float, float, float]:
-        ingresos_totales = 0.0
-        costos_totales = 0.0
-        
-        for prod_id, porcentaje in self.mix.porcentajes.items():
-            producto = self.productos.get(prod_id)
-            if not producto: continue
-            
-            # Asumimos que el mix se aplica tanto a la producción como a las ventas
-            ingresos_totales += (vol_ventas * porcentaje) * producto.precio_unitario
-            costos_totales += (vol_prod * porcentaje) * producto.costo_marginal_unitario
-            
-        beneficio_total = ingresos_totales - costos_totales
-        return beneficio_total, ingresos_totales, costos_totales

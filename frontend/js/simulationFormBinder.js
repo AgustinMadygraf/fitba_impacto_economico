@@ -7,7 +7,7 @@ export const SimulationFormBinder = {
     
     // Recolectar Productos
     const productos = Array.from(document.querySelectorAll(".item-producto")).map(div => ({
-      id: div.dataset.id,
+      id: div.dataset.sku,
       nombre: div.querySelector(".input-producto-nombre").value,
       precio: parseFloat(div.querySelector(".input-producto-precio").value) || 0,
       costo: parseFloat(div.querySelector(".input-producto-costo").value) || 0
@@ -15,7 +15,7 @@ export const SimulationFormBinder = {
 
     // Recolectar Líneas
     const lineas = Array.from(document.querySelectorAll(".item-linea")).map(div => ({
-      id: div.dataset.id,
+      id: div.dataset.sku,
       nombre: div.querySelector(".input-linea-nombre").value,
       capacidad: parseFloat(div.querySelector(".input-linea-capacidad").value) || 0
     }));

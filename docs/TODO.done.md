@@ -27,4 +27,4 @@
 - [x] Implementar UI en la sección de Entradas para visualizar/editar la serie de IPC
 - [x] Refactorización: Centralización de cálculo de IPC en `IPCCalculator` (Servicio de Dominio)
 - [x] Corrección de KPIs: Refactorización de cálculo de `monto_anr_real` y visualización centralizada
-- [x] **Arquitectura Dinámica de IPC**: Implementación de modelo basado solo en datos observados con proyección automática por backend
+- [x] **Arquitectura Dinámica de IPC**: Implementación de modelo basado solo en datos observados con proyección automática por backend- [x] Desacoplar `limite_disponibilidad` de `OEE` y mover a `CapacidadInstalada`.

@@ -10,8 +10,8 @@ from src.application.simular_impacto_economico_caso_uso import CasoUsoSimularImp
 
 def test_simular_impacto_repago():
     inversion = Inversion(monto_anr=1000.0, fecha_base="2025-01-01")
-    productos = [Producto(id="p1", nombre="P1", precio_unitario=10.0, costo_marginal_unitario=5.0)]
-    lineas = [LineaProduccion(id="l1", nombre="L1", capacidad_nominal=10000.0, productos_compatibles=["p1"])]
+    productos = [Producto(sku="p1", nombre="P1", precio_unitario=10.0, costo_marginal_unitario=5.0)]
+    lineas = [LineaProduccion(sku="l1", nombre="L1", capacidad_nominal=10000.0, productos_compatibles=["p1"])]
     capacidad = CapacidadInstalada(
         capacidad_nominal_por_hora=100.0,
         horas_por_turno=8,

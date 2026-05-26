@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ctx = canvasElement ? canvasElement.getContext('2d') : null;
   let realAnr = 0;
 
-  console.log('[FITBA] Dashboard: Cargando parámetros iniciales');
+  // console.log('[FITBA] Dashboard: Cargando parámetros iniciales');
   fetch('/api/v1/simulacion/parametros')
     .then(res => res.json())
     .then(async data => {
-      console.log('[FITBA] Dashboard: Parámetros cargados', data);
+      // console.log('[FITBA] Dashboard: Parámetros cargados', data);
       realAnr = data.inversion.monto_anr_real;
       poblarFormulario(data);
       if (loading) loading.classList.remove('d-none');
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    console.log('[FITBA] Dashboard: Form submit');
+    // console.log('[FITBA] Dashboard: Form submit');
     if (loading) loading.classList.remove('d-none');
     try {
       const formData = SimulationFormBinder.getSimulationData();
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
     const div = document.createElement("div");
     div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-producto";
-    div.dataset.id = producto.id;
+    div.dataset.sku = producto.sku;
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-producto-nombre" value="${producto.nombre}" placeholder="Nombre">
       <div class="d-flex gap-2">
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
     const div = document.createElement("div");
     div.className = "card mb-2 p-2 border-0 bg-dark bg-opacity-10 item-linea";
-    div.dataset.id = linea.id;
+    div.dataset.sku = linea.sku;
     div.innerHTML = `
       <input type="text" class="form-control mb-1 input-linea-nombre" value="${linea.nombre}" placeholder="Nombre">
       <input type="number" step="1000" class="form-control input-linea-capacidad" value="${linea.capacidad_nominal || 0}" placeholder="Capacidad Nominal">
